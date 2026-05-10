@@ -9,7 +9,6 @@
 
     :root {
       --yellow: #FFCB05;
-      --blue: #3B4CCA;
       --dark: #0d0d0d;
       --dark2: #161616;
       --dark3: #1f1f1f;
@@ -17,825 +16,940 @@
       --text: #f0f0f0;
       --muted: #888;
       --border: #2a2a2a;
+      --success: #22c55e;
+      --error: #ef4444;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--dark); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
-    body {
-      background: var(--dark);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-    }
+    /* ─── VIEWS ─── */
+    .view { display: none; }
+    .view.active { display: block; }
 
-    /* ── HEADER ── */
+    /* ─── HEADER ─── */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,13,13,0.95);
-      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.96); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
-    .logo {
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: var(--text);
-    }
+    .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; }
     .logo span { color: var(--yellow); }
-
-    nav {
-      display: flex;
-      gap: 0.25rem;
-    }
-
+    nav { display: flex; gap: 0.25rem; }
     nav button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 0.4rem 0.9rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.02em;
+      background: none; border: none; color: var(--muted); font-family: inherit;
+      font-size: 0.85rem; font-weight: 500; padding: 0.4rem 0.9rem;
+      border-radius: 6px; cursor: pointer; transition: all 0.2s;
     }
     nav button:hover { color: var(--text); background: var(--dark3); }
     nav button.active { color: var(--yellow); background: rgba(255,203,5,0.1); }
+    .header-right { display: flex; gap: 0.75rem; align-items: center; }
 
-    .cart-btn {
-      position: relative;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 0.4rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
+    .cart-btn, .account-btn {
+      background: none; border: 1px solid var(--border); color: var(--text);
+      font-family: inherit; font-size: 0.85rem; font-weight: 500;
+      padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
     }
     .cart-btn:hover { border-color: var(--yellow); color: var(--yellow); }
-
+    .account-btn { border-color: rgba(255,203,5,0.3); color: var(--yellow); }
+    .account-btn:hover { background: rgba(255,203,5,0.08); }
+    .account-avatar {
+      width: 22px; height: 22px; background: var(--yellow); color: #000;
+      border-radius: 50%; font-size: 0.7rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
     .cart-count {
-      background: var(--yellow);
-      color: #000;
-      font-size: 0.7rem;
-      font-weight: 700;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      display: none;
+      background: var(--yellow); color: #000; font-size: 0.7rem; font-weight: 700;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
     }
     .cart-count.visible { display: flex; }
 
-    /* ── HERO ── */
+    /* ─── HERO ─── */
     .hero {
       background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #0d0d0d 100%);
-      padding: 5rem 2rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
+      padding: 5rem 2rem; text-align: center;
+      border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
     }
-
     .hero::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
+      width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(255,203,5,0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .hero-badge {
       display: inline-block;
-      background: rgba(255,203,5,0.1);
-      border: 1px solid rgba(255,203,5,0.3);
-      color: var(--yellow);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.3rem 1rem;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
+      background: rgba(255,203,5,0.1); border: 1px solid rgba(255,203,5,0.3);
+      color: var(--yellow); font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.3rem 1rem; border-radius: 20px; margin-bottom: 1.5rem;
     }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
+    .hero h1 { font-size: clamp(2rem,5vw,3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
     .hero h1 span { color: var(--yellow); }
-
-    .hero p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 500px;
-      margin: 0 auto 2rem;
-      line-height: 1.7;
-    }
-
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin-top: 3rem;
-    }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
+    .hero-stats { display: flex; justify-content: center; gap: 3rem; margin-top: 3rem; }
     .stat { text-align: center; }
     .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--yellow); }
     .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.05em; }
 
-    /* ── MAIN ── */
+    /* ─── MAIN ─── */
     main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1.1rem; font-weight: 700; }
+    .section-count { font-size: 0.8rem; color: var(--muted); }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .section-count {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    /* ── FILTER TABS ── */
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
+    /* ─── FILTER ─── */
+    .filter-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
     .filter-tab {
-      background: var(--dark3);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 500;
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
+      background: var(--dark3); border: 1px solid var(--border);
+      color: var(--muted); font-family: inherit; font-size: 0.8rem; font-weight: 500;
+      padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer; transition: all 0.2s;
     }
     .filter-tab:hover { color: var(--text); border-color: #444; }
-    .filter-tab.active {
-      background: rgba(255,203,5,0.12);
-      border-color: rgba(255,203,5,0.4);
-      color: var(--yellow);
-    }
+    .filter-tab.active { background: rgba(255,203,5,0.12); border-color: rgba(255,203,5,0.4); color: var(--yellow); }
 
-    /* ── PRODUCT GRID ── */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.25rem;
-    }
-
+    /* ─── PRODUCT GRID ─── */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
     .product-card {
-      background: var(--dark2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.25s;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; transition: all 0.25s; cursor: pointer;
+      display: flex; flex-direction: column;
     }
-    .product-card:hover {
-      border-color: rgba(255,203,5,0.3);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    }
-
+    .product-card:hover { border-color: rgba(255,203,5,0.3); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
     .product-img {
-      aspect-ratio: 1;
-      background: var(--dark3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      position: relative;
-      overflow: hidden;
+      aspect-ratio: 1; background: var(--dark3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; position: relative; overflow: hidden;
     }
-
     .product-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+      position: absolute; top: 10px; left: 10px;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px;
     }
     .badge-fr { background: #002395; color: #fff; }
     .badge-jp { background: #BC002D; color: #fff; }
     .badge-en { background: #006400; color: #fff; }
     .badge-new { background: var(--yellow); color: #000; }
-    .badge-promo { background: #e53e3e; color: #fff; }
-
-    .product-info {
-      padding: 1rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .product-category {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
-    }
-
-    .product-name {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.4;
-      margin-bottom: 0.25rem;
-      flex: 1;
-    }
-
-    .product-sub {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .product-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: auto;
-    }
-
-    .product-price {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--yellow);
-    }
-
-    .product-price .old {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--muted);
-      text-decoration: line-through;
-      margin-right: 0.3rem;
-    }
-
+    .product-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .product-category { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    .product-name { font-size: 0.9rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.25rem; flex: 1; }
+    .product-sub { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .product-price { font-size: 1.05rem; font-weight: 700; color: var(--yellow); }
+    .product-price .old { font-size: 0.75rem; font-weight: 400; color: var(--muted); text-decoration: line-through; margin-right: 0.3rem; }
     .add-btn {
-      background: var(--dark4);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.4rem 0.75rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
+      background: var(--dark4); border: 1px solid var(--border); color: var(--text);
+      font-family: inherit; font-size: 0.75rem; font-weight: 600;
+      padding: 0.4rem 0.75rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
     }
-    .add-btn:hover {
-      background: var(--yellow);
-      border-color: var(--yellow);
-      color: #000;
-    }
-    .add-btn.added {
-      background: rgba(255,203,5,0.15);
-      border-color: var(--yellow);
-      color: var(--yellow);
-    }
+    .add-btn:hover { background: var(--yellow); border-color: var(--yellow); color: #000; }
+    .add-btn.added { background: rgba(255,203,5,0.15); border-color: var(--yellow); color: var(--yellow); }
 
-    /* ── CART SIDEBAR ── */
+    /* ─── BANNER ─── */
+    .banner {
+      background: linear-gradient(135deg, rgba(59,76,202,0.15), rgba(255,203,5,0.08));
+      border: 1px solid rgba(255,203,5,0.15); border-radius: 12px;
+      padding: 1.5rem 2rem; margin-bottom: 3rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .banner-text h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .banner-text p { font-size: 0.82rem; color: var(--muted); }
+    .banner-perks { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .perk { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); }
+
+    /* ─── CART SIDEBAR ─── */
     .cart-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .cart-overlay.open { opacity: 1; pointer-events: all; }
-
     .cart-sidebar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 380px;
-      max-width: 100vw;
-      height: 100vh;
-      background: var(--dark2);
-      border-left: 1px solid var(--border);
-      z-index: 201;
-      transform: translateX(100%);
+      position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw;
+      height: 100vh; background: var(--dark2); border-left: 1px solid var(--border);
+      z-index: 201; transform: translateX(100%);
       transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
     }
     .cart-sidebar.open { transform: translateX(0); }
-
-    .cart-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .cart-header h3 { font-size: 1rem; font-weight: 700; }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 1.3rem;
-      cursor: pointer;
-      padding: 0.2rem;
-      line-height: 1;
-    }
+    .close-btn { background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; padding: 0.2rem; line-height: 1; }
     .close-btn:hover { color: var(--text); }
-
     .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
-
-    .cart-empty {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--muted);
-    }
+    .cart-empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
     .cart-empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
     .cart-empty p { font-size: 0.9rem; }
-
-    .cart-item {
-      display: flex;
-      gap: 0.75rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border);
-      align-items: center;
-    }
-
-    .cart-item-img {
-      width: 48px;
-      height: 48px;
-      background: var(--dark3);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-
+    .cart-item { display: flex; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); align-items: center; }
+    .cart-item-img { width: 48px; height: 48px; background: var(--dark3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
     .cart-item-info { flex: 1; min-width: 0; }
     .cart-item-name { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .cart-item-price { font-size: 0.8rem; color: var(--yellow); margin-top: 0.2rem; }
-
-    .cart-item-qty {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .cart-item-qty { display: flex; align-items: center; gap: 0.5rem; }
     .qty-btn {
-      background: var(--dark4);
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--dark4); border: 1px solid var(--border); color: var(--text);
+      width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
     }
     .qty-btn:hover { border-color: var(--yellow); color: var(--yellow); }
     .qty-num { font-size: 0.85rem; font-weight: 600; min-width: 16px; text-align: center; }
-
-    .cart-footer {
-      padding: 1.25rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
+    .cart-footer-panel { padding: 1.25rem; border-top: 1px solid var(--border); }
+    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .cart-total-label { font-size: 0.85rem; color: var(--muted); }
     .cart-total-price { font-size: 1.2rem; font-weight: 700; color: var(--yellow); }
-
     .checkout-btn {
-      width: 100%;
-      background: var(--yellow);
-      color: #000;
-      border: none;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.02em;
+      width: 100%; background: var(--yellow); color: #000; border: none;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.85rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
     }
     .checkout-btn:hover { background: #ffd700; }
 
-    /* ── BANNER ── */
-    .banner {
-      background: linear-gradient(135deg, rgba(59,76,202,0.15), rgba(255,203,5,0.08));
-      border: 1px solid rgba(255,203,5,0.15);
-      border-radius: 12px;
-      padding: 1.5rem 2rem;
-      margin-bottom: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
+    /* ─── AUTH VIEW ─── */
+    .auth-wrapper {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center; padding: 2rem;
+    }
+    .auth-box {
+      background: var(--dark2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 420px;
+    }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 2rem; background: var(--dark3); border-radius: 8px; padding: 3px; }
+    .auth-tab {
+      flex: 1; background: none; border: none; color: var(--muted);
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      padding: 0.5rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    }
+    .auth-tab.active { background: var(--dark4); color: var(--text); }
+    .auth-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .auth-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+
+    /* ─── FORM ELEMENTS ─── */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.4rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    input, select {
+      width: 100%; background: var(--dark3); border: 1px solid var(--border);
+      color: var(--text); font-family: inherit; font-size: 0.9rem;
+      padding: 0.7rem 1rem; border-radius: 8px; transition: border-color 0.2s; outline: none;
+    }
+    input:focus, select:focus { border-color: rgba(255,203,5,0.5); }
+    input::placeholder { color: #444; }
+    select option { background: var(--dark3); }
+
+    .form-error { font-size: 0.75rem; color: var(--error); margin-top: 0.3rem; display: none; }
+    .form-error.show { display: block; }
+
+    .submit-btn {
+      width: 100%; background: var(--yellow); color: #000; border: none;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.85rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
+    }
+    .submit-btn:hover { background: #ffd700; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .auth-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1.25rem 0; position: relative; }
+    .auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border); }
+    .auth-divider::before { left: 0; }
+    .auth-divider::after { right: 0; }
+
+    .back-link { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 0.82rem; cursor: pointer; padding: 0; margin-top: 1.25rem; display: block; text-align: center; }
+    .back-link:hover { color: var(--text); }
+
+    /* ─── CHECKOUT VIEW ─── */
+    .checkout-wrapper { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+    .checkout-progress {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 3rem;
+    }
+    .progress-step {
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      position: relative;
+    }
+    .progress-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 16px; left: calc(50% + 16px);
+      width: calc(100% + 16px); height: 1px; background: var(--border);
+    }
+    .progress-step.done:not(:last-child)::after { background: var(--yellow); }
+    .progress-dot {
+      width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--muted);
+      background: var(--dark2); z-index: 1; transition: all 0.3s;
+    }
+    .progress-step.active .progress-dot { border-color: var(--yellow); color: var(--yellow); background: rgba(255,203,5,0.1); }
+    .progress-step.done .progress-dot { border-color: var(--yellow); background: var(--yellow); color: #000; }
+    .progress-label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .progress-step.active .progress-label { color: var(--yellow); font-weight: 600; }
+    .progress-spacer { width: 80px; height: 1px; background: var(--border); margin-bottom: 20px; }
+    .progress-spacer.done { background: var(--yellow); }
+
+    .checkout-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; align-items: start; }
+    .checkout-form-box { background: var(--dark2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+    .checkout-form-box h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.75rem; }
+
+    .checkout-summary { background: var(--dark2); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; position: sticky; top: 84px; }
+    .checkout-summary h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .summary-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .summary-item-name { color: var(--muted); flex: 1; margin-right: 0.5rem; }
+    .summary-item-qty { color: var(--muted); font-size: 0.75rem; margin-right: 0.5rem; }
+    .summary-item-price { font-weight: 600; color: var(--text); }
+    .summary-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .summary-row .label { color: var(--muted); }
+    .summary-total { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+    .summary-total .label { font-weight: 700; }
+    .summary-total .amount { font-size: 1.3rem; font-weight: 800; color: var(--yellow); }
+    .summary-shipping { font-size: 0.75rem; color: var(--success); text-align: right; margin-top: 0.25rem; }
+
+    .delivery-options { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .delivery-option {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; transition: all 0.2s;
+    }
+    .delivery-option:hover { border-color: rgba(255,203,5,0.3); }
+    .delivery-option.selected { border-color: var(--yellow); background: rgba(255,203,5,0.05); }
+    .delivery-option input[type=radio] { accent-color: var(--yellow); }
+    .delivery-option-info { flex: 1; }
+    .delivery-option-name { font-size: 0.88rem; font-weight: 600; }
+    .delivery-option-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .delivery-option-price { font-size: 0.9rem; font-weight: 700; color: var(--yellow); }
+
+    .next-btn {
+      width: 100%; background: var(--yellow); color: #000; border: none;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.9rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 1.5rem;
+    }
+    .next-btn:hover { background: #ffd700; }
+
+    /* ─── PAYMENT ─── */
+    .card-preview {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 14px; padding: 1.5rem; margin-bottom: 1.75rem;
+      border: 1px solid rgba(255,203,5,0.2); position: relative; overflow: hidden;
+    }
+    .card-preview::after {
+      content: ''; position: absolute; top: -30px; right: -30px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(255,203,5,0.06);
+    }
+    .card-chip { font-size: 1.5rem; margin-bottom: 1rem; }
+    .card-number-display { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.2em; color: var(--text); margin-bottom: 1rem; }
+    .card-bottom { display: flex; justify-content: space-between; }
+    .card-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .card-value { font-size: 0.85rem; font-weight: 600; }
+
+    .payment-methods { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .pay-method {
+      flex: 1; padding: 0.6rem; background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; text-align: center; font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+    .pay-method:hover { border-color: rgba(255,203,5,0.3); }
+    .pay-method.selected { border-color: var(--yellow); background: rgba(255,203,5,0.05); }
+    .pay-method-label { font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .card-input-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; }
+
+    .secure-badge {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--muted); margin-top: 1.25rem;
+      padding: 0.75rem; background: var(--dark3); border-radius: 8px;
     }
 
-    .banner-text h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .banner-text p { font-size: 0.82rem; color: var(--muted); }
-
-    .banner-perks {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
+    /* ─── CONFIRMATION ─── */
+    .confirm-wrapper {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center; padding: 2rem;
     }
-    .perk {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--muted);
+    .confirm-box {
+      background: var(--dark2); border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 16px; padding: 3rem 2.5rem; text-align: center;
+      max-width: 480px; width: 100%;
     }
-    .perk-icon { font-size: 1rem; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.8rem;
+    .confirm-icon {
+      width: 72px; height: 72px; background: rgba(34,197,94,0.12);
+      border: 2px solid rgba(34,197,94,0.4); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; margin: 0 auto 1.5rem;
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
     }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .confirm-box h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .confirm-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+    .order-ref {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem; margin: 1.5rem 0;
+    }
+    .order-ref .ref-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+    .order-ref .ref-num { font-size: 1.2rem; font-weight: 800; color: var(--yellow); letter-spacing: 0.1em; }
+    .confirm-details { display: flex; flex-direction: column; gap: 0.6rem; text-align: left; margin-top: 1.5rem; }
+    .confirm-detail { display: flex; align-items: center; gap: 0.75rem; font-size: 0.82rem; color: var(--muted); }
+    .confirm-detail span:first-child { font-size: 1rem; }
+    .back-shop-btn {
+      width: 100%; background: var(--yellow); color: #000; border: none;
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.85rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 2rem;
+    }
+    .back-shop-btn:hover { background: #ffd700; }
 
+    /* ─── ACCOUNT VIEW ─── */
+    .account-wrapper { max-width: 800px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .account-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; padding: 1.5rem; background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; }
+    .account-avatar-big {
+      width: 60px; height: 60px; background: var(--yellow); color: #000;
+      border-radius: 50%; font-size: 1.5rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .account-name { font-size: 1.1rem; font-weight: 700; }
+    .account-email { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+    .account-section { margin-bottom: 2rem; }
+    .account-section h3 { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .order-card { background: var(--dark2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .order-card-ref { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .order-card-name { font-size: 0.9rem; font-weight: 600; }
+    .order-card-status { font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 20px; }
+    .status-delivered { background: rgba(34,197,94,0.12); color: var(--success); }
+    .status-transit { background: rgba(255,203,5,0.12); color: var(--yellow); }
+    .order-card-price { font-size: 1rem; font-weight: 700; color: var(--yellow); }
+    .logout-btn {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      font-family: inherit; font-size: 0.85rem; font-weight: 500;
+      padding: 0.6rem 1.25rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: var(--error); color: var(--error); }
+
+    /* ─── FOOTER ─── */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
     footer .footer-logo { color: var(--text); font-weight: 700; margin-bottom: 0.5rem; }
     footer .footer-logo span { color: var(--yellow); }
 
-    /* ── HIDDEN ── */
-    .product-card[data-cat].hidden { display: none; }
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--dark3); border: 1px solid rgba(255,203,5,0.3);
+      color: var(--text); font-size: 0.82rem; font-weight: 500;
+      padding: 0.6rem 1.2rem; border-radius: 8px; z-index: 400;
+      opacity: 0; transition: all 0.3s; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── RESPONSIVE ── */
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
       nav { display: none; }
-      .hero-stats { gap: 1.5rem; }
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
       .cart-sidebar { width: 100vw; }
       .banner { flex-direction: column; }
-      .banner-perks { gap: 1rem; }
+      .checkout-layout { grid-template-columns: 1fr; }
+      .checkout-summary { position: static; }
+      .form-row { grid-template-columns: 1fr; }
+      .card-input-row { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.5rem; }
     }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--dark3);
-      border: 1px solid rgba(255,203,5,0.3);
-      color: var(--text);
-      font-size: 0.82rem;
-      font-weight: 500;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      z-index: 300;
-      opacity: 0;
-      transition: all 0.3s;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ═══════════════════════════════════════════ HEADER -->
 <header>
-  <div class="logo">Poke<span>Vault</span></div>
-  <nav>
+  <div class="logo" onclick="showView('shop')">Poke<span>Vault</span></div>
+  <nav id="shopNav">
     <button class="nav-btn active" data-filter="all">Tout</button>
     <button class="nav-btn" data-filter="booster">Boosters</button>
     <button class="nav-btn" data-filter="sleeve">Sleeves</button>
     <button class="nav-btn" data-filter="protection">Protections</button>
     <button class="nav-btn" data-filter="toploader">Toploaders</button>
   </nav>
-  <button class="cart-btn" id="cartToggle">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-    Panier
-    <span class="cart-count" id="cartCount">0</span>
-  </button>
+  <div class="header-right">
+    <button class="account-btn" id="accountBtn" style="display:none" onclick="showView('account')">
+      <div class="account-avatar" id="accountAvatar">?</div>
+      <span id="accountName">Mon compte</span>
+    </button>
+    <button class="account-btn" id="loginBtn" onclick="showView('auth')" style="border-color:var(--border);color:var(--muted)">
+      Connexion
+    </button>
+    <button class="cart-btn" id="cartToggle">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Panier
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">✦ Boutique collector suisse</div>
-  <h1>La boutique des<br><span>vrais dresseurs</span></h1>
-  <p>Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro.</p>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">500+</div>
-      <div class="stat-label">Références</div>
+<!-- ═══════════════════════════════════════════ VIEW: SHOP -->
+<div class="view active" id="view-shop">
+  <section class="hero">
+    <div class="hero-badge">✦ Boutique collector suisse</div>
+    <h1>La boutique des<br><span>vrais dresseurs</span></h1>
+    <p>Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Références</div></div>
+      <div class="stat"><div class="stat-num">3 pays</div><div class="stat-label">FR · JP · EN</div></div>
+      <div class="stat"><div class="stat-num">48h</div><div class="stat-label">Livraison CH</div></div>
     </div>
-    <div class="stat">
-      <div class="stat-num">3 pays</div>
-      <div class="stat-label">FR · JP · EN</div>
+  </section>
+
+  <main>
+    <div class="banner">
+      <div class="banner-text">
+        <h3>Livraison offerte dès 80 CHF</h3>
+        <p>Partout en Suisse — emballage renforcé pour vos cartes</p>
+      </div>
+      <div class="banner-perks">
+        <div class="perk"><span>🔒</span> Paiement sécurisé</div>
+        <div class="perk"><span>📦</span> Stock mis à jour quotidiennement</div>
+        <div class="perk"><span>⭐</span> Produits authentiques</div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-num">48h</div>
-      <div class="stat-label">Livraison CH</div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">Tous les produits</button>
+      <button class="filter-tab" data-filter="booster">Boosters</button>
+      <button class="filter-tab" data-filter="sleeve">Sleeves</button>
+      <button class="filter-tab" data-filter="protection">Protections</button>
+      <button class="filter-tab" data-filter="toploader">Toploaders</button>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title" id="sectionTitle">Tous les produits</span>
+      <span class="section-count" id="sectionCount"></span>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div class="product-card" data-cat="booster" data-name="Booster Écarlate & Violet" data-price="4.90" data-icon="🃏">
+        <div class="product-img">🃏<span class="product-badge badge-fr">FR</span><span class="product-badge badge-new" style="left:auto;right:10px">Nouveau</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Écarlate & Violet</div>
+          <div class="product-sub">Série de base — 10 cartes</div>
+          <div class="product-footer"><div class="product-price">4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Fable Nébuleuse" data-price="4.90" data-icon="🌌">
+        <div class="product-img">🌌<span class="product-badge badge-fr">FR</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Fable Nébuleuse</div>
+          <div class="product-sub">EV6.5 — 10 cartes</div>
+          <div class="product-footer"><div class="product-price">4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Couronne Stellaire" data-price="4.90" data-icon="👑">
+        <div class="product-img">👑<span class="product-badge badge-fr">FR</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Couronne Stellaire</div>
+          <div class="product-sub">EV7 — 10 cartes</div>
+          <div class="product-footer"><div class="product-price"><span class="old">5.50 CHF</span>4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Mascarade Crépusculaire" data-price="4.90" data-icon="🎭">
+        <div class="product-img">🎭<span class="product-badge badge-fr">FR</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Mascarade Crépusculaire</div>
+          <div class="product-sub">EV6 — 10 cartes</div>
+          <div class="product-footer"><div class="product-price">4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Cyber Judge (JP)" data-price="3.50" data-icon="⚡">
+        <div class="product-img">⚡<span class="product-badge badge-jp">JP</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Cyber Judge</div>
+          <div class="product-sub">SV5M — Japonais — 5 cartes</div>
+          <div class="product-footer"><div class="product-price">3.50 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Stellar Miracle (JP)" data-price="3.50" data-icon="✨">
+        <div class="product-img">✨<span class="product-badge badge-jp">JP</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Stellar Miracle</div>
+          <div class="product-sub">SV7 — Japonais — 5 cartes</div>
+          <div class="product-footer"><div class="product-price">3.50 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Twilight Masquerade (EN)" data-price="4.90" data-icon="🌙">
+        <div class="product-img">🌙<span class="product-badge badge-en">EN</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Twilight Masquerade</div>
+          <div class="product-sub">SV6 — Anglais — 10 cartes</div>
+          <div class="product-footer"><div class="product-price">4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="booster" data-name="Booster Stellar Crown (EN)" data-price="4.90" data-icon="🌟">
+        <div class="product-img">🌟<span class="product-badge badge-en">EN</span></div>
+        <div class="product-info">
+          <div class="product-category">Booster</div>
+          <div class="product-name">Booster Stellar Crown</div>
+          <div class="product-sub">SV7 — Anglais — 10 cartes</div>
+          <div class="product-footer"><div class="product-price">4.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="sleeve" data-name="Sleeve Classic (x65)" data-price="9.90" data-icon="🛡️">
+        <div class="product-img">🛡️<span class="product-badge badge-new">Nouveau</span></div>
+        <div class="product-info">
+          <div class="product-category">Sleeve</div>
+          <div class="product-name">Sleeve Classic</div>
+          <div class="product-sub">Par 65 — Protection standard</div>
+          <div class="product-footer"><div class="product-price">9.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="sleeve" data-name="Sleeve Languette (x65)" data-price="12.90" data-icon="📎">
+        <div class="product-img">📎</div>
+        <div class="product-info">
+          <div class="product-category">Sleeve</div>
+          <div class="product-name">Sleeve Languette</div>
+          <div class="product-sub">Par 65 — Ouverture facilitée</div>
+          <div class="product-footer"><div class="product-price">12.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="protection" data-name="Protection ETB 100% UV Rigide Aimantée" data-price="24.90" data-icon="📦">
+        <div class="product-img">📦<span class="product-badge badge-new">Premium</span></div>
+        <div class="product-info">
+          <div class="product-category">Protection ETB</div>
+          <div class="product-name">Protection ETB 100% UV</div>
+          <div class="product-sub">Rigide aimantée — Anti-UV total</div>
+          <div class="product-footer"><div class="product-price">24.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="protection" data-name="Protection Display Rigide Aimantée" data-price="34.90" data-icon="🗃️">
+        <div class="product-img">🗃️<span class="product-badge badge-new">Premium</span></div>
+        <div class="product-info">
+          <div class="product-category">Protection Display</div>
+          <div class="product-name">Protection Display Rigide</div>
+          <div class="product-sub">Aimantée — 36 boosters</div>
+          <div class="product-footer"><div class="product-price">34.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="protection" data-name="Protection Display Bundle" data-price="49.90" data-icon="🎁">
+        <div class="product-img">🎁<span class="product-badge badge-new">Bundle</span></div>
+        <div class="product-info">
+          <div class="product-category">Protection Display</div>
+          <div class="product-name">Protection Display Bundle</div>
+          <div class="product-sub">Display + ETB inclus</div>
+          <div class="product-footer"><div class="product-price"><span class="old">59.80 CHF</span>49.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="toploader" data-name="Toploader Standard (x25)" data-price="6.90" data-icon="🪪">
+        <div class="product-img">🪪</div>
+        <div class="product-info">
+          <div class="product-category">Toploader</div>
+          <div class="product-name">Toploader Standard</div>
+          <div class="product-sub">Par 25 — 35pt — Cartes standard</div>
+          <div class="product-footer"><div class="product-price">6.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+      <div class="product-card" data-cat="toploader" data-name="Toploader Premium (x10)" data-price="8.90" data-icon="💎">
+        <div class="product-img">💎<span class="product-badge badge-new">Premium</span></div>
+        <div class="product-info">
+          <div class="product-category">Toploader</div>
+          <div class="product-name">Toploader Premium</div>
+          <div class="product-sub">Par 10 — 55pt — Cartes épaisses</div>
+          <div class="product-footer"><div class="product-price">8.90 CHF</div><button class="add-btn">+ Panier</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Poke<span>Vault</span></div>
+    <p>Boutique Pokémon collector — Suisse · Livraison 48h · Produits authentiques</p>
+    <p style="margin-top:0.5rem;font-size:0.72rem;opacity:0.4">Site conçu par Helv'Edit — Agence Webdesign Suisse</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════ VIEW: AUTH -->
+<div class="view" id="view-auth">
+  <div class="auth-wrapper">
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Se connecter</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Créer un compte</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="formLogin">
+        <div class="auth-title">Bon retour 👋</div>
+        <div class="auth-subtitle">Connectez-vous pour accéder à votre compte</div>
+        <div class="form-group">
+          <label>Adresse e-mail</label>
+          <input type="email" id="loginEmail" placeholder="vous@exemple.ch" />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" />
+          <div class="form-error" id="loginError">E-mail ou mot de passe incorrect</div>
+        </div>
+        <button class="submit-btn" onclick="handleLogin()">Se connecter →</button>
+        <div class="auth-divider">ou</div>
+        <div style="font-size:0.78rem;color:var(--muted);text-align:center">
+          Pas encore de compte ? <button onclick="switchAuthTab('register')" style="background:none;border:none;color:var(--yellow);cursor:pointer;font-size:inherit">Créer un compte</button>
+        </div>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="formRegister" style="display:none">
+        <div class="auth-title">Rejoindre PokeVault</div>
+        <div class="auth-subtitle">Créez votre compte collector en quelques secondes</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" id="regFirstName" placeholder="Jean" />
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" id="regLastName" placeholder="Dupont" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Adresse e-mail</label>
+          <input type="email" id="regEmail" placeholder="vous@exemple.ch" />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="regPassword" placeholder="8 caractères minimum" />
+          <div class="form-error" id="regError">Veuillez remplir tous les champs</div>
+        </div>
+        <button class="submit-btn" onclick="handleRegister()">Créer mon compte →</button>
+      </div>
+
+      <button class="back-link" onclick="showView('shop')">← Continuer sans compte</button>
     </div>
   </div>
-</section>
+</div>
 
-<!-- MAIN -->
-<main>
+<!-- ═══════════════════════════════════════════ VIEW: CHECKOUT -->
+<div class="view" id="view-checkout">
+  <div class="checkout-wrapper">
 
-  <!-- BANNER -->
-  <div class="banner">
-    <div class="banner-text">
-      <h3>Livraison offerte dès 80 CHF</h3>
-      <p>Partout en Suisse — emballage renforcé pour vos cartes</p>
-    </div>
-    <div class="banner-perks">
-      <div class="perk"><span class="perk-icon">🔒</span> Paiement sécurisé</div>
-      <div class="perk"><span class="perk-icon">📦</span> Stock mis à jour quotidiennement</div>
-      <div class="perk"><span class="perk-icon">⭐</span> Produits authentiques</div>
-    </div>
-  </div>
-
-  <!-- FILTER TABS -->
-  <div class="filter-tabs" id="filterTabs">
-    <button class="filter-tab active" data-filter="all">Tous les produits</button>
-    <button class="filter-tab" data-filter="booster">Boosters</button>
-    <button class="filter-tab" data-filter="sleeve">Sleeves</button>
-    <button class="filter-tab" data-filter="protection">Protections</button>
-    <button class="filter-tab" data-filter="toploader">Toploaders</button>
-  </div>
-
-  <div class="section-header">
-    <span class="section-title" id="sectionTitle">Tous les produits</span>
-    <span class="section-count" id="sectionCount"></span>
-  </div>
-
-  <!-- PRODUCTS GRID -->
-  <div class="products-grid" id="productsGrid">
-
-    <!-- BOOSTERS FR -->
-    <div class="product-card" data-cat="booster" data-name="Booster Écarlate & Violet" data-price="4.90" data-icon="🃏">
-      <div class="product-img">🃏<span class="product-badge badge-fr">FR</span><span class="product-badge badge-new" style="left:auto;right:10px">Nouveau</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Écarlate & Violet</div>
-        <div class="product-sub">Série de base — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
+    <!-- PROGRESS BAR -->
+    <div class="checkout-progress" id="checkoutProgress">
+      <div class="progress-step active" id="step-delivery">
+        <div class="progress-dot">1</div>
+        <div class="progress-label">Livraison</div>
+      </div>
+      <div class="progress-spacer" id="spacer-1"></div>
+      <div class="progress-step" id="step-payment">
+        <div class="progress-dot">2</div>
+        <div class="progress-label">Paiement</div>
+      </div>
+      <div class="progress-spacer" id="spacer-2"></div>
+      <div class="progress-step" id="step-confirm">
+        <div class="progress-dot">✓</div>
+        <div class="progress-label">Confirmation</div>
       </div>
     </div>
 
-    <div class="product-card" data-cat="booster" data-name="Booster Fable Nébuleuse" data-price="4.90" data-icon="🌌">
-      <div class="product-img">🌌<span class="product-badge badge-fr">FR</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Fable Nébuleuse</div>
-        <div class="product-sub">EV6.5 — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
+    <!-- STEP: DELIVERY -->
+    <div id="checkoutDelivery">
+      <div class="checkout-layout">
+        <div>
+          <div class="checkout-form-box">
+            <h2>Adresse de livraison</h2>
+            <div class="form-row">
+              <div class="form-group"><label>Prénom</label><input type="text" id="dlvFirst" placeholder="Jean" /></div>
+              <div class="form-group"><label>Nom</label><input type="text" id="dlvLast" placeholder="Dupont" /></div>
+            </div>
+            <div class="form-group"><label>Adresse</label><input type="text" id="dlvAddress" placeholder="Rue de la Paix 12" /></div>
+            <div class="form-row">
+              <div class="form-group"><label>Code postal</label><input type="text" id="dlvZip" placeholder="1201" /></div>
+              <div class="form-group"><label>Ville</label><input type="text" id="dlvCity" placeholder="Genève" /></div>
+            </div>
+            <div class="form-group">
+              <label>Canton</label>
+              <select id="dlvCanton">
+                <option value="">Sélectionner</option>
+                <option>Genève</option><option>Vaud</option><option>Valais</option>
+                <option>Fribourg</option><option>Neuchâtel</option><option>Jura</option>
+                <option>Berne</option><option>Zurich</option><option>Bâle</option>
+                <option>Lucerne</option><option>Tessin</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Téléphone</label><input type="tel" id="dlvPhone" placeholder="+41 79 000 00 00" /></div>
+          </div>
+
+          <div class="checkout-form-box" style="margin-top:1.25rem">
+            <h2>Mode de livraison</h2>
+            <div class="delivery-options">
+              <label class="delivery-option selected" id="opt-standard">
+                <input type="radio" name="delivery" value="standard" checked onchange="selectDelivery(this)" />
+                <div class="delivery-option-info">
+                  <div class="delivery-option-name">Post CH — Standard</div>
+                  <div class="delivery-option-desc">Livraison en 2-3 jours ouvrés · Suivi inclus</div>
+                </div>
+                <div class="delivery-option-price" id="price-standard">5.90 CHF</div>
+              </label>
+              <label class="delivery-option" id="opt-express">
+                <input type="radio" name="delivery" value="express" onchange="selectDelivery(this)" />
+                <div class="delivery-option-info">
+                  <div class="delivery-option-name">Post CH — Express</div>
+                  <div class="delivery-option-desc">Livraison le lendemain avant 12h · Prioritaire</div>
+                </div>
+                <div class="delivery-option-price">12.90 CHF</div>
+              </label>
+            </div>
+          </div>
+
+          <button class="next-btn" onclick="goToPayment()">Continuer vers le paiement →</button>
         </div>
+
+        <div class="checkout-summary" id="summaryDelivery"></div>
       </div>
     </div>
 
-    <div class="product-card" data-cat="booster" data-name="Booster Couronne Stellaire" data-price="4.90" data-icon="👑">
-      <div class="product-img">👑<span class="product-badge badge-fr">FR</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Couronne Stellaire</div>
-        <div class="product-sub">EV7 — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price"><span class="old">5.50 CHF</span>4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
+    <!-- STEP: PAYMENT -->
+    <div id="checkoutPayment" style="display:none">
+      <div class="checkout-layout">
+        <div>
+          <div class="checkout-form-box">
+            <h2>Moyen de paiement</h2>
+
+            <div class="payment-methods">
+              <div class="pay-method selected" id="pm-card" onclick="selectPayMethod('card')">
+                <div>💳</div><div class="pay-method-label">Carte</div>
+              </div>
+              <div class="pay-method" id="pm-twint" onclick="selectPayMethod('twint')">
+                <div>📱</div><div class="pay-method-label">TWINT</div>
+              </div>
+              <div class="pay-method" id="pm-paypal" onclick="selectPayMethod('paypal')">
+                <div>🅿️</div><div class="pay-method-label">PayPal</div>
+              </div>
+            </div>
+
+            <div id="cardForm">
+              <div class="card-preview">
+                <div class="card-chip">💳</div>
+                <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+                <div class="card-bottom">
+                  <div>
+                    <div class="card-label">Titulaire</div>
+                    <div class="card-value" id="cardNameDisplay">VOTRE NOM</div>
+                  </div>
+                  <div>
+                    <div class="card-label">Expiration</div>
+                    <div class="card-value" id="cardExpDisplay">MM/AA</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Numéro de carte</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+              </div>
+              <div class="form-group">
+                <label>Titulaire de la carte</label>
+                <input type="text" id="cardName" placeholder="JEAN DUPONT" />
+              </div>
+              <div class="card-input-row">
+                <div class="form-group"><label>Date d'expiration</label><input type="text" id="cardExp" placeholder="MM/AA" maxlength="5" /></div>
+                <div class="form-group" style="grid-column:span 2"><label>Code CVV</label><input type="text" id="cardCvv" placeholder="•••" maxlength="3" /></div>
+              </div>
+            </div>
+
+            <div id="twintForm" style="display:none;text-align:center;padding:2rem 0">
+              <div style="font-size:3rem;margin-bottom:1rem">📱</div>
+              <div style="font-weight:700;margin-bottom:0.5rem">Paiement TWINT</div>
+              <p style="font-size:0.85rem;color:var(--muted)">Scannez le QR code avec votre app TWINT après confirmation</p>
+            </div>
+
+            <div id="paypalForm" style="display:none;text-align:center;padding:2rem 0">
+              <div style="font-size:3rem;margin-bottom:1rem">🅿️</div>
+              <div style="font-weight:700;margin-bottom:0.5rem">Paiement PayPal</div>
+              <p style="font-size:0.85rem;color:var(--muted)">Vous serez redirigé vers PayPal pour finaliser le paiement</p>
+            </div>
+
+            <div class="secure-badge">
+              <span>🔒</span>
+              <span>Paiement 100% sécurisé — Vos données sont chiffrées SSL/TLS</span>
+            </div>
+
+            <button class="next-btn" onclick="confirmOrder()">Confirmer la commande →</button>
+            <button class="back-link" onclick="goToDelivery()">← Modifier la livraison</button>
+          </div>
         </div>
+
+        <div class="checkout-summary" id="summaryPayment"></div>
       </div>
     </div>
 
-    <div class="product-card" data-cat="booster" data-name="Booster Mascarade Crépusculaire" data-price="4.90" data-icon="🎭">
-      <div class="product-img">🎭<span class="product-badge badge-fr">FR</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Mascarade Crépusculaire</div>
-        <div class="product-sub">EV6 — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOOSTERS JP -->
-    <div class="product-card" data-cat="booster" data-name="Booster Cyber Judge (JP)" data-price="3.50" data-icon="⚡">
-      <div class="product-img">⚡<span class="product-badge badge-jp">JP</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Cyber Judge</div>
-        <div class="product-sub">SV5M — Japonais — 5 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">3.50 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="booster" data-name="Booster Stellar Miracle (JP)" data-price="3.50" data-icon="✨">
-      <div class="product-img">✨<span class="product-badge badge-jp">JP</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Stellar Miracle</div>
-        <div class="product-sub">SV7 — Japonais — 5 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">3.50 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOOSTERS EN -->
-    <div class="product-card" data-cat="booster" data-name="Booster Twilight Masquerade (EN)" data-price="4.90" data-icon="🌙">
-      <div class="product-img">🌙<span class="product-badge badge-en">EN</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Twilight Masquerade</div>
-        <div class="product-sub">SV6 — Anglais — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="booster" data-name="Booster Stellar Crown (EN)" data-price="4.90" data-icon="🌟">
-      <div class="product-img">🌟<span class="product-badge badge-en">EN</span></div>
-      <div class="product-info">
-        <div class="product-category">Booster</div>
-        <div class="product-name">Booster Stellar Crown</div>
-        <div class="product-sub">SV7 — Anglais — 10 cartes</div>
-        <div class="product-footer">
-          <div class="product-price">4.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLEEVES -->
-    <div class="product-card" data-cat="sleeve" data-name="Sleeve Classic (x65)" data-price="9.90" data-icon="🛡️">
-      <div class="product-img">🛡️<span class="product-badge badge-new">Nouveau</span></div>
-      <div class="product-info">
-        <div class="product-category">Sleeve</div>
-        <div class="product-name">Sleeve Classic</div>
-        <div class="product-sub">Par 65 — Protection standard</div>
-        <div class="product-footer">
-          <div class="product-price">9.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="sleeve" data-name="Sleeve Languette (x65)" data-price="12.90" data-icon="📎">
-      <div class="product-img">📎</div>
-      <div class="product-info">
-        <div class="product-category">Sleeve</div>
-        <div class="product-name">Sleeve Languette</div>
-        <div class="product-sub">Par 65 — Ouverture facilitée</div>
-        <div class="product-footer">
-          <div class="product-price">12.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROTECTIONS ETB -->
-    <div class="product-card" data-cat="protection" data-name="Protection ETB 100% UV Rigide Aimantée" data-price="24.90" data-icon="📦">
-      <div class="product-img">📦<span class="product-badge badge-new">Premium</span></div>
-      <div class="product-info">
-        <div class="product-category">Protection ETB</div>
-        <div class="product-name">Protection ETB 100% UV</div>
-        <div class="product-sub">Rigide aimantée — Anti-UV total</div>
-        <div class="product-footer">
-          <div class="product-price">24.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROTECTIONS DISPLAY -->
-    <div class="product-card" data-cat="protection" data-name="Protection Display Rigide Aimantée" data-price="34.90" data-icon="🗃️">
-      <div class="product-img">🗃️<span class="product-badge badge-new">Premium</span></div>
-      <div class="product-info">
-        <div class="product-category">Protection Display</div>
-        <div class="product-name">Protection Display Rigide</div>
-        <div class="product-sub">Aimantée — 36 boosters</div>
-        <div class="product-footer">
-          <div class="product-price">34.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="protection" data-name="Protection Display Bundle" data-price="49.90" data-icon="🎁">
-      <div class="product-img">🎁<span class="product-badge badge-new">Bundle</span></div>
-      <div class="product-info">
-        <div class="product-category">Protection Display</div>
-        <div class="product-name">Protection Display Bundle</div>
-        <div class="product-sub">Display + ETB inclus</div>
-        <div class="product-footer">
-          <div class="product-price"><span class="old">59.80 CHF</span>49.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- TOPLOADERS -->
-    <div class="product-card" data-cat="toploader" data-name="Toploader Standard (x25)" data-price="6.90" data-icon="🪪">
-      <div class="product-img">🪪</div>
-      <div class="product-info">
-        <div class="product-category">Toploader</div>
-        <div class="product-name">Toploader Standard</div>
-        <div class="product-sub">Par 25 — 35pt — Cartes standard</div>
-        <div class="product-footer">
-          <div class="product-price">6.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="toploader" data-name="Toploader Premium (x10)" data-price="8.90" data-icon="💎">
-      <div class="product-img">💎<span class="product-badge badge-new">Premium</span></div>
-      <div class="product-info">
-        <div class="product-category">Toploader</div>
-        <div class="product-name">Toploader Premium</div>
-        <div class="product-sub">Par 10 — 55pt — Cartes épaisses</div>
-        <div class="product-footer">
-          <div class="product-price">8.90 CHF</div>
-          <button class="add-btn">+ Panier</button>
+    <!-- STEP: CONFIRMATION -->
+    <div id="checkoutConfirm" style="display:none">
+      <div class="confirm-wrapper">
+        <div class="confirm-box">
+          <div class="confirm-icon">✓</div>
+          <h2>Commande confirmée !</h2>
+          <p>Merci pour votre commande. Vous recevrez un e-mail de confirmation avec le suivi de votre colis.</p>
+          <div class="order-ref">
+            <div class="ref-label">Numéro de commande</div>
+            <div class="ref-num" id="orderRef">#PV-000000</div>
+          </div>
+          <div class="confirm-details">
+            <div class="confirm-detail"><span>📦</span><span>Expédition sous 24h — Post CH Standard</span></div>
+            <div class="confirm-detail"><span>📧</span><span>Confirmation envoyée par e-mail</span></div>
+            <div class="confirm-detail"><span>🚚</span><span>Livraison estimée : 2-3 jours ouvrés</span></div>
+          </div>
+          <button class="back-shop-btn" onclick="showView('shop')">Continuer mes achats →</button>
         </div>
       </div>
     </div>
 
   </div>
-</main>
+</div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Poke<span>Vault</span></div>
-  <p>Boutique Pokémon collector — Suisse · Livraison 48h · Produits authentiques</p>
-  <p style="margin-top:0.5rem;font-size:0.72rem;opacity:0.4">Site conçu par Helv'Edit — Agence Webdesign Suisse</p>
-</footer>
+<!-- ═══════════════════════════════════════════ VIEW: ACCOUNT -->
+<div class="view" id="view-account">
+  <div class="account-wrapper">
+    <div class="account-header">
+      <div class="account-avatar-big" id="bigAvatar">?</div>
+      <div>
+        <div class="account-name" id="bigName">Mon compte</div>
+        <div class="account-email" id="bigEmail">—</div>
+      </div>
+      <button class="logout-btn" style="margin-left:auto" onclick="handleLogout()">Se déconnecter</button>
+    </div>
+
+    <div class="account-section">
+      <h3>Mes commandes</h3>
+      <div class="order-card">
+        <div>
+          <div class="order-card-ref">#PV-241198</div>
+          <div class="order-card-name">3 × Booster + Sleeve Classic</div>
+        </div>
+        <span class="order-card-status status-delivered">Livré</span>
+        <div class="order-card-price">24.60 CHF</div>
+      </div>
+      <div class="order-card">
+        <div>
+          <div class="order-card-ref">#PV-241052</div>
+          <div class="order-card-name">Protection ETB 100% UV + Toploader x25</div>
+        </div>
+        <span class="order-card-status status-transit">En transit</span>
+        <div class="order-card-price">31.80 CHF</div>
+      </div>
+    </div>
+
+    <div class="account-section">
+      <h3>Mes informations</h3>
+      <div class="checkout-form-box">
+        <div class="form-row">
+          <div class="form-group"><label>Prénom</label><input type="text" id="profileFirst" /></div>
+          <div class="form-group"><label>Nom</label><input type="text" id="profileLast" /></div>
+        </div>
+        <div class="form-group"><label>E-mail</label><input type="email" id="profileEmail" /></div>
+        <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+41 79 000 00 00" /></div>
+        <button class="submit-btn" style="margin-top:0.5rem" onclick="showToast('Informations sauvegardées ✓')">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- CART SIDEBAR -->
 <div class="cart-overlay" id="cartOverlay"></div>
@@ -845,92 +959,77 @@
     <button class="close-btn" id="closeCart">✕</button>
   </div>
   <div class="cart-items" id="cartItems">
-    <div class="cart-empty">
-      <div class="cart-empty-icon">🛒</div>
-      <p>Votre panier est vide</p>
-    </div>
+    <div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Votre panier est vide</p></div>
   </div>
-  <div class="cart-footer" id="cartFooter" style="display:none">
+  <div class="cart-footer-panel" id="cartFooter" style="display:none">
     <div class="cart-total">
-      <span class="cart-total-label">Total</span>
+      <span class="cart-total-label">Sous-total</span>
       <span class="cart-total-price" id="cartTotal">0.00 CHF</span>
     </div>
-    <button class="checkout-btn">Passer la commande →</button>
+    <button class="checkout-btn" onclick="startCheckout()">Passer la commande →</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── CART STATE
+  // ─── STATE
   let cart = [];
+  let currentUser = null;
+  let deliveryMethod = 'standard';
+  let payMethod = 'card';
 
-  // ── FILTER
+  // ─── VIEW ROUTER
+  function showView(view) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + view).classList.add('active');
+    window.scrollTo(0, 0);
+    closeCart();
+  }
+
+  // ─── FILTER
   const allCards = document.querySelectorAll('.product-card');
   const filterBtns = document.querySelectorAll('.filter-tab, .nav-btn');
-  const sectionTitle = document.getElementById('sectionTitle');
-  const sectionCount = document.getElementById('sectionCount');
-
   const labels = { all: 'Tous les produits', booster: 'Boosters', sleeve: 'Sleeves', protection: 'Protections', toploader: 'Toploaders' };
 
   function applyFilter(filter) {
-    filterBtns.forEach(b => {
-      b.classList.toggle('active', b.dataset.filter === filter);
-    });
+    filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
     let visible = 0;
     allCards.forEach(card => {
       const show = filter === 'all' || card.dataset.cat === filter;
       card.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-    sectionTitle.textContent = labels[filter] || 'Tous les produits';
-    sectionCount.textContent = visible + ' produit' + (visible > 1 ? 's' : '');
+    document.getElementById('sectionTitle').textContent = labels[filter] || 'Tous les produits';
+    document.getElementById('sectionCount').textContent = visible + ' produit' + (visible > 1 ? 's' : '');
   }
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
-  });
-
+  filterBtns.forEach(btn => btn.addEventListener('click', () => applyFilter(btn.dataset.filter)));
   applyFilter('all');
 
-  // ── ADD TO CART
+  // ─── CART
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const card = btn.closest('.product-card');
-      const name = card.dataset.name;
-      const price = parseFloat(card.dataset.price);
-      const icon = card.dataset.icon;
-
-      const existing = cart.find(i => i.name === name);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ name, price, icon, qty: 1 });
-      }
-
-      btn.textContent = '✓ Ajouté';
-      btn.classList.add('added');
+      const name = card.dataset.name, price = parseFloat(card.dataset.price), icon = card.dataset.icon;
+      const ex = cart.find(i => i.name === name);
+      ex ? ex.qty++ : cart.push({ name, price, icon, qty: 1 });
+      btn.textContent = '✓ Ajouté'; btn.classList.add('added');
       setTimeout(() => { btn.textContent = '+ Panier'; btn.classList.remove('added'); }, 1500);
-
       updateCart();
       showToast(name + ' ajouté au panier');
     });
   });
 
-  // ── UPDATE CART UI
   function updateCart() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const count = cart.reduce((s, i) => s + i.qty, 0);
     const countEl = document.getElementById('cartCount');
     countEl.textContent = count;
     countEl.classList.toggle('visible', count > 0);
-
     const itemsEl = document.getElementById('cartItems');
     const footerEl = document.getElementById('cartFooter');
-    const totalEl = document.getElementById('cartTotal');
-
     if (cart.length === 0) {
       itemsEl.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Votre panier est vide</p></div>';
       footerEl.style.display = 'none';
@@ -943,14 +1042,13 @@
             <div class="cart-item-price">${(item.price * item.qty).toFixed(2)} CHF</div>
           </div>
           <div class="cart-item-qty">
-            <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+            <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
             <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
       footerEl.style.display = 'block';
-      totalEl.textContent = total.toFixed(2) + ' CHF';
+      document.getElementById('cartTotal').textContent = total.toFixed(2) + ' CHF';
     }
   }
 
@@ -960,24 +1058,210 @@
     updateCart();
   }
 
-  // ── CART TOGGLE
+  function buildSummaryHTML(showDelivery = false) {
+    const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const dlvCost = deliveryMethod === 'express' ? 12.90 : (sub >= 80 ? 0 : 5.90);
+    const total = sub + dlvCost;
+    const freeShip = sub >= 80;
+    return `
+      <h3>Récapitulatif</h3>
+      ${cart.map(i => `
+        <div class="summary-item">
+          <span class="summary-item-name">${i.name}</span>
+          <span class="summary-item-qty">×${i.qty}</span>
+          <span class="summary-item-price">${(i.price * i.qty).toFixed(2)} CHF</span>
+        </div>`).join('')}
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span class="label">Sous-total</span><span>${sub.toFixed(2)} CHF</span></div>
+      ${showDelivery ? `<div class="summary-row"><span class="label">Livraison</span><span>${freeShip ? '<span style="color:var(--success)">Offerte</span>' : dlvCost.toFixed(2) + ' CHF'}</span></div>` : ''}
+      <div class="summary-total">
+        <span class="label">Total</span>
+        <span class="amount">${total.toFixed(2)} CHF</span>
+      </div>
+      ${freeShip ? '<div class="summary-shipping">✓ Livraison offerte appliquée</div>' : ''}
+    `;
+  }
+
+  // ─── CART SIDEBAR
   const overlay = document.getElementById('cartOverlay');
   const sidebar = document.getElementById('cartSidebar');
-
   function openCart() { overlay.classList.add('open'); sidebar.classList.add('open'); }
   function closeCart() { overlay.classList.remove('open'); sidebar.classList.remove('open'); }
-
   document.getElementById('cartToggle').addEventListener('click', openCart);
   document.getElementById('closeCart').addEventListener('click', closeCart);
   overlay.addEventListener('click', closeCart);
 
-  // ── TOAST
+  // ─── CHECKOUT FLOW
+  function startCheckout() {
+    if (cart.length === 0) return;
+    closeCart();
+    if (currentUser) {
+      showCheckoutStep('delivery');
+    } else {
+      showView('auth');
+    }
+  }
+
+  function showCheckoutStep(step) {
+    showView('checkout');
+    document.getElementById('checkoutDelivery').style.display = step === 'delivery' ? '' : 'none';
+    document.getElementById('checkoutPayment').style.display = step === 'payment' ? '' : 'none';
+    document.getElementById('checkoutConfirm').style.display = step === 'confirm' ? '' : 'none';
+    ['delivery','payment','confirm'].forEach((s, i) => {
+      const el = document.getElementById('step-' + s);
+      const idx = ['delivery','payment','confirm'].indexOf(step);
+      el.className = 'progress-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+    });
+    document.getElementById('spacer-1').className = 'progress-spacer' + (['payment','confirm'].includes(step) ? ' done' : '');
+    document.getElementById('spacer-2').className = 'progress-spacer' + (step === 'confirm' ? ' done' : '');
+    if (step === 'delivery') document.getElementById('summaryDelivery').innerHTML = buildSummaryHTML(false);
+    if (step === 'payment') document.getElementById('summaryPayment').innerHTML = buildSummaryHTML(true);
+    if (currentUser) {
+      document.getElementById('dlvFirst').value = currentUser.firstName || '';
+      document.getElementById('dlvLast').value = currentUser.lastName || '';
+    }
+  }
+
+  function selectDelivery(radio) {
+    deliveryMethod = radio.value;
+    document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
+    radio.closest('.delivery-option').classList.add('selected');
+    const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const el = document.getElementById('price-standard');
+    if (el) el.textContent = sub >= 80 ? 'Offerte' : '5.90 CHF';
+  }
+
+  function goToPayment() {
+    const fields = ['dlvFirst','dlvLast','dlvAddress','dlvZip','dlvCity','dlvCanton','dlvPhone'];
+    for (const f of fields) {
+      if (!document.getElementById(f).value.trim()) {
+        showToast('Veuillez remplir tous les champs'); return;
+      }
+    }
+    showCheckoutStep('payment');
+  }
+
+  function goToDelivery() { showCheckoutStep('delivery'); }
+
+  function selectPayMethod(method) {
+    payMethod = method;
+    ['card','twint','paypal'].forEach(m => {
+      document.getElementById('pm-' + m).classList.toggle('selected', m === method);
+      const form = document.getElementById(m + 'Form');
+      if (form) form.style.display = m === method ? '' : 'none';
+    });
+  }
+
+  function confirmOrder() {
+    if (payMethod === 'card') {
+      const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+      const name = document.getElementById('cardName').value.trim();
+      const exp = document.getElementById('cardExp').value.trim();
+      const cvv = document.getElementById('cardCvv').value.trim();
+      if (!num || !name || !exp || !cvv) { showToast('Veuillez compléter les informations de carte'); return; }
+    }
+    const ref = '#PV-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('orderRef').textContent = ref;
+    if (currentUser) {
+      document.getElementById('confirmDelivery') && null;
+    }
+    cart = []; updateCart();
+    showCheckoutStep('confirm');
+  }
+
+  // ─── CARD LIVE PREVIEW
+  document.getElementById('cardNumber').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'').substring(0,16);
+    this.value = v.replace(/(.{4})/g,'$1 ').trim();
+    document.getElementById('cardNumDisplay').textContent = (v + '................').substring(0,16).replace(/(.{4})/g,'$1 ').trim().replace(/\d/g,'•').replace(/•{4}/g, (m, i, s) => v.substring(i, i+4).padEnd(4,'•')) || '•••• •••• •••• ••••';
+    const display = this.value || '•••• •••• •••• ••••';
+    document.getElementById('cardNumDisplay').textContent = display.length < 4 ? '•••• •••• •••• ••••' : display;
+  });
+  document.getElementById('cardName').addEventListener('input', function() {
+    document.getElementById('cardNameDisplay').textContent = this.value.toUpperCase() || 'VOTRE NOM';
+  });
+  document.getElementById('cardExp').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'');
+    if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+    this.value = v;
+    document.getElementById('cardExpDisplay').textContent = this.value || 'MM/AA';
+  });
+
+  // ─── AUTH
+  function switchAuthTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('formLogin').style.display = tab === 'login' ? '' : 'none';
+    document.getElementById('formRegister').style.display = tab === 'register' ? '' : 'none';
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    if (!email || !pass) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    const stored = JSON.parse(localStorage.getItem('pvUser') || 'null');
+    if (stored && stored.email === email && stored.password === pass) {
+      loginUser(stored);
+    } else if (!stored && email && pass.length >= 4) {
+      loginUser({ email, firstName: 'Client', lastName: '', password: pass });
+    } else {
+      err.classList.add('show');
+    }
+  }
+
+  function handleRegister() {
+    const first = document.getElementById('regFirstName').value.trim();
+    const last = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPassword').value;
+    const err = document.getElementById('regError');
+    if (!first || !last || !email || pass.length < 6) { err.classList.add('show'); err.textContent = !pass || pass.length < 6 ? 'Mot de passe minimum 6 caractères' : 'Veuillez remplir tous les champs'; return; }
+    err.classList.remove('show');
+    const user = { firstName: first, lastName: last, email, password: pass };
+    localStorage.setItem('pvUser', JSON.stringify(user));
+    loginUser(user);
+  }
+
+  function loginUser(user) {
+    currentUser = user;
+    document.getElementById('accountBtn').style.display = 'flex';
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('accountAvatar').textContent = user.firstName[0].toUpperCase();
+    document.getElementById('accountName').textContent = user.firstName;
+    document.getElementById('bigAvatar').textContent = user.firstName[0].toUpperCase();
+    document.getElementById('bigName').textContent = user.firstName + ' ' + user.lastName;
+    document.getElementById('bigEmail').textContent = user.email;
+    document.getElementById('profileFirst').value = user.firstName;
+    document.getElementById('profileLast').value = user.lastName;
+    document.getElementById('profileEmail').value = user.email;
+    showToast('Bonjour ' + user.firstName + ' 👋');
+    if (cart.length > 0) { showCheckoutStep('delivery'); } else { showView('shop'); }
+  }
+
+  function handleLogout() {
+    currentUser = null;
+    document.getElementById('accountBtn').style.display = 'none';
+    document.getElementById('loginBtn').style.display = 'flex';
+    showView('shop');
+    showToast('Déconnecté');
+  }
+
+  // ─── AUTH: checkout → login flow
+  const origStartCheckout = startCheckout;
+
+  // ─── TOAST
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = '✓ ' + msg;
+    t.textContent = msg;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    setTimeout(() => t.classList.remove('show'), 2800);
   }
+
+  // ─── AUTO LOGIN from localStorage
+  const saved = JSON.parse(localStorage.getItem('pvUser') || 'null');
+  if (saved) loginUser(saved);
 </script>
 </body>
 </html>
