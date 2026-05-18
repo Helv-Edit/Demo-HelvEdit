@@ -1,7 +1,14 @@
 {%- if form.posted_successfully? -%}
-  <div class="form-success" role="status">
+  <div class="form-success" role="status" id="login-success">
     ✓ {{ 'customers.login.success' | t | default: 'Connecté ! Redirection...' }}
   </div>
+  <script>
+    if (typeof cloudNavigate === 'function') {
+      setTimeout(() => cloudNavigate('{{ routes.account_url }}'), 1000);
+    } else {
+      setTimeout(() => window.location.href = '{{ routes.account_url }}', 1000);
+    }
+  </script>
 {%- endif -%}
 
 {%- if form.errors -%}
