@@ -1,0 +1,231 @@
+<div class="login-page">
+  <div class="login-container">
+
+    {%- if customer -%}
+      <!-- Déjà connecté -->
+      <div class="login-message login-message--success">
+        <h1>{{ 'customers.login.already_connected' | t | default: 'Bienvenue !' }}</h1>
+        <p>{{ customer.first_name }}, tu es connecté.</p>
+        <a href="{{ routes.account_url }}" class="btn btn--primary btn--large">
+          {{ 'customers.account' | t | default: 'Aller au compte' }}
+        </a>
+      </div>
+    {%- else -%}
+
+      <!-- Formulaire Connexion -->
+      <div class="login-box">
+        <h1 class="login-title">{{ section.settings.login_title | default: 'CONNECTE-TOI' }}</h1>
+        <p class="login-subtitle">{{ section.settings.login_subtitle | default: 'Accède à ton historique et tes paramètres' }}</p>
+
+        {%- render 'login-form', form_type: 'customer_login' -%}
+
+        <div class="login-footer">
+          <p class="login-divider">{{ 'customers.or' | t | default: 'ou' }}</p>
+          <a href="#register" class="login-link login-link--register" data-toggle="register">
+            {{ 'customers.create_account' | t | default: 'Créer un compte' }} →
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulaire Création de compte (initialement caché) -->
+      <div class="login-box login-box--register" id="register" style="display: none;">
+        <h1 class="login-title">{{ section.settings.register_title | default: 'CRÉER UN COMPTE' }}</h1>
+        <p class="login-subtitle">{{ section.settings.register_subtitle | default: 'Rejoins la communauté PokeVault' }}</p>
+
+        {%- render 'login-form', form_type: 'create_customer' -%}
+
+        <div class="login-footer">
+          <a href="#login" class="login-link login-link--login" data-toggle="login">
+            ← {{ 'customers.have_account' | t | default: 'J\'ai déjà un compte' }}
+          </a>
+        </div>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</div>
+
+<style>
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, rgba(14, 12, 10, 0.98) 0%, rgba(14, 12, 10, 0.95) 100%);
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 450px;
+    animation: fadeInUp 0.7s ease-out;
+  }
+
+  .login-box {
+    background: rgba(22, 19, 16, 0.85);
+    border: 2px solid var(--yellow);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 60px rgba(255, 203, 5, 0.15);
+  }
+
+  .login-title {
+    font-family: var(--f-manga);
+    font-size: 2.4rem;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(255, 203, 5, 0.3);
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  .login-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 203, 5, 0.2);
+    text-align: center;
+  }
+
+  .login-divider {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .login-link {
+    display: inline-block;
+    color: var(--yellow);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: var(--f-body);
+  }
+
+  .login-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  .login-message {
+    background: rgba(22, 19, 16, 0.85);
+    border: 2px solid var(--cloud-blue);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .login-message h1 {
+    font-family: var(--f-manga);
+    font-size: 2rem;
+    color: var(--cloud-blue);
+    margin-bottom: 1rem;
+  }
+
+  .login-message p {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .login-box {
+      padding: 1.75rem;
+    }
+
+    .login-title {
+      font-size: 1.8rem;
+    }
+
+    .login-page {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('[data-toggle]');
+    const loginBoxes = document.querySelectorAll('.login-box');
+
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = button.dataset.toggle;
+
+        loginBoxes.forEach(box => {
+          if (target === 'register' && box.classList.contains('login-box--register')) {
+            box.style.display = 'block';
+            box.style.animation = 'fadeInUp 0.5s ease-out';
+          } else if (target === 'login' && !box.classList.contains('login-box--register')) {
+            box.style.display = 'block';
+            box.style.animation = 'fadeInUp 0.5s ease-out';
+          } else {
+            box.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Focus first input
+    const firstInput = document.querySelector('.login-page input:not([type="hidden"])');
+    if (firstInput) setTimeout(() => firstInput.focus(), 200);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Page Connexion PokeVault",
+  "settings": [
+    {
+      "type": "text",
+      "id": "login_title",
+      "label": "Titre Connexion",
+      "default": "CONNECTE-TOI"
+    },
+    {
+      "type": "text",
+      "id": "login_subtitle",
+      "label": "Sous-titre Connexion",
+      "default": "Accède à ton historique et tes paramètres"
+    },
+    {
+      "type": "text",
+      "id": "register_title",
+      "label": "Titre Créer un compte",
+      "default": "CRÉER UN COMPTE"
+    },
+    {
+      "type": "text",
+      "id": "register_subtitle",
+      "label": "Sous-titre Créer un compte",
+      "default": "Rejoins la communauté PokeVault"
+    }
+  ]
+}
+{% endschema %}

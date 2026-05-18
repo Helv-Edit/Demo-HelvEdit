@@ -24,11 +24,12 @@
       "title": "Connectez-vous",
       "email": "Adresse email",
       "password": "Mot de passe",
-      "submit": "Se connecter",
+      "submit": "SE CONNECTER",
       "forgot_password": "Mot de passe oublié ?",
       "no_account": "Créer un compte",
       "tab": "Connexion",
-      "success": "Connecté ! Redirection en cours..."
+      "success": "Connecté ! Redirection...",
+      "already_connected": "Bienvenue !"
     },
     "register": {
       "title": "Créer un compte",
@@ -37,10 +38,13 @@
       "email": "Adresse email",
       "password": "Mot de passe",
       "password_hint": "Minimum 6 caractères",
-      "submit": "Créer mon compte",
+      "submit": "CRÉER MON COMPTE",
       "have_account": "J'ai déjà un compte",
       "tab": "Créer un compte"
-    }
+    },
+    "account": "Aller au compte",
+    "create_account": "Créer un compte",
+    "or": "ou"
   },
   "collections": {
     "title": "Collections"

@@ -1,0 +1,204 @@
+{%- if form.posted_successfully? -%}
+  <div class="form-success" role="status">
+    ✓ {{ 'customers.login.success' | t | default: 'Connecté ! Redirection...' }}
+  </div>
+{%- endif -%}
+
+{%- if form.errors -%}
+  <div class="form-errors-box" role="alert">
+    {%- for error in form.errors -%}
+      <p class="form-error-message">{{ error | capitalize }}</p>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{% form form_type %}
+  {% case form_type %}
+    {% when 'customer_login' %}
+      <!-- Connexion -->
+      <div class="form-group">
+        <label class="form-label" for="email-login">Email</label>
+        <input
+          type="email"
+          name="customer[email]"
+          id="email-login"
+          class="form-input"
+          value="{{ form.email }}"
+          placeholder="ton@email.com"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password-login">Mot de passe</label>
+        <input
+          type="password"
+          name="customer[password]"
+          id="password-login"
+          class="form-input"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--large">
+        {{ 'customers.login.submit' | t | default: 'SE CONNECTER' }}
+      </button>
+
+      <div class="form-links">
+        <a href="{{ routes.account_recover_url }}" class="form-link">
+          {{ 'customers.login.forgot_password' | t | default: 'Mot de passe oublié ?' }}
+        </a>
+      </div>
+
+    {% when 'create_customer' %}
+      <!-- Création de compte -->
+      <div class="form-group">
+        <label class="form-label" for="first-name">Prénom</label>
+        <input
+          type="text"
+          name="customer[first_name]"
+          id="first-name"
+          class="form-input"
+          value="{{ form.first_name }}"
+          required
+          autocomplete="given-name"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="last-name">Nom</label>
+        <input
+          type="text"
+          name="customer[last_name]"
+          id="last-name"
+          class="form-input"
+          value="{{ form.last_name }}"
+          autocomplete="family-name"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email-register">Email</label>
+        <input
+          type="email"
+          name="customer[email]"
+          id="email-register"
+          class="form-input"
+          value="{{ form.email }}"
+          placeholder="ton@email.com"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password-register">Mot de passe</label>
+        <input
+          type="password"
+          name="customer[password]"
+          id="password-register"
+          class="form-input"
+          required
+          autocomplete="new-password"
+        >
+        <small class="form-hint">Min. 6 caractères</small>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--large">
+        {{ 'customers.register.submit' | t | default: 'CRÉER MON COMPTE' }}
+      </button>
+  {% endcase %}
+{% endform %}
+
+<style>
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1.5px solid var(--border);
+    color: var(--white);
+    font-family: var(--f-body);
+    font-size: 0.95rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    outline: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--yellow);
+    background: var(--bg-4);
+    box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.15);
+  }
+
+  .form-input::placeholder {
+    color: var(--faint);
+  }
+
+  .form-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  .form-success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1.5px solid #22c55e;
+    color: #22c55e;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .form-errors-box {
+    background: rgba(220, 38, 38, 0.15);
+    border: 1.5px solid #dc2626;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-error-message {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: 0.4rem 0;
+    font-weight: 500;
+  }
+
+  .form-links {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .form-link {
+    font-size: 0.85rem;
+    color: var(--yellow);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .form-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+</style>
