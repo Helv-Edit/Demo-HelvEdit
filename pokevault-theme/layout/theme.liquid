@@ -12,9 +12,8 @@
 </head>
 <body>
 
-  <!-- MANGA TRANSITION OVERLAYS -->
-  <div class="manga-flash" id="mangaFlash"></div>
-  <div class="manga-speedlines" id="mangaSpeedlines"></div>
+  <!-- CLOUD CURTAIN TRANSITION -->
+  {{ 'cloud-transition.js' | asset_url | script_tag }}
 
   <!-- ═══ HEADER -->
   <header class="site-header">
@@ -129,17 +128,13 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    /* ── MANGA TRANSITION ── */
+    /* ── CLOUD CURTAIN TRANSITION ── */
     function mangaTransition(callback) {
-      const flash = document.getElementById('mangaFlash');
-      const lines = document.getElementById('mangaSpeedlines');
-      flash.classList.add('active');
-      lines.classList.add('active');
-      setTimeout(() => {
-        flash.classList.remove('active');
-        lines.classList.remove('active');
+      if (typeof cloudTransition === 'function') {
+        cloudTransition(callback);
+      } else {
         if (callback) callback();
-      }, 450);
+      }
     }
 
     /* ── CART ── */
