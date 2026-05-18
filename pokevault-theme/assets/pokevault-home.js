@@ -190,7 +190,9 @@
     gsap.to(cards, { opacity: 1, y: 0, duration: 0.5, stagger: 0.055, ease: 'power2.out', delay: 0.2 });
 
     tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const cat = tab.dataset.cat;
         if (cat === currentCat || animating) return;
         currentCat = cat;

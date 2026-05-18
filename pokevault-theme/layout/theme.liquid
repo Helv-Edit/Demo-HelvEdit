@@ -240,15 +240,19 @@
     /* Init cart count */
     fetchCart();
 
-    /* Nav cloud transitions */
-    document.querySelectorAll('.site-nav a, .filter-tab, .btn-manga').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
-        if (href && !href.startsWith('#') && href !== window.location.href && href !== window.location.pathname) {
-          e.preventDefault();
-          mangaTransition(href);
-        }
-      });
+    /* Cloud transition — only for checkout/account links */
+    document.addEventListener('click', (e) => {
+      // Never intercept filter tabs (they're buttons, no href)
+      if (e.target.closest('.filter-tab')) return;
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#')) return;
+      const cloudLinks = ['/checkout', '/cart', '/account'];
+      if (cloudLinks.some(l => href.startsWith(l))) {
+        e.preventDefault();
+        mangaTransition(href);
+      }
     });
   </script>
 
