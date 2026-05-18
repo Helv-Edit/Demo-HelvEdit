@@ -55,163 +55,163 @@
     </div>
   </div>
 
-  {% stylesheet %}
-    .login-page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      background: linear-gradient(135deg, rgba(14, 12, 10, 0.98) 0%, rgba(14, 12, 10, 0.95) 100%);
-    }
-
-    .login-container {
-      width: 100%;
-      max-width: 450px;
-      animation: fadeInUp 0.7s ease-out;
-    }
-
-    .login-box {
-      background: rgba(22, 19, 16, 0.85);
-      border: 2px solid var(--yellow);
-      border-radius: 16px;
-      padding: 2.5rem;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 20px 60px rgba(255, 203, 5, 0.15);
-    }
-
-    .login-title {
-      font-family: var(--f-manga);
-      font-size: 2.4rem;
-      color: var(--yellow);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 20px rgba(255, 203, 5, 0.3);
-    }
-
-    .login-subtitle {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      letter-spacing: 0.02em;
-    }
-
-    .login-footer {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 203, 5, 0.2);
-      text-align: center;
-    }
-
-    .login-divider {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .login-link {
-      display: inline-block;
-      color: var(--yellow);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      font-family: var(--f-body);
-    }
-
-    .login-link:hover {
-      opacity: 0.8;
-      text-decoration: underline;
-    }
-
-    .login-message {
-      background: rgba(22, 19, 16, 0.85);
-      border: 2px solid var(--cloud-blue);
-      border-radius: 16px;
-      padding: 2.5rem;
-      text-align: center;
-    }
-
-    .login-message h1 {
-      font-family: var(--f-manga);
-      font-size: 2rem;
-      color: var(--cloud-blue);
-      margin-bottom: 1rem;
-    }
-
-    .login-message p {
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .login-box {
-        padding: 1.75rem;
-      }
-
-      .login-title {
-        font-size: 1.8rem;
-      }
-
-      .login-page {
-        padding: 1rem;
-      }
-    }
-  {% endstylesheet %}
-
-  {% javascript %}
-    document.addEventListener('DOMContentLoaded', () => {
-      const toggleButtons = document.querySelectorAll('[data-toggle]');
-      const loginBoxes = document.querySelectorAll('.login-box');
-
-      toggleButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = button.dataset.toggle;
-
-          loginBoxes.forEach(box => {
-            if (target === 'register' && box.classList.contains('login-box--register')) {
-              box.style.display = 'block';
-              box.style.animation = 'fadeInUp 0.5s ease-out';
-            } else if (target === 'login' && !box.classList.contains('login-box--register')) {
-              box.style.display = 'block';
-              box.style.animation = 'fadeInUp 0.5s ease-out';
-            } else {
-              box.style.display = 'none';
-            }
-          });
-        });
-      });
-
-      const firstInput = document.querySelector('.login-page input:not([type="hidden"])');
-      if (firstInput) setTimeout(() => firstInput.focus(), 200);
-    });
-  {% endjavascript %}
-
 {%- else -%}
 
   <h1>{{ page.title }}</h1>
   {{ page.content }}
 
 {%- endif -%}
+
+{% stylesheet %}
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, rgba(14, 12, 10, 0.98) 0%, rgba(14, 12, 10, 0.95) 100%);
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 450px;
+    animation: fadeInUp 0.7s ease-out;
+  }
+
+  .login-box {
+    background: rgba(22, 19, 16, 0.85);
+    border: 2px solid var(--yellow);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 60px rgba(255, 203, 5, 0.15);
+  }
+
+  .login-title {
+    font-family: var(--f-manga);
+    font-size: 2.4rem;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(255, 203, 5, 0.3);
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  .login-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 203, 5, 0.2);
+    text-align: center;
+  }
+
+  .login-divider {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .login-link {
+    display: inline-block;
+    color: var(--yellow);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: var(--f-body);
+  }
+
+  .login-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  .login-message {
+    background: rgba(22, 19, 16, 0.85);
+    border: 2px solid var(--cloud-blue);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .login-message h1 {
+    font-family: var(--f-manga);
+    font-size: 2rem;
+    color: var(--cloud-blue);
+    margin-bottom: 1rem;
+  }
+
+  .login-message p {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .login-box {
+      padding: 1.75rem;
+    }
+
+    .login-title {
+      font-size: 1.8rem;
+    }
+
+    .login-page {
+      padding: 1rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('[data-toggle]');
+    const loginBoxes = document.querySelectorAll('.login-box');
+
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = button.dataset.toggle;
+
+        loginBoxes.forEach(box => {
+          if (target === 'register' && box.classList.contains('login-box--register')) {
+            box.style.display = 'block';
+            box.style.animation = 'fadeInUp 0.5s ease-out';
+          } else if (target === 'login' && !box.classList.contains('login-box--register')) {
+            box.style.display = 'block';
+            box.style.animation = 'fadeInUp 0.5s ease-out';
+          } else {
+            box.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    const firstInput = document.querySelector('.login-page input:not([type="hidden"])');
+    if (firstInput) setTimeout(() => firstInput.focus(), 200);
+  });
+{% endjavascript %}
 
 {% schema %}
 {
