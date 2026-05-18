@@ -589,17 +589,27 @@
       .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
     }
 
-    /* ─── CARD ANIMATIONS (IntersectionObserver) ─── */
+    /* ─── CARD ANIMATIONS CSS ─── */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .product-card {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
-      transition-delay: var(--card-delay, 0s);
+      animation: cardIn 0.5s ease forwards;
+      animation-delay: var(--card-delay, 0s);
+      opacity: 0; /* initial, sera overridé par l'animation */
     }
-    .product-card.card-visible {
-      opacity: 1;
-      transform: translateY(0);
+
+    /* ─── HERO ANIMATIONS CSS ─── */
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+    .hero-badge  { animation: heroFadeUp 0.6s ease 0.1s forwards; opacity: 0; }
+    .hero h1     { animation: heroFadeUp 0.7s ease 0.25s forwards; opacity: 0; }
+    .hero > .hero-content > p { animation: heroFadeUp 0.6s ease 0.4s forwards; opacity: 0; }
+    .hero-ctas   { animation: heroFadeUp 0.5s ease 0.55s forwards; opacity: 0; }
+    .hero-stats  { animation: heroFadeUp 0.5s ease 0.7s forwards; opacity: 0; }
   </style>
 </head>
 <body>
@@ -1298,59 +1308,49 @@ let currentUser = null;
 let deliveryMethod = 'standard';
 let payMethod = 'card';
 
-// ─── HERO ANIMATIONS
+// ─── HERO ANIMATIONS (particules GSAP seulement)
 function initHeroAnimations() {
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.from('#heroBadge',  { opacity: 0, y: 24, duration: 0.7, delay: 0.1 })
-    .from('#heroTitle',  { opacity: 0, y: 32, duration: 0.8 }, '-=0.4')
-    .from('#heroSub',    { opacity: 0, y: 20, duration: 0.6 }, '-=0.5')
-    .from('#heroCtas',   { opacity: 0, y: 16, duration: 0.5 }, '-=0.4')
-    .from('#heroStats',  { opacity: 0, y: 12, duration: 0.5 }, '-=0.3');
-
-  // Animated counters
-  document.querySelectorAll('.stat-num[data-count]').forEach(el => {
-    const target = parseInt(el.dataset.count);
-    gsap.to({ val: 0 }, {
-      val: target, duration: 2, delay: 0.8, ease: 'power2.out',
-      onUpdate: function() { el.textContent = Math.round(this.targets()[0].val) + (target === 48 ? 'h' : '+'); }
+  // Compteurs animés (CSS animation gère l'apparition, GSAP gère le count)
+  setTimeout(() => {
+    document.querySelectorAll('.stat-num[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const suffix = target === 48 ? 'h' : '+';
+      let start = 0;
+      const step = Math.ceil(target / 40);
+      const timer = setInterval(() => {
+        start = Math.min(start + step, target);
+        el.textContent = start + suffix;
+        if (start >= target) clearInterval(timer);
+      }, 40);
     });
-  });
+  }, 800);
 
-  // Floating particles
+  // Particules flottantes
   const container = document.getElementById('heroParticles');
-  for (let i = 0; i < 12; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.top = Math.random() * 100 + '%';
-    container.appendChild(p);
-    gsap.to(p, {
-      opacity: Math.random() * 0.4 + 0.1,
-      y: -60 - Math.random() * 80,
-      x: (Math.random() - 0.5) * 60,
-      duration: 3 + Math.random() * 4,
-      delay: Math.random() * 3,
-      repeat: -1, yoyo: true,
-      ease: 'sine.inOut'
-    });
+  if (container && typeof gsap !== 'undefined') {
+    for (let i = 0; i < 10; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      container.appendChild(p);
+      gsap.to(p, {
+        opacity: Math.random() * 0.35 + 0.05,
+        y: -50 - Math.random() * 60,
+        x: (Math.random() - 0.5) * 50,
+        duration: 3 + Math.random() * 4,
+        delay: Math.random() * 3,
+        repeat: -1, yoyo: true,
+        ease: 'sine.inOut'
+      });
+    }
   }
 }
 
-// ─── PRODUCT CARDS SCROLL ANIMATION (CSS-based, fiable)
+// ─── PRODUCT CARDS : délai CSS en cascade
 function initScrollAnimations() {
-  // Utilise IntersectionObserver plutôt que GSAP ScrollTrigger pour plus de fiabilité
-  const cards = document.querySelectorAll('.product-card');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('card-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-  cards.forEach((card, i) => {
-    card.style.setProperty('--card-delay', (i % 4) * 0.07 + 's');
-    observer.observe(card);
+  document.querySelectorAll('.product-card').forEach((card, i) => {
+    card.style.setProperty('--card-delay', (i % 4) * 0.08 + 's');
   });
 }
 
