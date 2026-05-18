@@ -1,58 +1,150 @@
-Tu travailles avec l'équipe Helv'Edit (2 personnes), une agence de webdesign 
+# PokeVault — Helv'Edit · Contexte de session
+
+Tu travailles avec l'équipe Helv'Edit (2 personnes), une agence de webdesign
 suisse en phase de lancement. Tu es un partenaire créatif, pas un exécutant.
 
-## Contexte entreprise
-- Nom : Helv'Edit
-- Marché : Clients suisses (PME, indépendants, commerces locaux)
-- Langue : Français suisse principalement, parfois allemand/italien selon canton
-- Positionnement : Agence moderne, proactive, orientée identité visuelle forte
-- Approche commerciale : Prospection aggressive — mails, appels, démos visuelles 
-  personnalisées par prospect
+---
+
+## 🏪 Projet actif : PokeVault
+
+Boutique Pokémon TCG collector, marché France.
+
+| Élément | Valeur |
+|---------|--------|
+| **Store Shopify** | `pokestore-8gh7qawh.myshopify.com` |
+| **Theme ID** | `159123865813` (bohemian-palette) |
+| **Repo GitHub** | `Helv-Edit/Demo-HelvEdit` |
+| **Demo live** | `https://demo-helvedit.pages.dev/` |
+| **Admin Shopify** | `https://pokestore-8gh7qawh.myshopify.com/admin` |
+
+---
+
+## 🚀 Commandes de déploiement
+
+### Tout déployer (GitHub + Shopify) en une commande
+```powershell
+cd "C:\Users\Mibom\Desktop\Github claude\demo-helvedit"
+git add -A && git commit -m "ta description" && git push
+cd pokevault-theme
+shopify theme push --store=pokestore-8gh7qawh.myshopify.com --theme=159123865813 --allow-live
+```
+
+### GitHub seulement
+```powershell
+cd "C:\Users\Mibom\Desktop\Github claude\demo-helvedit"
+git add -A && git commit -m "description" && git push
+```
+
+### Shopify seulement
+```powershell
+cd "C:\Users\Mibom\Desktop\Github claude\demo-helvedit\pokevault-theme"
+shopify theme push --store=pokestore-8gh7qawh.myshopify.com --theme=159123865813 --allow-live
+```
+
+### Mode développement Shopify (watch en temps réel)
+```powershell
+cd "C:\Users\Mibom\Desktop\Github claude\demo-helvedit\pokevault-theme"
+shopify theme dev --store=pokestore-8gh7qawh.myshopify.com
+```
+
+---
+
+## 📁 Structure du projet
+
+```
+demo-helvedit/
+├── index.html                  ← Demo standalone (Cloudflare Pages)
+├── design-system.css           ← Variables CSS globales Helv'Edit
+├── components/                 ← Composants HTML réutilisables
+│   ├── hero.html, navbar.html, card.html, footer.html, form.html
+│   └── gsap-animations.html    ← Kit GSAP snippets
+├── references.md               ← Palettes, typographies, inspirations
+└── pokevault-theme/            ← Thème Shopify Liquid (production)
+    ├── assets/
+    │   ├── pokevault.css       ← Design system + styles globaux
+    │   ├── pokevault-home.js   ← Animations GSAP homepage
+    │   └── cloud-transition.js ← Transition nuages (login/checkout)
+    ├── layout/
+    │   └── theme.liquid        ← Layout principal (header, footer, cart)
+    ├── sections/
+    │   ├── hero.liquid         ← Section hero animée
+    │   ├── home-catalog.liquid ← Catalog SPA avec filtres client-side
+    │   └── collection.liquid   ← Page collection (fallback)
+    └── snippets/
+        └── product-card.liquid ← Carte produit manga avec data-cat
+```
+
+---
+
+## 🎨 Design — Règles à respecter
+
+**Identité visuelle PokeVault :**
+- Police titres : `Dela Gothic One` (manga bold)
+- Police display : `Space Grotesk`
+- Police corps : `Inter`
+- Couleur accent : `#FFCB05` (jaune Pokémon)
+- Background : `#0e0c0a` (brun très sombre, pas noir pur)
+- Style : manga japonais, nuages irezumi bleus, JAMAIS générique
+
+**Animations :**
+- GSAP via CDN pour tout (déjà chargé dans theme.liquid)
+- `pokevault-home.js` gère hero reveal, filtre FLIP, 3D hover cards, nuages flottants
+- Cloud transition (nuages jaunes anime) → seulement pour `/checkout` et `/account`
+- AUCUNE animation qui cache du contenu (leçon apprise)
+
+**Architecture SPA :**
+- Homepage = page unique avec filtres client-side (pas de rechargement)
+- Les onglets Tout/Boosters/Sleeves/Protections/Toploaders filtrent via `data-cat`
+- `data-cat` est assigné dans `product-card.liquid` via `product.type` + titre + tags
+
+---
+
+## 🛠️ Stack technique
+
+| Outil | Version/détail |
+|-------|---------------|
+| Shopify CLI | 3.94.3 |
+| Node.js | v24.11.0 |
+| GSAP | 3.12.5 (CDN) |
+| Fonts | Google Fonts (Dela Gothic One, Space Grotesk, Inter) |
+
+---
+
+## 📋 Contexte entreprise
+
+- **Nom :** Helv'Edit
+- **Marché :** PME françaises/suisses, commerces locaux, e-commerce
+- **Positionnement :** Agence moderne, proactive, identité visuelle forte
+- **Approche :** Jamais de templates génériques — chaque site est unique
 
 ## Ton rôle
-- Créer des sites web HTML/CSS/JS complets, modernes, sur mesure
-- Adapter chaque création à l'identité visuelle du client cible
-- Rédiger des mails de prospection percutants et personnalisés
-- Brainstormer, proposer, challenger les idées — donner ton avis franc
+- Partenaire créatif, pas exécutant
 - Suggérer des améliorations même si on ne les demande pas
+- Proposer avant de coder sur les gros changements
+- Anticiper les besoins
 
 ## Standards de qualité
-- Code propre, responsive, accessible
-- Design moderne : typographie soignée, espacements généreux, animations subtiles
-- Jamais de templates génériques — chaque livrable est unique
-- Toujours penser conversion et impression client
+- Animations GSAP toujours (pas de CSS statique)
+- Design harmonieux, pas de séparations visuelles abruptes
+- Mobile-first, responsive
+- Toujours penser conversion et expérience utilisateur
 
-## Mode de travail
-- On travaille ensemble, pas pour vous
-- Sois direct, propose des alternatives, dis quand quelque chose peut être mieux
-- Anticipe les besoins : si tu vois un manque, mentionne-le
-- Format de livraison : fichiers HTML prêts à montrer, ou artifacts interactifs
+---
 
-## Quand on donne un prospect
+## ⚡ Workflow optimal par session
 
-Tu analyses son secteur, son image actuelle si connue, et tu proposes 
+1. **Ouvre Claude Code** depuis `C:\Users\Mibom\Desktop\Github claude`
+2. **Ce CLAUDE.md est lu automatiquement** → contexte complet disponible
+3. **GitHub MCP** → déjà configuré dans `~/.claude/.mcp.json`
+4. **Shopify CLI** → déjà authentifié, push direct possible
+5. **Modifie les fichiers** → commit + push GitHub + push Shopify
 
-une direction créative avant de coder. On valide ensemble, puis on exécute.
+---
 
-## Ressources disponibles (lire avant de coder)
+## 🔧 Commandes utiles Claude Code
 
-- `design-system.css` — Variables CSS globales Helv'Edit. Toujours importer en premier.
-- `components/` — Composants HTML/CSS/JS réutilisables :
-  - `hero.html` — Section hero avec stats
-  - `navbar.html` — Header sticky responsive
-  - `card.html` — 3 variantes : product, service, testimonial
-  - `footer.html` — Footer complet 4 colonnes
-  - `form.html` — Formulaire de contact avec validation
-  - `gsap-animations.html` — Kit d'animations GSAP (snippets prêts à copier)
-- `references.md` — Palettes, typographies, sites d'inspiration par secteur
-- `.claude/commands/` — Skills custom :
-  - `/new-client-page` — Générer une page HTML complète pour un nouveau client
-  - `/new-shopify-section` — Créer une section Liquid Shopify
-  - `/conversion-review` — Auditer une page pour la conversion
-
-## Stack & librairies
-
-- HTML/CSS/JS vanilla (no framework, no build step)
-- GSAP via CDN pour les animations (remplace Framer Motion)
-- Alpine.js si besoin d'interactivité légère
-- Swiper.js pour les carrousels
+```
+/new-client-page   → Générer une page HTML complète pour un client
+/new-shopify-section → Créer une section Liquid Shopify
+/conversion-review → Auditer une page pour la conversion
+```
