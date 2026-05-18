@@ -21,10 +21,25 @@
   },
   "customers": {
     "login": {
-      "email": "Email",
-      "password": "Password",
-      "submit": "Sign in",
-      "title": "Login"
+      "title": "Connectez-vous",
+      "email": "Adresse email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgot_password": "Mot de passe oublié ?",
+      "no_account": "Créer un compte",
+      "tab": "Connexion",
+      "success": "Connecté ! Redirection en cours..."
+    },
+    "register": {
+      "title": "Créer un compte",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "Adresse email",
+      "password": "Mot de passe",
+      "password_hint": "Minimum 6 caractères",
+      "submit": "Créer mon compte",
+      "have_account": "J'ai déjà un compte",
+      "tab": "Créer un compte"
     }
   },
   "collections": {

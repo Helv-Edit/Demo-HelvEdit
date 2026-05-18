@@ -1,0 +1,203 @@
+<div class="page-wrapper">
+  <div class="auth-page">
+
+    {%- if form.posted_successfully? -%}
+      <div class="auth-success" role="status">
+        ✓ {{ 'customers.login.success' | t | default: 'Connecté ! Redirection en cours...' }}
+      </div>
+    {%- endif -%}
+
+    <!-- Onglets -->
+    {%- render 'auth-tabs',
+        show_register: section.settings.show_register_tab,
+        active_tab: 'login'
+    -%}
+
+    <!-- Tab Login -->
+    <div class="auth-tabs__content auth-tabs__content--login" data-tab="login" id="login-panel" role="tabpanel" aria-labelledby="login-tab">
+      <div class="auth-box">
+        <h1 class="auth-box__title">{{ 'customers.login.title' | t | default: 'Connectez-vous' }}</h1>
+
+        {%- render 'auth-errors', form: form -%}
+
+        {% form 'customer_login' %}
+          <div class="form-group">
+            <label class="form-label" for="email">
+              {{ 'customers.login.email' | t | default: 'Adresse email' }}
+            </label>
+            <input
+              type="email"
+              name="customer[email]"
+              id="email"
+              class="form-input"
+              value="{{ form.email }}"
+              placeholder="vous@example.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">
+              {{ 'customers.login.password' | t | default: 'Mot de passe' }}
+            </label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="password"
+              class="form-input"
+              required
+              autocomplete="current-password"
+            >
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--large btn--full">
+            {{ 'customers.login.submit' | t | default: 'Se connecter' }}
+          </button>
+        {% endform %}
+
+        <div class="auth-box__footer">
+          <a href="{{ routes.account_recover_url }}" class="auth-link auth-link--recover">
+            {{ 'customers.login.forgot_password' | t | default: 'Mot de passe oublié ?' }}
+          </a>
+          {% if section.settings.show_register_tab %}
+            <button class="auth-link auth-link--register" data-toggle-tab="register">
+              {{ 'customers.login.no_account' | t | default: 'Créer un compte' }}
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Register -->
+    {% if section.settings.show_register_tab %}
+    <div class="auth-tabs__content auth-tabs__content--register" data-tab="register" id="register-panel" role="tabpanel" aria-labelledby="register-tab" style="display: none;">
+      <div class="auth-box">
+        <h1 class="auth-box__title">{{ 'customers.register.title' | t | default: 'Créer un compte' }}</h1>
+
+        {%- render 'auth-errors', form: form -%}
+
+        {% form 'create_customer' %}
+          <div class="form-group">
+            <label class="form-label" for="first_name">
+              {{ 'customers.register.first_name' | t | default: 'Prénom' }}
+            </label>
+            <input
+              type="text"
+              name="customer[first_name]"
+              id="first_name"
+              class="form-input"
+              value="{{ form.first_name }}"
+              required
+              autocomplete="given-name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="last_name">
+              {{ 'customers.register.last_name' | t | default: 'Nom' }}
+            </label>
+            <input
+              type="text"
+              name="customer[last_name]"
+              id="last_name"
+              class="form-input"
+              value="{{ form.last_name }}"
+              autocomplete="family-name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email-register">
+              {{ 'customers.register.email' | t | default: 'Adresse email' }}
+            </label>
+            <input
+              type="email"
+              name="customer[email]"
+              id="email-register"
+              class="form-input"
+              value="{{ form.email }}"
+              placeholder="vous@example.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password-register">
+              {{ 'customers.register.password' | t | default: 'Mot de passe' }}
+            </label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="password-register"
+              class="form-input"
+              required
+              autocomplete="new-password"
+            >
+            <small class="form-hint">{{ 'customers.register.password_hint' | t | default: 'Minimum 6 caractères' }}</small>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--large btn--full">
+            {{ 'customers.register.submit' | t | default: 'Créer mon compte' }}
+          </button>
+        {% endform %}
+
+        <div class="auth-box__footer">
+          <button class="auth-link auth-link--login" data-toggle-tab="login">
+            {{ 'customers.register.have_account' | t | default: 'J\'ai déjà un compte' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script src="{{ 'auth.js' | asset_url }}" defer></script>
+
+<style>
+  .auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, rgba(14, 12, 10, 0.95) 0%, rgba(14, 12, 10, 0.98) 100%);
+  }
+
+  .auth-box {
+    max-width: 420px;
+    width: 100%;
+  }
+
+  .auth-tabs__content {
+    animation: fadeInUp 0.5s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Customer Login",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_register_tab",
+      "label": "Afficher onglet Créer un compte",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

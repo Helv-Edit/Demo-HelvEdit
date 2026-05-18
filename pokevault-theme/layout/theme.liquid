@@ -38,8 +38,8 @@
           {{ customer.first_name }}
         </a>
       {% else %}
-        <a href="{{ routes.account_login_url }}" class="header-btn">Connexion</a>
-        <a href="{{ routes.account_register_url }}" class="header-btn header-btn--account">Créer un compte</a>
+        <a href="{{ routes.account_login_url }}" class="header-btn auth-link">Connexion</a>
+        <a href="{{ routes.account_register_url }}" class="header-btn header-btn--account auth-link">Créer un compte</a>
       {% endif %}
       <button class="header-btn" id="cartToggle" aria-label="Panier">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
