@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% render 'meta-tags' %}
+  {{ content_for_header }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {{ 'pokevault.css' | asset_url | stylesheet_tag }}
+</head>
+<body>
+
+  <!-- MANGA TRANSITION OVERLAYS -->
+  <div class="manga-flash" id="mangaFlash"></div>
+  <div class="manga-speedlines" id="mangaSpeedlines"></div>
+
+  <!-- ═══ HEADER -->
+  <header class="site-header">
+
+    <a href="{{ routes.root_url }}" class="site-logo">
+      <div class="logo-icon"></div>
+      Poke<span>Vault</span>
+    </a>
+
+    <nav class="site-nav">
+      <a href="{{ routes.all_products_collection_url }}" {% if request.path == routes.all_products_collection_url %}aria-current="page"{% endif %}>Tout</a>
+      <a href="/collections/boosters" {% if request.path contains 'boosters' %}class="active"{% endif %}>Boosters</a>
+      <a href="/collections/sleeves" {% if request.path contains 'sleeves' %}class="active"{% endif %}>Sleeves</a>
+      <a href="/collections/protections" {% if request.path contains 'protections' %}class="active"{% endif %}>Protections</a>
+      <a href="/collections/toploaders" {% if request.path contains 'toploaders' %}class="active"{% endif %}>Toploaders</a>
+    </nav>
+
+    <div class="header-actions">
+      {% if customer %}
+        <a href="{{ routes.account_url }}" class="header-btn header-btn--account">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          {{ customer.first_name }}
+        </a>
+      {% else %}
+        <a href="{{ routes.account_login_url }}" class="header-btn">Connexion</a>
+        <a href="{{ routes.account_register_url }}" class="header-btn header-btn--account">Créer un compte</a>
+      {% endif %}
+      <button class="header-btn" id="cartToggle" aria-label="Panier">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        Panier
+        {% if cart.item_count > 0 %}
+          <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
+        {% else %}
+          <span class="cart-count" id="cartCount" style="display:none">0</span>
+        {% endif %}
+      </button>
+    </div>
+
+  </header>
+
+  <!-- ═══ PAGE CONTENT -->
+  <main>
+    {{ content_for_layout }}
+  </main>
+
+  <!-- ═══ FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo">Poke<span>Vault</span></span>
+        <p class="footer-tagline">La boutique collector Pokémon TCG en France. Boosters, sleeves et protections premium livrés en 24/48h.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Boutique</div>
+        <ul class="footer-links">
+          <li><a href="/collections/boosters">Boosters</a></li>
+          <li><a href="/collections/sleeves">Sleeves</a></li>
+          <li><a href="/collections/protections">Protections</a></li>
+          <li><a href="/collections/toploaders">Toploaders</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Aide</div>
+        <ul class="footer-links">
+          <li><a href="/pages/livraison">Livraison & retours</a></li>
+          <li><a href="/pages/contact">Contact</a></li>
+          {% if shop.privacy_policy.url %}<li><a href="{{ shop.privacy_policy.url }}">Confidentialité</a></li>{% endif %}
+          {% if shop.terms_of_service.url %}<li><a href="{{ shop.terms_of_service.url }}">CGV</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 PokeVault France — Tous droits réservés · Site conçu par <strong style="color:var(--yellow)">Helv'Edit</strong></p>
+      <div class="footer-badges">
+        <span class="footer-badge">SSL</span>
+        <span class="footer-badge">Colissimo</span>
+        <span class="footer-badge">Chronopost</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ CART DRAWER -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer__header">
+      <h3>Mon Panier</h3>
+      <button class="btn-close" id="closeCart">✕</button>
+    </div>
+    <div class="cart-drawer__items" id="cartDrawerItems">
+      <div class="cart-empty">
+        <div class="cart-empty__icon">🛒</div>
+        <p>Votre panier est vide</p>
+      </div>
+    </div>
+    <div class="cart-drawer__footer" id="cartDrawerFooter" style="display:none">
+      <div class="summary-line">
+        <span class="label">Sous-total</span>
+        <span id="drawerSubtotal" style="font-family:var(--manga-font);font-size:1rem;color:var(--yellow)">0,00 €</span>
+      </div>
+      <a href="{{ routes.cart_url }}" class="btn-primary">Commander →</a>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ── MANGA TRANSITION ── */
+    function mangaTransition(callback) {
+      const flash = document.getElementById('mangaFlash');
+      const lines = document.getElementById('mangaSpeedlines');
+      flash.classList.add('active');
+      lines.classList.add('active');
+      setTimeout(() => {
+        flash.classList.remove('active');
+        lines.classList.remove('active');
+        if (callback) callback();
+      }, 450);
+    }
+
+    /* ── CART ── */
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartDrawer  = document.getElementById('cartDrawer');
+
+    function openCart() { cartOverlay.classList.add('open'); cartDrawer.classList.add('open'); }
+    function closeCartFn() { cartOverlay.classList.remove('open'); cartDrawer.classList.remove('open'); }
+
+    document.getElementById('cartToggle').addEventListener('click', () => { fetchCart(); openCart(); });
+    document.getElementById('closeCart').addEventListener('click', closeCartFn);
+    cartOverlay.addEventListener('click', closeCartFn);
+
+    function fetchCart() {
+      fetch('/cart.js').then(r => r.json()).then(renderDrawer);
+    }
+
+    function renderDrawer(cart) {
+      const itemsEl  = document.getElementById('cartDrawerItems');
+      const footerEl = document.getElementById('cartDrawerFooter');
+      const countEl  = document.getElementById('cartCount');
+
+      countEl.textContent   = cart.item_count;
+      countEl.style.display = cart.item_count > 0 ? 'flex' : 'none';
+
+      if (!cart.items.length) {
+        itemsEl.innerHTML = '<div class="cart-empty"><div class="cart-empty__icon">🛒</div><p>Votre panier est vide</p></div>';
+        footerEl.style.display = 'none';
+        return;
+      }
+
+      itemsEl.innerHTML = cart.items.map(item => `
+        <div class="cart-line">
+          <div class="cart-line__img">
+            ${item.image
+              ? `<img src="${item.image}" alt="${item.title}" loading="lazy">`
+              : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:#1a1a1a">📦</div>'}
+          </div>
+          <div class="cart-line__info">
+            <div class="cart-line__title">${item.product_title}</div>
+            <div class="cart-line__price">${formatMoney(item.line_price)}</div>
+          </div>
+          <div class="cart-line__qty">
+            <button class="qty-btn" onclick="updateQty('${item.key}', ${item.quantity - 1})">−</button>
+            <span class="qty-num">${item.quantity}</span>
+            <button class="qty-btn" onclick="updateQty('${item.key}', ${item.quantity + 1})">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('drawerSubtotal').textContent = formatMoney(cart.total_price);
+      footerEl.style.display = 'block';
+    }
+
+    function formatMoney(cents) {
+      return (cents / 100).toFixed(2).replace('.', ',') + ' €';
+    }
+
+    function updateQty(key, qty) {
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: key, quantity: qty })
+      }).then(r => r.json()).then(renderDrawer);
+    }
+
+    function addToCart(variantId, qty, btn) {
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: qty || 1 })
+      }).then(r => r.json()).then(data => {
+        fetchCart();
+        openCart();
+        showToast('✓ Ajouté au panier !');
+        triggerImpact(btn);
+        if (btn) { btn.disabled = false; btn.textContent = '+ Panier'; }
+      });
+    }
+
+    /* Impact burst effect */
+    function triggerImpact(el) {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const burst = document.createElement('div');
+      burst.className = 'impact-burst';
+      burst.style.left = (rect.left + rect.width / 2) + 'px';
+      burst.style.top  = (rect.top + rect.height / 2) + 'px';
+      burst.innerHTML = `<svg viewBox="0 0 100 100" width="100" height="100">
+        <polygon points="50,5 55,40 90,20 65,50 95,65 60,60 70,95 50,70 30,95 40,60 5,65 35,50 10,20 45,40"
+          fill="var(--yellow)" stroke="#000" stroke-width="2"/>
+      </svg>`;
+      document.body.appendChild(burst);
+      setTimeout(() => burst.remove(), 600);
+    }
+
+    /* Toast */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    /* Init cart count */
+    fetchCart();
+
+    /* Nav manga transitions */
+    document.querySelectorAll('.site-nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('#') && href !== window.location.pathname) {
+          e.preventDefault();
+          mangaTransition(() => { window.location.href = href; });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

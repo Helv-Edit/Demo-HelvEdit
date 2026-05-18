@@ -1,0 +1,115 @@
+<div class="page-wrapper">
+
+  <!-- Promo banner manga -->
+  <div class="promo-banner">
+    <div>
+      <h3>Livraison offerte dès 80€</h3>
+      <p>Partout en France — emballage renforcé pour vos cartes</p>
+    </div>
+    <div class="banner-perks">
+      <div class="perk"><div class="perk-dot"></div> Paiement sécurisé SSL</div>
+      <div class="perk"><div class="perk-dot"></div> Stock mis à jour quotidiennement</div>
+      <div class="perk"><div class="perk-dot"></div> Produits 100% authentiques</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs avec animation manga -->
+  <div class="filter-tabs" id="filterTabs">
+    <a href="{{ routes.all_products_collection_url }}" class="filter-tab {% if collection.handle == 'all' or request.path == routes.all_products_collection_url %}active{% endif %}">
+      Tous les produits
+    </a>
+    <a href="/collections/boosters" class="filter-tab {% if collection.handle == 'boosters' %}active{% endif %}">Boosters</a>
+    <a href="/collections/sleeves" class="filter-tab {% if collection.handle == 'sleeves' %}active{% endif %}">Sleeves</a>
+    <a href="/collections/protections" class="filter-tab {% if collection.handle == 'protections' %}active{% endif %}">Protections</a>
+    <a href="/collections/toploaders" class="filter-tab {% if collection.handle == 'toploaders' %}active{% endif %}">Toploaders</a>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header">
+    <span class="section-title">
+      {% if collection.title %}{{ collection.title }}{% else %}Tous les produits{% endif %}
+    </span>
+    <span class="section-count">{{ collection.products_count }} produit{{ collection.products_count | pluralize: '', 's' }}</span>
+  </div>
+
+  <!-- Product grid manga panels -->
+  {% paginate collection.products by 24 %}
+    {% if collection.products.size > 0 %}
+      <div class="products-grid" id="productsGrid">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <div style="margin-top:2rem;text-align:center">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div style="text-align:center;padding:4rem 2rem;color:var(--muted)">
+        <p style="font-family:var(--manga-font);font-size:2rem;color:var(--yellow);text-shadow:2px 2px 0 #000;margin-bottom:1rem">AUCUN PRODUIT</p>
+        <p style="font-size:0.85rem">Cette collection est vide pour l'instant.</p>
+      </div>
+    {% endif %}
+  {% endpaginate %}
+
+</div>
+
+{% stylesheet %}
+  /* Manga filter tab transitions */
+  .filter-tab {
+    position: relative;
+    overflow: hidden;
+  }
+  .filter-tab::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--yellow);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+    z-index: -1;
+    opacity: 0.1;
+  }
+  .filter-tab:hover::after { transform: scaleX(1); }
+
+  /* Card appear animation */
+  @keyframes cardAppear {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .product-card {
+    animation: cardAppear 0.4s ease both;
+  }
+  {% for i in (1..15) %}
+    .product-card:nth-child({{ i }}) { animation-delay: {{ i | minus: 1 | times: 0.05 }}s; }
+  {% endfor %}
+{% endstylesheet %}
+
+{% javascript %}
+  // Manga transition on filter tab click
+  document.querySelectorAll('.filter-tabs .filter-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      const href = tab.getAttribute('href');
+      if (href && href !== window.location.pathname) {
+        e.preventDefault();
+        if (typeof mangaTransition === 'function') {
+          mangaTransition(() => { window.location.href = href; });
+        } else {
+          window.location.href = href;
+        }
+      }
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [],
+  "presets": [{ "name": "Collection" }]
+}
+{% endschema %}

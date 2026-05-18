@@ -1,0 +1,57 @@
+<div class="page-wrapper">
+
+  <div class="promo-banner">
+    <div>
+      <h3>Livraison offerte dès 80 CHF</h3>
+      <p>Partout en Suisse — emballage renforcé pour vos cartes</p>
+    </div>
+    <div class="banner-perks">
+      <div class="perk"><span>🔒</span> Paiement sécurisé</div>
+      <div class="perk"><span>📦</span> Stock mis à jour quotidiennement</div>
+      <div class="perk"><span>⭐</span> Produits authentiques</div>
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <a href="{{ routes.all_products_collection_url }}" class="filter-tab active">Tous les produits</a>
+    <a href="/collections/boosters"    class="filter-tab">Boosters</a>
+    <a href="/collections/sleeves"     class="filter-tab">Sleeves</a>
+    <a href="/collections/protections" class="filter-tab">Protections</a>
+    <a href="/collections/toploaders"  class="filter-tab">Toploaders</a>
+  </div>
+
+  {%- assign featured_collection = collections[section.settings.collection] -%}
+  {%- if featured_collection == blank -%}
+    {%- assign featured_collection = collections.all -%}
+  {%- endif -%}
+
+  <div class="section-header">
+    <span class="section-title">Tous les produits</span>
+    <span class="section-count">{{ featured_collection.products_count }} produit{% if featured_collection.products_count != 1 %}s{% endif %}</span>
+  </div>
+
+  <div class="products-grid">
+    {%- for product in featured_collection.products limit: 16 -%}
+      {% render 'product-card', product: product %}
+    {%- else -%}
+      <p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:3rem 0">
+        Aucun produit pour l'instant — ajoutez des produits dans l'admin Shopify.
+      </p>
+    {%- endfor -%}
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Produits vedette",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection à afficher"
+    }
+  ],
+  "presets": [{ "name": "Produits vedette" }]
+}
+{% endschema %}

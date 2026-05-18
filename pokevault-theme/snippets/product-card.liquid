@@ -1,0 +1,103 @@
+{% doc %}
+  Renders a manga-style product card for PokeVault theme.
+
+  @param {product} product - The product to render
+
+  @example
+  {% render 'product-card', product: product %}
+{% enddoc %}
+
+{% liquid
+  assign first_variant = product.first_available_variant
+  assign is_new = false
+  if product.tags contains 'nouveau'
+    assign is_new = true
+  endif
+  assign is_sale = false
+  if product.compare_at_price > product.price
+    assign is_sale = true
+  endif
+  assign lang_badge = ''
+  if product.tags contains 'fr'
+    assign lang_badge = 'fr'
+  elsif product.tags contains 'jp'
+    assign lang_badge = 'jp'
+  elsif product.tags contains 'en'
+    assign lang_badge = 'en'
+  endif
+  assign img_class = 'img-toploader'
+  if product.type contains 'Booster'
+    if lang_badge == 'fr'
+      assign img_class = 'img-booster-fr'
+    elsif lang_badge == 'jp'
+      assign img_class = 'img-booster-jp'
+    else
+      assign img_class = 'img-booster-en'
+    endif
+  elsif product.type contains 'Sleeve'
+    assign img_class = 'img-sleeve'
+  elsif product.type contains 'Protection'
+    assign img_class = 'img-protection'
+  endif
+%}
+
+<div class="product-card">
+  <a href="{{ product.url }}" class="product-card__image {{ img_class }}">
+    <div class="pack-shine"></div>
+    {% if product.featured_image %}
+      <img
+        src="{{ product.featured_image | image_url: width: 480 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="480"
+        height="480"
+      >
+    {% else %}
+      <div class="product-card__image-placeholder">
+        <span class="pack-code" style="color:var(--yellow)">
+          {% if product.type %}{{ product.type | upcase | truncate: 4, '' }}{% else %}PV{% endif %}
+        </span>
+        <span class="pack-series">{{ product.title | truncate: 16, '' }}</span>
+      </div>
+    {% endif %}
+
+    {% if lang_badge != '' %}
+      <span class="product-badge badge--{{ lang_badge }}">{{ lang_badge | upcase }}</span>
+    {% endif %}
+
+    {% if is_new %}
+      <span class="product-badge badge--new product-badge--new-abs">Nouveau</span>
+    {% elsif is_sale %}
+      <span class="product-badge badge--bundle product-badge--new-abs">Promo</span>
+    {% endif %}
+  </a>
+
+  <div class="product-card__info">
+    <div class="product-card__type">{{ product.type | default: 'Produit' }}</div>
+    <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
+    {% if product.metafields.custom.subtitle != blank %}
+      <div class="product-card__variant">{{ product.metafields.custom.subtitle }}</div>
+    {% elsif product.variants.size > 1 %}
+      <div class="product-card__variant">{{ product.variants.size }} variantes</div>
+    {% endif %}
+    <div class="product-card__footer">
+      <div class="product-card__price">
+        {% if is_sale %}
+          <s>{{ product.compare_at_price | money }}</s>
+        {% endif %}
+        {{ product.price | money }}
+      </div>
+      <button
+        class="btn-cart"
+        onclick="addToCart({{ first_variant.id }}, 1, this)"
+        {% unless first_variant.available %}disabled{% endunless %}
+      >
+        {% if first_variant.available %}
+          + Panier
+        {% else %}
+          Rupture
+        {% endif %}
+      </button>
+    </div>
+  </div>
+</div>
