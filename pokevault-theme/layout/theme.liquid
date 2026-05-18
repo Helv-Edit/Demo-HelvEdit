@@ -7,7 +7,7 @@
   {{ content_for_header }}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   {{ 'pokevault.css' | asset_url | stylesheet_tag }}
 </head>
 <body>
@@ -129,11 +129,11 @@
 
   <script>
     /* ── CLOUD CURTAIN TRANSITION ── */
-    function mangaTransition(callback) {
-      if (typeof cloudTransition === 'function') {
-        cloudTransition(callback);
+    function mangaTransition(href) {
+      if (typeof cloudNavigate === 'function') {
+        cloudNavigate(href);
       } else {
-        if (callback) callback();
+        window.location.href = href;
       }
     }
 
@@ -243,13 +243,13 @@
     /* Init cart count */
     fetchCart();
 
-    /* Nav manga transitions */
-    document.querySelectorAll('.site-nav a').forEach(link => {
+    /* Nav cloud transitions */
+    document.querySelectorAll('.site-nav a, .filter-tab, .btn-manga').forEach(link => {
       link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
-        if (href && !href.startsWith('#') && href !== window.location.pathname) {
+        if (href && !href.startsWith('#') && href !== window.location.href && href !== window.location.pathname) {
           e.preventDefault();
-          mangaTransition(() => { window.location.href = href; });
+          mangaTransition(href);
         }
       });
     });

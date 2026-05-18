@@ -1,75 +1,37 @@
 /**
- * PokeVault — Cloud Curtain Transition
- * Vanilla JS implementation of the Cloud Overlay design.
- * Drop-in replacement for the manga flash effect.
+ * PokeVault — Cloud Curtain Transition (Two-Phase)
+ *
+ * Phase 1 (old page): clouds sweep IN → fully cover screen → navigate
+ * Phase 2 (new page): clouds start already covering → disperse to reveal
+ *
+ * sessionStorage key "pvCloudResume" triggers phase 2 on next page load.
  */
 (function () {
   'use strict';
 
-  // ── Timing (seconds) ──────────────────────────────────────────────────────
-  const DURATION   = 2.0;
   const T_IN_END   = 0.70;
   const T_HOLD_END = 1.05;
   const T_OUT_END  = 1.80;
-  const T_SWAP     = 0.85;
+  const T_TOTAL    = 2.00;
   const T_IMPACT   = 0.70;
-  const OFFSCREEN  = 1500;
+  const T_IN_START = 0.00;
+  const OFFSCREEN  = 1600;
 
   // ── Easing ────────────────────────────────────────────────────────────────
-  const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-  const easeInExpo  = (t) => t === 0 ? 0 : Math.pow(2, 10 * (t - 1));
-  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-  const easeInQuad   = (t) => t * t;
+  const easeOutExpo  = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  const easeInExpo   = t => t === 0 ? 0 : Math.pow(2, 10 * (t - 1));
+  const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+  const easeInQuad   = t => t * t;
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
   // ── Cloud shapes ─────────────────────────────────────────────────────────
-  const CLOUD_SHAPES = {
-    wideFlat: [
-      {cx:30,cy:70,r:26},{cx:70,cy:50,r:38},{cx:115,cy:38,r:44},
-      {cx:165,cy:42,r:40},{cx:210,cy:50,r:36},{cx:250,cy:60,r:30},
-      {cx:285,cy:72,r:22},{cx:90,cy:82,r:26},{cx:145,cy:88,r:28},
-      {cx:200,cy:84,r:26},{cx:245,cy:80,r:22},
-    ],
-    bigRound: [
-      {cx:80,cy:80,r:44},{cx:130,cy:50,r:52},{cx:190,cy:60,r:46},
-      {cx:235,cy:90,r:38},{cx:165,cy:100,r:40},{cx:100,cy:110,r:36},
-      {cx:50,cy:105,r:30},
-    ],
-    hugeWide: [
-      {cx:40,cy:80,r:32},{cx:90,cy:60,r:42},{cx:140,cy:45,r:48},
-      {cx:195,cy:38,r:50},{cx:250,cy:42,r:46},{cx:300,cy:52,r:42},
-      {cx:345,cy:65,r:36},{cx:385,cy:78,r:28},{cx:115,cy:95,r:32},
-      {cx:170,cy:102,r:34},{cx:230,cy:100,r:34},{cx:290,cy:92,r:30},
-      {cx:340,cy:85,r:26},
-    ],
-    puffy: [
-      {cx:50,cy:70,r:32},{cx:100,cy:50,r:42},{cx:155,cy:55,r:38},
-      {cx:200,cy:75,r:30},{cx:130,cy:90,r:34},{cx:80,cy:95,r:26},
-    ],
-    smallTuft: [
-      {cx:35,cy:50,r:24},{cx:70,cy:38,r:30},{cx:110,cy:48,r:26},
-      {cx:145,cy:60,r:20},{cx:80,cy:70,r:22},
-    ],
-    chunky: [
-      {cx:60,cy:70,r:38},{cx:115,cy:50,r:48},{cx:175,cy:60,r:42},
-      {cx:220,cy:80,r:34},{cx:150,cy:95,r:38},{cx:95,cy:100,r:32},
-    ],
-    kintoun: [
-      {cx:50,cy:90,r:40},{cx:95,cy:60,r:48},{cx:150,cy:50,r:52},
-      {cx:210,cy:58,r:46},{cx:255,cy:78,r:40},{cx:95,cy:118,r:34},
-      {cx:155,cy:125,r:36},{cx:215,cy:118,r:34},
-      {cx:290,cy:92,r:32},{cx:318,cy:86,r:28},{cx:344,cy:79,r:25},
-      {cx:368,cy:72,r:22},{cx:390,cy:65,r:19},{cx:409,cy:58,r:16},
-      {cx:425,cy:51,r:14},{cx:438,cy:45,r:12},{cx:449,cy:40,r:10},
-      {cx:458,cy:36,r:8},{cx:465,cy:33,r:7},
-    ],
-    curly: [
-      {cx:28,cy:50,r:16},{cx:48,cy:38,r:22},{cx:78,cy:32,r:30},
-      {cx:120,cy:45,r:42},{cx:170,cy:38,r:48},{cx:225,cy:50,r:42},
-      {cx:270,cy:65,r:36},{cx:310,cy:48,r:24},{cx:340,cy:36,r:17},
-      {cx:360,cy:28,r:11},{cx:95,cy:80,r:32},{cx:150,cy:90,r:36},
-      {cx:210,cy:88,r:34},{cx:260,cy:95,r:28},
-    ],
+  const SHAPES = {
+    wideFlat:  [{cx:30,cy:70,r:26},{cx:70,cy:50,r:38},{cx:115,cy:38,r:44},{cx:165,cy:42,r:40},{cx:210,cy:50,r:36},{cx:250,cy:60,r:30},{cx:285,cy:72,r:22},{cx:90,cy:82,r:26},{cx:145,cy:88,r:28},{cx:200,cy:84,r:26},{cx:245,cy:80,r:22}],
+    hugeWide:  [{cx:40,cy:80,r:32},{cx:90,cy:60,r:42},{cx:140,cy:45,r:48},{cx:195,cy:38,r:50},{cx:250,cy:42,r:46},{cx:300,cy:52,r:42},{cx:345,cy:65,r:36},{cx:385,cy:78,r:28},{cx:115,cy:95,r:32},{cx:170,cy:102,r:34},{cx:230,cy:100,r:34},{cx:290,cy:92,r:30},{cx:340,cy:85,r:26}],
+    puffy:     [{cx:50,cy:70,r:32},{cx:100,cy:50,r:42},{cx:155,cy:55,r:38},{cx:200,cy:75,r:30},{cx:130,cy:90,r:34},{cx:80,cy:95,r:26}],
+    chunky:    [{cx:60,cy:70,r:38},{cx:115,cy:50,r:48},{cx:175,cy:60,r:42},{cx:220,cy:80,r:34},{cx:150,cy:95,r:38},{cx:95,cy:100,r:32}],
+    kintoun:   [{cx:50,cy:90,r:40},{cx:95,cy:60,r:48},{cx:150,cy:50,r:52},{cx:210,cy:58,r:46},{cx:255,cy:78,r:40},{cx:95,cy:118,r:34},{cx:155,cy:125,r:36},{cx:215,cy:118,r:34},{cx:290,cy:92,r:32},{cx:318,cy:86,r:28},{cx:344,cy:79,r:25},{cx:368,cy:72,r:22},{cx:390,cy:65,r:19},{cx:409,cy:58,r:16},{cx:425,cy:51,r:14},{cx:438,cy:45,r:12},{cx:449,cy:40,r:10},{cx:458,cy:36,r:8},{cx:465,cy:33,r:7}],
+    curly:     [{cx:28,cy:50,r:16},{cx:48,cy:38,r:22},{cx:78,cy:32,r:30},{cx:120,cy:45,r:42},{cx:170,cy:38,r:48},{cx:225,cy:50,r:42},{cx:270,cy:65,r:36},{cx:310,cy:48,r:24},{cx:340,cy:36,r:17},{cx:360,cy:28,r:11},{cx:95,cy:80,r:32},{cx:150,cy:90,r:36},{cx:210,cy:88,r:34},{cx:260,cy:95,r:28}],
   };
 
   // ── Cloud layout ──────────────────────────────────────────────────────────
@@ -97,266 +59,232 @@
     {id:'u',shape:'chunky',  size:850, cx:1.00,cy:0.65,from:[ 1.0, 0.2],delay:0.11,flip:true, rot:-3},
   ];
 
-  // ── SVG cloud builder ─────────────────────────────────────────────────────
+  // ── SVG cloud ────────────────────────────────────────────────────────────
   function buildCloudSVG(shapeName, size, flip) {
-    const circles = CLOUD_SHAPES[shapeName] || CLOUD_SHAPES.puffy;
-    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-    for (const c of circles) {
-      if (c.cx-c.r < minX) minX = c.cx-c.r;
-      if (c.cy-c.r < minY) minY = c.cy-c.r;
-      if (c.cx+c.r > maxX) maxX = c.cx+c.r;
-      if (c.cy+c.r > maxY) maxY = c.cy+c.r;
-    }
-    const pad = 4;
-    const vbW = (maxX - minX) + pad*2;
-    const vbH = (maxY - minY) + pad*2;
-    const aspect = vbH / vbW;
-    const h = size * aspect;
-
-    const avgR = circles.reduce((s,c) => s+c.r, 0) / circles.length;
+    const cs = SHAPES[shapeName] || SHAPES.puffy;
+    let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+    cs.forEach(c => { x0=Math.min(x0,c.cx-c.r); y0=Math.min(y0,c.cy-c.r); x1=Math.max(x1,c.cx+c.r); y1=Math.max(y1,c.cy+c.r); });
+    const pad=4, vw=x1-x0+pad*2, vh=y1-y0+pad*2;
+    const h = size * (vh/vw);
+    const avgR = cs.reduce((s,c)=>s+c.r,0)/cs.length;
     const dy = avgR * 0.18;
-    const id = 'm' + Math.random().toString(36).slice(2,7);
-
-    const circleSVG = (arr, extra='') =>
-      arr.map(c => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}" ${extra}/>`).join('');
-
-    const outlineCircles = circles.map(c =>
-      `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r+6}" fill="#3a2812"/>`
-    ).join('');
-
-    const svg = `<svg width="${size}" height="${h}"
-      viewBox="${minX-pad} ${minY-pad} ${vbW} ${vbH}"
-      style="display:block;overflow:visible;${flip?'transform:scaleX(-1)':''}"
-      xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <mask id="cm-${id}">
-          <rect x="${minX-pad}" y="${minY-pad}" width="${vbW}" height="${vbH}" fill="black"/>
-          ${circleSVG(circles, 'fill="white"')}
-        </mask>
-      </defs>
-      <g>${outlineCircles}</g>
-      <g>${circleSVG(circles, 'fill="#FFE96A"')}</g>
-      <g mask="url(#cm-${id})">
-        <g transform="translate(${dy*0.6} ${dy*1.4})">
-          ${circleSVG(circles, 'fill="#D9B83A"')}
-        </g>
-      </g>
-      <g mask="url(#cm-${id})">
-        <g transform="translate(${-dy*0.5} ${-dy*0.9})">
-          ${circles.map(c=>`<circle cx="${c.cx}" cy="${c.cy}" r="${c.r*0.78}" fill="#FFF5B0"/>`).join('')}
-        </g>
-      </g>
+    const id = 'cv' + Math.random().toString(36).slice(2,8);
+    const circ = (arr,fill) => arr.map(c=>`<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}" fill="${fill}"/>`).join('');
+    return `<svg width="${size}" height="${h}" viewBox="${x0-pad} ${y0-pad} ${vw} ${vh}"
+      style="display:block;overflow:visible;${flip?'transform:scaleX(-1)':''}">
+      <defs><mask id="${id}">
+        <rect x="${x0-pad}" y="${y0-pad}" width="${vw}" height="${vh}" fill="black"/>
+        ${circ(cs,'white')}
+      </mask></defs>
+      <g>${cs.map(c=>`<circle cx="${c.cx}" cy="${c.cy}" r="${c.r+6}" fill="#3a2812"/>`).join('')}</g>
+      <g>${circ(cs,'#FFE96A')}</g>
+      <g mask="url(#${id})"><g transform="translate(${dy*.6} ${dy*1.4})">${circ(cs,'#D9B83A')}</g></g>
+      <g mask="url(#${id})"><g transform="translate(${-dy*.5} ${-dy*.9})">${cs.map(c=>`<circle cx="${c.cx}" cy="${c.cy}" r="${c.r*.78}" fill="#FFF5B0"/>`).join('')}</g></g>
     </svg>`;
-
-    return { svg, w: size, h };
   }
 
-  // ── Progress function ─────────────────────────────────────────────────────
-  function cloudProgress(t, delay) {
-    const inStart = T_IN_START + delay;
-    const inEnd   = T_IN_END;
-    const outStart = T_HOLD_END + delay * 0.4;
-    const outEnd   = T_OUT_END;
-    if (t <= inStart) return 0;
-    if (t < inEnd) return easeOutExpo((t - inStart) / (inEnd - inStart));
-    if (t <= outStart) return 1;
-    if (t < outEnd) return 1 - easeInExpo((t - outStart) / (outEnd - outStart));
+  // ── Progress ──────────────────────────────────────────────────────────────
+  function cloudProg(t, delay) {
+    const inS = T_IN_START + delay, outS = T_HOLD_END + delay * 0.4;
+    if (t <= inS) return 0;
+    if (t < T_IN_END) return easeOutExpo((t-inS)/(T_IN_END-inS));
+    if (t <= outS) return 1;
+    if (t < T_OUT_END) return 1 - easeInExpo((t-outS)/(T_OUT_END-outS));
     return 0;
   }
-  const T_IN_START = 0;
 
-  // ── Seeded random ─────────────────────────────────────────────────────────
-  function seedRand(i, salt) {
-    const v = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
-    return v - Math.floor(v);
-  }
+  const seedRand = (i,s) => { const v=Math.sin(i*12.9898+s*78.233)*43758.5453; return v-Math.floor(v); };
 
-  // ── Build overlay DOM ─────────────────────────────────────────────────────
-  let overlay = null;
-  let cloudEls = [];
-  let wispSVG = null;
-  let burstSVG = null;
-  let raf = null;
-  let startTime = null;
-  let onSwapCallback = null;
-  let swapFired = false;
-  let active = false;
-
-  const VW = window.innerWidth;
-  const VH = window.innerHeight;
+  // ── DOM state ─────────────────────────────────────────────────────────────
+  let overlay=null, cloudEls=[], wispSVG=null, burstSVG=null;
+  let raf=null, startT=null, active=false;
+  let VW=window.innerWidth, VH=window.innerHeight;
 
   function buildOverlay() {
     if (overlay) return;
-
     overlay = document.createElement('div');
-    overlay.id = 'cloud-curtain';
-    overlay.style.cssText = `
-      position:fixed;inset:0;z-index:9999;
-      pointer-events:none;overflow:hidden;
-      display:none;
-    `;
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;display:none;';
     document.body.appendChild(overlay);
 
-    // Wispy streaks SVG
-    wispSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    wispSVG.setAttribute('width', VW);
-    wispSVG.setAttribute('height', VH);
-    wispSVG.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-    wispSVG.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:visible;';
+    wispSVG = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    wispSVG.setAttribute('width',VW); wispSVG.setAttribute('height',VH);
+    wispSVG.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+    wispSVG.style.cssText='position:absolute;inset:0;overflow:visible;';
     overlay.appendChild(wispSVG);
 
-    // Cloud elements
+    const sc = VW/1920;
     cloudEls = CLOUDS.map(c => {
-      const { svg, w, h } = buildCloudSVG(c.shape, c.size * (VW / 1920), c.flip);
       const wrap = document.createElement('div');
-      wrap.style.cssText = `position:absolute;pointer-events:none;will-change:transform;`;
-      wrap.innerHTML = svg;
+      wrap.style.cssText = 'position:absolute;will-change:transform;display:none;';
+      wrap.innerHTML = buildCloudSVG(c.shape, c.size*sc, c.flip);
       overlay.appendChild(wrap);
-      return { el: wrap, cfg: c, w, h };
+      return { el: wrap, cfg: c };
     });
 
-    // Impact burst SVG
-    burstSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    burstSVG.setAttribute('width', VW);
-    burstSVG.setAttribute('height', VH);
-    burstSVG.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-    burstSVG.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+    burstSVG = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    burstSVG.setAttribute('width',VW); burstSVG.setAttribute('height',VH);
+    burstSVG.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+    burstSVG.style.cssText='position:absolute;inset:0;';
     overlay.appendChild(burstSVG);
   }
 
-  // ── Wispy streaks renderer ────────────────────────────────────────────────
-  function renderWisps(t) {
-    let alpha = 0;
-    if (t < T_IN_END) {
-      const p = clamp(t / T_IN_END, 0, 1);
-      alpha = easeOutCubic(p) * (1 - easeInQuad(Math.max(0, (t - T_IN_END * 0.6) / (T_IN_END * 0.4))));
-    } else if (t > T_HOLD_END && t < T_OUT_END) {
-      const p = clamp((t - T_HOLD_END) / (T_OUT_END - T_HOLD_END), 0, 1);
-      alpha = easeOutCubic(Math.min(1, p * 2)) * (1 - easeInQuad(Math.max(0, (p - 0.6) / 0.4)));
-    }
-    if (alpha <= 0.001) { wispSVG.innerHTML = ''; return; }
-
-    const N = 20;
-    let paths = '';
-    for (let i = 0; i < N; i++) {
-      const y = seedRand(i, 1) * VH;
-      const length = 200 + seedRand(i, 2) * 400;
-      const thick = 3 + seedRand(i, 3) * 8;
-      const dir = seedRand(i, 4) > 0.5 ? 1 : -1;
-      const curveY = (seedRand(i, 5) - 0.5) * 160;
-      const phaseT = t < T_IN_END ? t / T_IN_END : (t - T_HOLD_END) / (T_OUT_END - T_HOLD_END);
-      const startX = dir > 0 ? -length : VW;
-      const travel = VW + length * 2;
-      const x = startX + dir * travel * (phaseT + seedRand(i, 6) * 0.3);
-      const x1=x, y1=y, x2=x+dir*length, y2=y+curveY*0.3;
-      const cx=x+dir*length*0.5, cy=y+curveY;
-      const op = alpha * (0.4 + seedRand(i, 7) * 0.5);
-      paths += `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" stroke="white" stroke-width="${thick}" stroke-linecap="round" fill="none" opacity="${op}"/>`;
-    }
-    wispSVG.innerHTML = paths;
-  }
-
-  // ── Impact burst renderer ─────────────────────────────────────────────────
-  function renderBurst(t) {
-    const window_dur = 0.30;
-    const local = (t - T_IMPACT + window_dur * 0.3) / window_dur;
-    if (local < 0 || local > 1) { burstSVG.innerHTML = ''; return; }
-
-    const grow = easeOutExpo(clamp(local * 1.4, 0, 1));
-    const fade = 1 - easeInQuad(clamp(local, 0, 1));
-
-    const N = 24;
-    const cx = VW / 2, cy = VH / 2;
-    const innerR = 60 + (1 - grow) * 400;
-    const outerR = 150 + grow * 1200;
-
-    let rays = '';
-    for (let i = 0; i < N; i++) {
-      const angle = (i / N) * Math.PI * 2 + seedRand(i, 9) * 0.06;
-      const wa = 0.012 + seedRand(i, 10) * 0.018;
-      const r1 = innerR + seedRand(i, 11) * 80;
-      const r2 = outerR + seedRand(i, 12) * 150;
-      const p1 = [cx + Math.cos(angle-wa)*r1, cy + Math.sin(angle-wa)*r1];
-      const p2 = [cx + Math.cos(angle+wa)*r1, cy + Math.sin(angle+wa)*r1];
-      const p3 = [cx + Math.cos(angle+wa*0.3)*r2, cy + Math.sin(angle+wa*0.3)*r2];
-      const p4 = [cx + Math.cos(angle-wa*0.3)*r2, cy + Math.sin(angle-wa*0.3)*r2];
-      rays += `<polygon points="${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]} ${p4[0]},${p4[1]}" fill="#3a2812" opacity="${0.85*fade}"/>`;
-    }
-    burstSVG.innerHTML = rays;
-  }
-
-  // ── Animation frame ───────────────────────────────────────────────────────
-  function frame(ts) {
-    if (!startTime) startTime = ts;
-    const t = Math.min((ts - startTime) / 1000, DURATION);
-
-    // Swap callback at T_SWAP
-    if (!swapFired && t >= T_SWAP) {
-      swapFired = true;
-      if (onSwapCallback) onSwapCallback();
-    }
-
-    // Render clouds
-    cloudEls.forEach(({ el, cfg }) => {
-      const p = cloudProgress(t, cfg.delay);
-      const scale = VW / 1920;
-      const finalX = cfg.cx * VW;
-      const finalY = cfg.cy * VH;
-      const startX = finalX + cfg.from[0] * OFFSCREEN * scale;
-      const startY = finalY + cfg.from[1] * OFFSCREEN * scale;
-      const x = startX + (finalX - startX) * p;
-      const y = startY + (finalY - startY) * p;
-
-      let sc = 0.78 + 0.22 * p;
-      if (p >= 0.999) {
-        const holdLocal = clamp((t - T_IN_END) / (T_HOLD_END - T_IN_END), 0, 1);
-        sc = 1 + Math.sin(holdLocal * Math.PI) * 0.04;
-      }
-      const moving = p > 0 && p < 0.98;
-      let blurX = 0;
-      if (moving) blurX = -cfg.from[0] * (1 - p) * 0.18;
-      const sx = sc * (1 + Math.abs(blurX));
-      const sy = sc * (1 - Math.abs(blurX) * 0.25);
-      const rot = cfg.rot * (0.6 + 0.4 * p);
-
-      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${sx}, ${sy}) rotate(${rot}deg)`;
-      el.style.display = p > 0.001 ? '' : 'none';
+  function renderClouds(t) {
+    const sc = VW/1920;
+    cloudEls.forEach(({el, cfg:c}) => {
+      const p = cloudProg(t, c.delay);
+      if (p <= 0.001) { el.style.display='none'; return; }
+      el.style.display = '';
+      const fx=c.cx*VW, fy=c.cy*VH;
+      const sx2=fx+c.from[0]*OFFSCREEN*sc, sy2=fy+c.from[1]*OFFSCREEN*sc;
+      const x=sx2+(fx-sx2)*p, y=sy2+(fy-sy2)*p;
+      let scale = 0.78+0.22*p;
+      if (p>=0.999) { const hl=clamp((t-T_IN_END)/(T_HOLD_END-T_IN_END),0,1); scale=1+Math.sin(hl*Math.PI)*0.04; }
+      const bx = p>0&&p<0.98 ? -c.from[0]*(1-p)*0.18 : 0;
+      const rot = c.rot*(0.6+0.4*p);
+      el.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) scale(${scale*(1+Math.abs(bx))},${scale*(1-Math.abs(bx)*.25)}) rotate(${rot}deg)`;
     });
+  }
 
+  function renderWisps(t) {
+    let alpha=0;
+    if (t<T_IN_END) { const p=clamp(t/T_IN_END,0,1); alpha=easeOutCubic(p)*(1-easeInQuad(Math.max(0,(t-T_IN_END*.6)/(T_IN_END*.4)))); }
+    else if (t>T_HOLD_END&&t<T_OUT_END) { const p=clamp((t-T_HOLD_END)/(T_OUT_END-T_HOLD_END),0,1); alpha=easeOutCubic(Math.min(1,p*2))*(1-easeInQuad(Math.max(0,(p-.6)/.4))); }
+    if (alpha<=0.001) { wispSVG.innerHTML=''; return; }
+    let p2='';
+    for (let i=0;i<18;i++) {
+      const y=seedRand(i,1)*VH, len=180+seedRand(i,2)*360, th=2+seedRand(i,3)*7;
+      const dir=seedRand(i,4)>.5?1:-1, cy2=(seedRand(i,5)-.5)*140;
+      const ph=t<T_IN_END?t/T_IN_END:(t-T_HOLD_END)/(T_OUT_END-T_HOLD_END);
+      const x=( dir>0?-len:VW )+dir*(VW+len*2)*(ph+seedRand(i,6)*.3);
+      p2+=`<path d="M ${x} ${y} Q ${x+dir*len*.5} ${y+cy2} ${x+dir*len} ${y+cy2*.3}" stroke="white" stroke-width="${th}" stroke-linecap="round" fill="none" opacity="${alpha*(0.35+seedRand(i,7)*.5)}"/>`;
+    }
+    wispSVG.innerHTML=p2;
+  }
+
+  function renderBurst(t) {
+    const wn=0.30, local=(t-T_IMPACT+wn*.3)/wn;
+    if (local<0||local>1) { burstSVG.innerHTML=''; return; }
+    const grow=easeOutExpo(clamp(local*1.4,0,1)), fade=1-easeInQuad(clamp(local,0,1));
+    const N=24, cx=VW/2, cy=VH/2;
+    const ir=60+(1-grow)*400, or2=150+grow*1200;
+    let rays='';
+    for (let i=0;i<N;i++) {
+      const a=(i/N)*Math.PI*2+seedRand(i,9)*.06, wa=0.012+seedRand(i,10)*.018;
+      const r1=ir+seedRand(i,11)*80, r2=or2+seedRand(i,12)*150;
+      const p1=[cx+Math.cos(a-wa)*r1,cy+Math.sin(a-wa)*r1],p2=[cx+Math.cos(a+wa)*r1,cy+Math.sin(a+wa)*r1];
+      const p3=[cx+Math.cos(a+wa*.3)*r2,cy+Math.sin(a+wa*.3)*r2],p4=[cx+Math.cos(a-wa*.3)*r2,cy+Math.sin(a-wa*.3)*r2];
+      rays+=`<polygon points="${p1} ${p2} ${p3} ${p4}" fill="#3a2812" opacity="${.85*fade}"/>`;
+    }
+    burstSVG.innerHTML=rays;
+  }
+
+  // ── Animation loop ────────────────────────────────────────────────────────
+  let phaseOffset = 0; // start time within [0, T_TOTAL]
+  let navCallback = null;
+  let navFired = false;
+
+  function frame(ts) {
+    if (!startT) startT = ts;
+    const t = Math.min(phaseOffset + (ts - startT) / 1000, T_TOTAL);
+
+    // Phase 1: navigate when fully covered
+    if (!navFired && navCallback && t >= T_HOLD_END) {
+      navFired = true;
+      const cb = navCallback;
+      navCallback = null;
+      cb(); // Navigate — browser will load new page
+      return; // stop rendering (page is navigating)
+    }
+
+    renderClouds(t);
     renderWisps(t);
     renderBurst(t);
 
-    if (t < DURATION) {
+    if (t < T_TOTAL) {
       raf = requestAnimationFrame(frame);
     } else {
       hide();
     }
   }
 
-  // ── Public API ────────────────────────────────────────────────────────────
   function hide() {
     if (overlay) overlay.style.display = 'none';
     if (raf) cancelAnimationFrame(raf);
-    active = false;
-    startTime = null;
-    swapFired = false;
-    onSwapCallback = null;
+    active = false; startT = null; navFired = false; navCallback = null;
   }
 
-  function trigger(callback) {
-    if (active) return;
+  // ── Phase 1: sweep in, then navigate ─────────────────────────────────────
+  function triggerIn(href) {
+    if (active) { window.location.href = href; return; }
     buildOverlay();
     active = true;
-    onSwapCallback = callback || null;
-    swapFired = false;
-    startTime = null;
+    phaseOffset = 0;
+    startT = null;
+    navFired = false;
+    navCallback = () => {
+      try { sessionStorage.setItem('pvCloudResume','1'); } catch(e){}
+      window.location.href = href;
+    };
     overlay.style.display = 'block';
-    // Reset cloud positions
-    cloudEls.forEach(({ el }) => { el.style.display = 'none'; });
     raf = requestAnimationFrame(frame);
   }
 
-  // ── Expose globally ───────────────────────────────────────────────────────
-  window.cloudTransition = trigger;
+  // ── Phase 2: start dispersal (called on new page load) ───────────────────
+  function triggerOut() {
+    buildOverlay();
+    active = true;
+    phaseOffset = T_HOLD_END; // start mid-animation (dispersal)
+    startT = null;
+    navFired = true;
+    navCallback = null;
+    overlay.style.display = 'block';
+    // Force all clouds to "fully covered" position first
+    renderClouds(T_HOLD_END);
+    raf = requestAnimationFrame(frame);
+  }
+
+  // ── Public API ────────────────────────────────────────────────────────────
+  // Navigate with cloud transition
+  window.cloudNavigate = triggerIn;
+
+  // Simple callback-style (for non-navigation uses)
+  window.cloudTransition = (callback) => {
+    if (active) { if(callback) callback(); return; }
+    buildOverlay();
+    active = true;
+    phaseOffset = 0;
+    startT = null;
+    navFired = false;
+    navCallback = null;
+    overlay.style.display = 'block';
+    // Use the swap callback via a different mechanism
+    let swapFired = false;
+    const origFrame = frame;
+    raf = requestAnimationFrame(function tick(ts) {
+      if (!startT) startT = ts;
+      const t = Math.min((ts - startT) / 1000, T_TOTAL);
+      if (!swapFired && t >= T_HOLD_END) { swapFired=true; if(callback) callback(); }
+      renderClouds(t); renderWisps(t); renderBurst(t);
+      if (t < T_TOTAL) raf = requestAnimationFrame(tick);
+      else hide();
+    });
+  };
+
+  // ── Auto-resume phase 2 on page load ─────────────────────────────────────
+  function onLoad() {
+    try {
+      if (sessionStorage.getItem('pvCloudResume')) {
+        sessionStorage.removeItem('pvCloudResume');
+        // Small delay to let the page render first
+        setTimeout(triggerOut, 30);
+      }
+    } catch(e){}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onLoad);
+  } else {
+    onLoad();
+  }
 
 })();

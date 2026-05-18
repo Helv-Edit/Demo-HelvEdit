@@ -3,7 +3,7 @@
    Design unique inspiré manga/anime — Pokémon TCG France
    ═══════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── VARIABLES ── */
 :root {
@@ -12,15 +12,15 @@
   --yellow-dim:  rgba(255,203,5,0.12);
   --red:         #E8001D;
   --red-dim:     rgba(232,0,29,0.12);
-  --black:       #0a0a0a;
-  --black2:      #111111;
-  --black3:      #1a1a1a;
+  --black:       #0d0b09;
+  --black2:      #141210;
+  --black3:      #1c1916;
   --white:       #f5f5f0;
   --muted:       #888;
   --border:      #2a2a2a;
   --panel-border: 3px solid #000;
   --radius:      4px;
-  --manga-font:  'Bangers', cursive;
+  --manga-font:  'Dela Gothic One', cursive;
   --display-font:'Space Grotesk', sans-serif;
   --body-font:   'Inter', sans-serif;
 }
@@ -29,7 +29,11 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  background: var(--black);
+  background-color: var(--black);
+  background-image:
+    /* Sakura petals — SVG inline */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg opacity='0.045'%3E%3Cellipse cx='40' cy='30' rx='8' ry='5' fill='%23ffb7c5' transform='rotate(-30 40 30)'/%3E%3Cellipse cx='40' cy='30' rx='8' ry='5' fill='%23ffb7c5' transform='rotate(42 40 30)'/%3E%3Cellipse cx='40' cy='30' rx='8' ry='5' fill='%23ffb7c5' transform='rotate(114 40 30)'/%3E%3Cellipse cx='40' cy='30' rx='8' ry='5' fill='%23ffb7c5' transform='rotate(186 40 30)'/%3E%3Cellipse cx='40' cy='30' rx='8' ry='5' fill='%23ffb7c5' transform='rotate(258 40 30)'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%23ffb7c5'/%3E%3C/g%3E%3Cg opacity='0.035'%3E%3Cellipse cx='140' cy='110' rx='7' ry='4' fill='%23ffc8d8' transform='rotate(15 140 110)'/%3E%3Cellipse cx='140' cy='110' rx='7' ry='4' fill='%23ffc8d8' transform='rotate(87 140 110)'/%3E%3Cellipse cx='140' cy='110' rx='7' ry='4' fill='%23ffc8d8' transform='rotate(159 140 110)'/%3E%3Cellipse cx='140' cy='110' rx='7' ry='4' fill='%23ffc8d8' transform='rotate(231 140 110)'/%3E%3Cellipse cx='140' cy='110' rx='7' ry='4' fill='%23ffc8d8' transform='rotate(303 140 110)'/%3E%3Ccircle cx='140' cy='110' r='2.5' fill='%23ffc8d8'/%3E%3C/g%3E%3Cg opacity='0.025'%3E%3Cellipse cx='95' cy='170' rx='6' ry='3.5' fill='%23ffe0e8' transform='rotate(-45 95 170)'/%3E%3Cellipse cx='95' cy='170' rx='6' ry='3.5' fill='%23ffe0e8' transform='rotate(27 95 170)'/%3E%3Cellipse cx='95' cy='170' rx='6' ry='3.5' fill='%23ffe0e8' transform='rotate(99 95 170)'/%3E%3Cellipse cx='95' cy='170' rx='6' ry='3.5' fill='%23ffe0e8' transform='rotate(171 95 170)'/%3E%3Cellipse cx='95' cy='170' rx='6' ry='3.5' fill='%23ffe0e8' transform='rotate(243 95 170)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 200px 200px;
   color: var(--white);
   font-family: var(--body-font);
   min-height: 100vh;

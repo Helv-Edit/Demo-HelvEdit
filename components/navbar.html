@@ -1,0 +1,87 @@
+<!--
+  COMPOSANT : Navbar / Header
+  Usage : Sticky header avec logo, nav links, et CTA button
+  Dépendances : design-system.css
+-->
+<header class="navbar">
+  <div class="container navbar-inner">
+    <a href="#" class="navbar-logo">
+      Helv<span class="text-accent">Edit</span>
+    </a>
+    <nav class="navbar-nav">
+      <a href="#" class="nav-link active">Accueil</a>
+      <a href="#" class="nav-link">Services</a>
+      <a href="#" class="nav-link">Réalisations</a>
+      <a href="#" class="nav-link">À propos</a>
+      <a href="#" class="nav-link">Contact</a>
+    </nav>
+    <div class="navbar-right">
+      <button class="btn btn-primary btn-sm">Démarrer un projet</button>
+      <button class="navbar-burger" aria-label="Menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div class="navbar-mobile" id="mobileMenu">
+    <a href="#" class="nav-link">Accueil</a>
+    <a href="#" class="nav-link">Services</a>
+    <a href="#" class="nav-link">Réalisations</a>
+    <a href="#" class="nav-link">À propos</a>
+    <a href="#" class="nav-link">Contact</a>
+    <button class="btn btn-primary" style="margin-top:0.5rem">Démarrer un projet</button>
+  </div>
+</header>
+
+<style>
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,13,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.navbar-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: var(--header-h);
+}
+.navbar-logo {
+  font-size: 1.2rem; font-weight: 800; letter-spacing: 0.04em;
+}
+.navbar-nav {
+  display: flex; align-items: center; gap: 0.25rem;
+}
+.nav-link {
+  padding: 0.4rem 0.85rem; border-radius: var(--radius);
+  font-size: var(--text-sm); font-weight: 500; color: var(--muted);
+  transition: all var(--t-base);
+}
+.nav-link:hover, .nav-link.active { color: var(--text); background: var(--bg-3); }
+.navbar-right { display: flex; align-items: center; gap: var(--space-4); }
+
+.navbar-burger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; padding: 4px; cursor: pointer;
+}
+.navbar-burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: all var(--t-base);
+}
+
+.navbar-mobile {
+  display: none; flex-direction: column; gap: 0.25rem;
+  padding: var(--space-4); border-top: 1px solid var(--border);
+}
+.navbar-mobile.open { display: flex; }
+
+@media (max-width: 768px) {
+  .navbar-nav { display: none; }
+  .navbar-burger { display: flex; }
+}
+</style>
+
+<script>
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+</script>

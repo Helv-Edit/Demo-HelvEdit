@@ -1,0 +1,111 @@
+<!--
+  COMPOSANT : Formulaire de contact
+  Usage : Formulaire complet avec validation client, toast de confirmation
+  Dépendances : design-system.css
+-->
+<div class="form-wrapper">
+  <div class="form-header">
+    <h2>Parlons de votre projet</h2>
+    <p class="text-muted">Réponse garantie sous 24h ouvrées.</p>
+  </div>
+
+  <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="input-group">
+        <label for="firstName">Prénom</label>
+        <input class="input" id="firstName" name="firstName" type="text" placeholder="Jean" required />
+      </div>
+      <div class="input-group">
+        <label for="lastName">Nom</label>
+        <input class="input" id="lastName" name="lastName" type="text" placeholder="Dupont" required />
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="email">Email professionnel</label>
+      <input class="input" id="email" name="email" type="email" placeholder="jean@entreprise.ch" required />
+    </div>
+
+    <div class="input-group">
+      <label for="service">Type de projet</label>
+      <select class="input" id="service" name="service">
+        <option value="" disabled selected>Choisir...</option>
+        <option value="vitrine">Site vitrine</option>
+        <option value="ecommerce">E-commerce</option>
+        <option value="shopify">Shopify</option>
+        <option value="identite">Identité visuelle</option>
+        <option value="autre">Autre</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="budget">Budget estimé</label>
+      <select class="input" id="budget" name="budget">
+        <option value="" disabled selected>Fourchette...</option>
+        <option value="1-3">CHF 1'000 – 3'000</option>
+        <option value="3-6">CHF 3'000 – 6'000</option>
+        <option value="6-12">CHF 6'000 – 12'000</option>
+        <option value="12+">CHF 12'000+</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="message">Décrivez votre projet</label>
+      <textarea class="input textarea" id="message" name="message" rows="4"
+        placeholder="Votre activité, vos objectifs, votre deadline..." required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg" style="width:100%" id="submitBtn">
+      Envoyer ma demande
+    </button>
+
+    <p class="form-note text-muted text-sm">
+      🔒 Vos données restent confidentielles. Jamais de spam.
+    </p>
+  </form>
+</div>
+
+<style>
+.form-wrapper {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: var(--space-10);
+  max-width: 520px;
+}
+.form-header { margin-bottom: var(--space-8); }
+.form-header h2 { font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-2); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.contact-form { display: flex; flex-direction: column; gap: var(--space-5); }
+.textarea { resize: vertical; min-height: 100px; }
+.form-note { text-align: center; margin-top: var(--space-2); }
+
+select.input { appearance: none; cursor: pointer; }
+
+@media (max-width: 480px) {
+  .form-wrapper { padding: var(--space-6); }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    showToast('Message envoyé ! On revient vers vous sous 24h.', 'success');
+    e.target.reset();
+    btn.textContent = 'Envoyer ma demande';
+    btn.disabled = false;
+  }, 1200);
+}
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'success' ? '✓' : '✕'}</span> ${message}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+</script>

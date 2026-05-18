@@ -1,0 +1,131 @@
+<!--
+  COMPOSANT : GSAP Animations — Kit de base
+  Usage : Copier les snippets d'animation dans n'importe quel projet
+  Dépendance : GSAP CDN (inclus ci-dessous) + ScrollTrigger plugin
+
+  COMMENT UTILISER :
+  1. Coller les 2 scripts CDN dans le <head> de la page
+  2. Copier les snippets d'animation souhaités dans ton <script>
+  3. Ajouter les classes data-animate="..." sur tes éléments HTML
+-->
+
+<!-- ── SCRIPTS À COLLER DANS LE <head> ── -->
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+-->
+
+<!-- ── DÉMO VISUELLE ── -->
+<div class="gsap-demo">
+  <h2 style="margin-bottom:2rem">GSAP — Kit d'animations Helv'Edit</h2>
+
+  <!-- Fade In Up (le plus utilisé) -->
+  <div class="demo-block" data-animate="fadeUp">
+    <h3>fadeUp</h3>
+    <p>Apparition depuis le bas — idéal pour titres, cartes, sections</p>
+  </div>
+
+  <!-- Stagger (liste d'éléments) -->
+  <div class="stagger-demo">
+    <div class="stagger-item" data-animate="stagger">Item 1</div>
+    <div class="stagger-item" data-animate="stagger">Item 2</div>
+    <div class="stagger-item" data-animate="stagger">Item 3</div>
+    <div class="stagger-item" data-animate="stagger">Item 4</div>
+  </div>
+
+  <!-- Compteur animé -->
+  <div class="counter-demo">
+    <div class="counter-item">
+      <span class="counter" data-target="500">0</span><span>+</span>
+      <p>Projets livrés</p>
+    </div>
+    <div class="counter-item">
+      <span class="counter" data-target="98">0</span><span>%</span>
+      <p>Clients satisfaits</p>
+    </div>
+    <div class="counter-item">
+      <span class="counter" data-target="12">0</span><span>ans</span>
+      <p>D'expérience</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.gsap-demo { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.demo-block {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-6);
+  margin-bottom: var(--space-4); opacity: 0;
+}
+.demo-block h3 { color: var(--accent); margin-bottom: var(--space-2); }
+
+.stagger-demo {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+.stagger-item {
+  background: var(--bg-3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: var(--space-4);
+  text-align: center; font-weight: 600;
+  opacity: 0;
+}
+
+.counter-demo {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6);
+}
+.counter-item { text-align: center; }
+.counter { font-size: 3rem; font-weight: 800; color: var(--accent); }
+.counter-item p { color: var(--muted); margin-top: var(--space-2); }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── SNIPPET 1 : Fade Up (copier-coller pour tout élément) ── */
+gsap.from('[data-animate="fadeUp"]', {
+  scrollTrigger: { trigger: '[data-animate="fadeUp"]', start: 'top 85%' },
+  y: 40, opacity: 0, duration: 0.8, ease: 'power3.out'
+});
+
+/* ── SNIPPET 2 : Stagger (liste d'items en cascade) ── */
+gsap.from('[data-animate="stagger"]', {
+  scrollTrigger: { trigger: '.stagger-demo', start: 'top 85%' },
+  y: 30, opacity: 0, duration: 0.6, ease: 'power2.out',
+  stagger: 0.1
+});
+
+/* ── SNIPPET 3 : Compteur animé ── */
+document.querySelectorAll('.counter').forEach(el => {
+  const target = +el.dataset.target;
+  gsap.to(el, {
+    scrollTrigger: { trigger: el, start: 'top 85%' },
+    innerHTML: target,
+    duration: 1.5,
+    ease: 'power2.out',
+    snap: { innerHTML: 1 }
+  });
+});
+
+/* ── SNIPPET 4 : Parallax (à appliquer sur .hero-bg par ex.) ──
+gsap.to('.parallax-el', {
+  scrollTrigger: {
+    trigger: '.parallax-el',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: true
+  },
+  y: -80
+});
+*/
+
+/* ── SNIPPET 5 : Apparition au scroll générique ──
+gsap.utils.toArray('.reveal').forEach(el => {
+  gsap.from(el, {
+    scrollTrigger: { trigger: el, start: 'top 88%' },
+    opacity: 0, y: 30, duration: 0.7, ease: 'power2.out'
+  });
+});
+*/
+</script>
