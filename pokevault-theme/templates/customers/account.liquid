@@ -1,0 +1,342 @@
+{% comment %}
+  Customer account page — displays customer info, orders, and addresses
+{% endcomment %}
+
+<div class="customer-account">
+  <div class="account-header">
+    <h1 class="account-title">Mon Compte</h1>
+    <p class="account-subtitle">Bienvenue {{ customer.first_name }} 👋</p>
+  </div>
+
+  <div class="account-container">
+
+    <!-- INFOS PERSONNELLES -->
+    <section class="account-section">
+      <h2 class="section-title">Infos Personnelles</h2>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-label">Prénom</span>
+          <span class="info-value">{{ customer.first_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Nom</span>
+          <span class="info-value">{{ customer.last_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ customer.email }}</span>
+        </div>
+      </div>
+      <a href="{{ routes.account_edit_url }}" class="btn btn--secondary">Modifier mes infos →</a>
+    </section>
+
+    <!-- ADRESSES -->
+    <section class="account-section">
+      <h2 class="section-title">Mes Adresses</h2>
+      {% if customer.addresses.size > 0 %}
+        <div class="addresses-grid">
+          {% for address in customer.addresses %}
+            <div class="address-card">
+              <p class="address-name">{{ address.first_name }} {{ address.last_name }}</p>
+              <p>{{ address.street }}</p>
+              <p>{{ address.city }} {{ address.zip }}</p>
+              <p>{{ address.country }}</p>
+              {% if address.default %}<span class="badge">Par défaut</span>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="empty-state">Aucune adresse enregistrée</p>
+      {% endif %}
+      <a href="{{ routes.account_addresses_url }}" class="btn btn--secondary">Gérer les adresses →</a>
+    </section>
+
+    <!-- COMMANDES -->
+    <section class="account-section">
+      <h2 class="section-title">Mes Commandes</h2>
+      {% if customer.orders.size > 0 %}
+        <div class="orders-list">
+          {% for order in customer.orders %}
+            <div class="order-card">
+              <div class="order-header">
+                <span class="order-number">Commande #{{ order.order_number }}</span>
+                <span class="order-status">{{ order.fulfillment_status_label }}</span>
+              </div>
+              <div class="order-details">
+                <p><strong>Date:</strong> {{ order.created_at | date: "%d/%m/%Y" }}</p>
+                <p><strong>Total:</strong> {{ order.total_price | money }}</p>
+                <p><strong>Articles:</strong> {{ order.line_items.size }}</p>
+              </div>
+              <a href="{{ order.customer_url }}" class="btn btn--tertiary">Voir la commande →</a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="empty-state">Aucune commande pour le moment</p>
+      {% endif %}
+    </section>
+
+  </div>
+
+  <!-- DÉCONNEXION -->
+  <div class="account-footer">
+    <a href="{{ routes.customer_logout_url }}" class="btn btn--logout">Se déconnecter</a>
+  </div>
+
+</div>
+
+<style>
+  .customer-account {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: var(--white);
+  }
+
+  .account-header {
+    margin-bottom: 3rem;
+    text-align: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.2);
+  }
+
+  .account-title {
+    font-family: var(--f-manga);
+    font-size: 2.5rem;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+
+  .account-subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  .account-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .account-section {
+    background: rgba(22, 19, 16, 0.6);
+    border: 1px solid rgba(255, 203, 5, 0.15);
+    border-radius: 12px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .section-title {
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    color: var(--yellow);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.2);
+  }
+
+  /* Info Card */
+  .info-card {
+    background: rgba(14, 12, 10, 0.5);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.1);
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .info-value {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* Addresses Grid */
+  .addresses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .address-card {
+    background: rgba(14, 12, 10, 0.5);
+    border: 1px solid rgba(255, 203, 5, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .address-name {
+    font-weight: 600;
+    color: var(--yellow);
+    margin-bottom: 0.75rem;
+  }
+
+  .address-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0.25rem 0;
+  }
+
+  .badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 203, 5, 0.2);
+    color: var(--yellow);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  /* Orders List */
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .order-card {
+    background: rgba(14, 12, 10, 0.5);
+    border: 1px solid rgba(255, 203, 5, 0.15);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.1);
+  }
+
+  .order-number {
+    font-family: var(--f-display);
+    font-size: 1.1rem;
+    color: var(--yellow);
+    font-weight: 600;
+  }
+
+  .order-status {
+    display: inline-block;
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .order-details {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .order-details p {
+    margin: 0.5rem 0;
+  }
+
+  /* Empty State */
+  .empty-state {
+    color: var(--muted);
+    text-align: center;
+    padding: 2rem 1rem;
+    font-style: italic;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .btn--secondary {
+    background: rgba(255, 203, 5, 0.1);
+    color: var(--yellow);
+    border: 1px solid rgba(255, 203, 5, 0.3);
+  }
+
+  .btn--secondary:hover {
+    background: rgba(255, 203, 5, 0.2);
+  }
+
+  .btn--tertiary {
+    background: transparent;
+    color: var(--yellow);
+    border: 1px solid rgba(255, 203, 5, 0.3);
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .btn--tertiary:hover {
+    border-color: var(--yellow);
+  }
+
+  .btn--logout {
+    background: rgba(220, 38, 38, 0.15);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+  }
+
+  .btn--logout:hover {
+    background: rgba(220, 38, 38, 0.25);
+  }
+
+  /* Footer */
+  .account-footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 203, 5, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .account-title {
+      font-size: 1.8rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+    }
+
+    .account-section {
+      padding: 1.5rem;
+    }
+
+    .addresses-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .order-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  }
+</style>

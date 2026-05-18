@@ -1,0 +1,308 @@
+{% comment %}
+  Customer order detail page
+{% endcomment %}
+
+<div class="customer-order">
+  <div class="page-header">
+    <h1 class="page-title">Commande #{{ order.order_number }}</h1>
+    <a href="{{ routes.account_url }}" class="btn btn--back">← Retour au compte</a>
+  </div>
+
+  <div class="order-container">
+
+    <!-- INFO COMMANDE -->
+    <section class="order-section">
+      <h2>Informations de la Commande</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Date</span>
+          <span class="info-value">{{ order.created_at | date: "%d/%m/%Y à %H:%M" }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Statut</span>
+          <span class="info-value status">{{ order.fulfillment_status_label }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Total</span>
+          <span class="info-value yellow">{{ order.total_price | money }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARTICLES -->
+    <section class="order-section">
+      <h2>Articles</h2>
+      <div class="items-list">
+        {% for item in order.line_items %}
+          <div class="item-card">
+            {% if item.image %}
+              <img src="{{ item.image | image_url: width: 80 }}" alt="{{ item.title }}" class="item-image">
+            {% else %}
+              <div class="item-image-placeholder">📦</div>
+            {% endif %}
+            <div class="item-info">
+              <h3>{{ item.title }}</h3>
+              {% if item.variant.title != 'Default Title' %}<p class="variant">{{ item.variant.title }}</p>{% endif %}
+              <p class="quantity">Quantité: {{ item.quantity }}</p>
+              <p class="price">{{ item.line_price | money }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- ADRESSE DE LIVRAISON -->
+    {% if order.shipping_address %}
+      <section class="order-section">
+        <h2>Adresse de Livraison</h2>
+        <div class="address-box">
+          <p><strong>{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}</strong></p>
+          <p>{{ order.shipping_address.street }}</p>
+          {% if order.shipping_address.street2 %}<p>{{ order.shipping_address.street2 }}</p>{% endif %}
+          <p>{{ order.shipping_address.city }} {{ order.shipping_address.zip }}</p>
+          <p>{{ order.shipping_address.country }}</p>
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- RÉCAPITULATIF PRIX -->
+    <section class="order-section summary">
+      <h2>Récapitulatif</h2>
+      <div class="summary-line">
+        <span>Sous-total</span>
+        <span>{{ order.subtotal_price | money }}</span>
+      </div>
+      {% for discount in order.discounts %}
+        <div class="summary-line discount">
+          <span>{{ discount.code }}</span>
+          <span>-{{ discount.savings | money }}</span>
+        </div>
+      {% endfor %}
+      {% if order.shipping_price > 0 %}
+        <div class="summary-line">
+          <span>Frais de port</span>
+          <span>{{ order.shipping_price | money }}</span>
+        </div>
+      {% endif %}
+      {% if order.tax_price > 0 %}
+        <div class="summary-line">
+          <span>Taxes</span>
+          <span>{{ order.tax_price | money }}</span>
+        </div>
+      {% endif %}
+      <div class="summary-line total">
+        <span>Total</span>
+        <span>{{ order.total_price | money }}</span>
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+<style>
+  .customer-order {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.2);
+  }
+
+  .page-title {
+    font-family: var(--f-manga);
+    font-size: 2rem;
+    color: var(--yellow);
+  }
+
+  .order-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .order-section {
+    background: rgba(22, 19, 16, 0.6);
+    border: 1px solid rgba(255, 203, 5, 0.15);
+    border-radius: 12px;
+    padding: 2rem;
+    color: var(--white);
+  }
+
+  .order-section h2 {
+    font-family: var(--f-display);
+    font-size: 1.3rem;
+    color: var(--yellow);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.2);
+  }
+
+  /* Info Grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .info-item {
+    background: rgba(14, 12, 10, 0.5);
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .info-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .info-value {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .info-value.status {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .info-value.yellow {
+    color: var(--yellow);
+  }
+
+  /* Items List */
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .item-card {
+    display: flex;
+    gap: 1rem;
+    background: rgba(14, 12, 10, 0.5);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 203, 5, 0.1);
+  }
+
+  .item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  .item-image-placeholder {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 203, 5, 0.1);
+    border-radius: 6px;
+    font-size: 2rem;
+  }
+
+  .item-info h3 {
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+
+  .item-info p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+
+  .item-info .price {
+    color: var(--white);
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  /* Address Box */
+  .address-box {
+    background: rgba(14, 12, 10, 0.5);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--yellow);
+  }
+
+  .address-box p {
+    color: var(--muted);
+    margin: 0.5rem 0;
+  }
+
+  .address-box strong {
+    color: var(--yellow);
+  }
+
+  /* Summary */
+  .order-section.summary {
+    background: rgba(22, 19, 16, 0.8);
+  }
+
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 203, 5, 0.1);
+    color: var(--muted);
+  }
+
+  .summary-line.discount {
+    color: #22c55e;
+  }
+
+  .summary-line.discount span:last-child {
+    color: #22c55e;
+  }
+
+  .summary-line.total {
+    border-bottom: none;
+    border-top: 2px solid rgba(255, 203, 5, 0.3);
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--yellow);
+  }
+
+  .btn--back {
+    background: transparent;
+    color: var(--yellow);
+    border: 1px solid rgba(255, 203, 5, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .item-card {
+      flex-direction: column;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
