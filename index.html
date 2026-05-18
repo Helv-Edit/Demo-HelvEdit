@@ -589,8 +589,17 @@
       .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
     }
 
-    /* ─── SCROLL ANIMATIONS ─── */
-    .gsap-hidden { opacity: 0; transform: translateY(30px); }
+    /* ─── CARD ANIMATIONS (IntersectionObserver) ─── */
+    .product-card {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+      transition-delay: var(--card-delay, 0s);
+    }
+    .product-card.card-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -1327,18 +1336,21 @@ function initHeroAnimations() {
   }
 }
 
-// ─── PRODUCT CARDS SCROLL ANIMATION
+// ─── PRODUCT CARDS SCROLL ANIMATION (CSS-based, fiable)
 function initScrollAnimations() {
-  const cards = gsap.utils.toArray('.product-card');
-  // Set initial state via JS (not CSS) so fallback is visible
-  gsap.set(cards, { opacity: 0, y: 30 });
-  cards.forEach((el, i) => {
-    gsap.to(el, {
-      scrollTrigger: { trigger: el, start: 'top 95%', toggleActions: 'play none none none' },
-      opacity: 1, y: 0, duration: 0.55,
-      delay: (i % 4) * 0.07,
-      ease: 'power2.out'
+  // Utilise IntersectionObserver plutôt que GSAP ScrollTrigger pour plus de fiabilité
+  const cards = document.querySelectorAll('.product-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('card-visible');
+        observer.unobserve(entry.target);
+      }
     });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  cards.forEach((card, i) => {
+    card.style.setProperty('--card-delay', (i % 4) * 0.07 + 's');
+    observer.observe(card);
   });
 }
 
