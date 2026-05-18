@@ -11,17 +11,17 @@
   <style>
     :root {
       --yellow: #FFCB05;
-      --yellow-dim: rgba(255,203,5,0.12);
-      --dark: #0a0a0a;
-      --dark2: #111111;
-      --dark3: #1a1a1a;
-      --dark4: #242424;
-      --dark5: #2e2e2e;
-      --text: #f0f0f0;
-      --muted: #777;
-      --faint: #444;
-      --border: #222;
-      --border2: #2e2e2e;
+      --yellow-dim: rgba(255,203,5,0.1);
+      --dark: #0d1117;
+      --dark2: #161c2a;
+      --dark3: #1e2638;
+      --dark4: #28334a;
+      --dark5: #324060;
+      --text: #eef0f5;
+      --muted: #8892a4;
+      --faint: #4a5568;
+      --border: #1e2638;
+      --border2: #283348;
       --success: #22c55e;
       --error: #ef4444;
       --radius: 10px;
@@ -108,8 +108,9 @@
     .hero-bg {
       position: absolute; inset: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 70% 60% at 50% -10%, rgba(255,203,5,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 80% 100%, rgba(59,76,202,0.06) 0%, transparent 60%);
+        radial-gradient(ellipse 80% 60% at 50% -5%, rgba(255,203,5,0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 85% 110%, rgba(99,120,255,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(30,180,120,0.05) 0%, transparent 60%);
     }
     .hero-noise {
       position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
@@ -224,12 +225,22 @@
     }
     .pack-code {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 2rem; font-weight: 800; opacity: 0.9;
+      font-size: 2.2rem; font-weight: 800;
       letter-spacing: -0.02em;
+      text-shadow: 0 2px 20px currentColor;
     }
     .pack-label {
-      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; opacity: 0.6; margin-top: 0.2rem;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; opacity: 0.75; margin-top: 0.3rem;
+      text-align: center; max-width: 120px;
+    }
+    /* Pokéball watermark */
+    .product-img::after {
+      content: '';
+      position: absolute; bottom: -20px; right: -20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 12px solid rgba(255,255,255,0.04);
+      pointer-events: none;
     }
     .pack-shine {
       position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -239,13 +250,13 @@
     }
     .product-card:hover .pack-shine { transform: translateX(30%); }
 
-    /* Product type gradients */
-    .img-booster-fr { background: linear-gradient(145deg, #0d0420 0%, #1a0840 50%, #2e1060 100%); }
-    .img-booster-jp { background: linear-gradient(145deg, #1a0505 0%, #3d0a0a 50%, #5c1010 100%); }
-    .img-booster-en { background: linear-gradient(145deg, #031a08 0%, #083d10 50%, #0d5c18 100%); }
-    .img-sleeve { background: linear-gradient(145deg, #030d1a 0%, #082a3d 50%, #0d3d5c 100%); }
-    .img-protection { background: linear-gradient(145deg, #0d0900 0%, #3d2800 50%, #5c3d00 100%); }
-    .img-toploader { background: linear-gradient(145deg, #080808 0%, #1a1a1a 50%, #2e2e2e 100%); }
+    /* Product type gradients — couleurs vives */
+    .img-booster-fr { background: linear-gradient(145deg, #14073a 0%, #2d0f72 60%, #4a1fa8 100%); }
+    .img-booster-jp { background: linear-gradient(145deg, #3a0707 0%, #7a0f0f 60%, #b51a1a 100%); }
+    .img-booster-en { background: linear-gradient(145deg, #073a14 0%, #0f7a2a 60%, #159e38 100%); }
+    .img-sleeve     { background: linear-gradient(145deg, #07203a 0%, #0f4a7a 60%, #1a6eb5 100%); }
+    .img-protection { background: linear-gradient(145deg, #3a2407 0%, #7a5010 60%, #b87820 100%); }
+    .img-toploader  { background: linear-gradient(145deg, #141a28 0%, #1e2a40 60%, #2a3a55 100%); }
 
     .product-badge {
       position: absolute; top: 10px; left: 10px; z-index: 2;
@@ -578,8 +589,8 @@
       .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
     }
 
-    /* ─── SCROLL ANIMATIONS (initial state) ─── */
-    .gsap-fade { opacity: 0; }
+    /* ─── SCROLL ANIMATIONS ─── */
+    .gsap-hidden { opacity: 0; transform: translateY(30px); }
   </style>
 </head>
 <body>
@@ -627,7 +638,7 @@
         <button class="btn-primary" onclick="document.querySelector('main').scrollIntoView({behavior:'smooth'})">
           Voir les produits →
         </button>
-        <button class="btn-ghost" onclick="showView('auth')">Créer un compte</button>
+        <button class="btn-ghost" id="heroAuthBtn" onclick="showView('auth')">Créer un compte</button>
       </div>
       <div class="hero-stats" id="heroStats">
         <div class="stat">
@@ -677,7 +688,7 @@
     <div class="products-grid" id="productsGrid">
 
       <!-- BOOSTERS FR -->
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Écarlate & Violet" data-price="4.90" data-color="img-booster-fr">
+      <div class="product-card" data-cat="booster" data-name="Booster Écarlate & Violet" data-price="4.90" data-color="img-booster-fr">
         <div class="product-img img-booster-fr">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -695,7 +706,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Fable Nébuleuse" data-price="4.90" data-color="img-booster-fr">
+      <div class="product-card" data-cat="booster" data-name="Booster Fable Nébuleuse" data-price="4.90" data-color="img-booster-fr">
         <div class="product-img img-booster-fr" style="background:linear-gradient(145deg,#030d1a,#0a2040,#1a3a6e)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -712,7 +723,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Couronne Stellaire" data-price="4.90">
+      <div class="product-card" data-cat="booster" data-name="Booster Couronne Stellaire" data-price="4.90">
         <div class="product-img" style="background:linear-gradient(145deg,#0f0a00,#2e1f00,#4a3200)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -730,7 +741,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Mascarade Crépusculaire" data-price="4.90">
+      <div class="product-card" data-cat="booster" data-name="Booster Mascarade Crépusculaire" data-price="4.90">
         <div class="product-img" style="background:linear-gradient(145deg,#0a0015,#1a0035,#2e0055)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -748,7 +759,7 @@
       </div>
 
       <!-- BOOSTERS JP -->
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Cyber Judge (JP)" data-price="3.50">
+      <div class="product-card" data-cat="booster" data-name="Booster Cyber Judge (JP)" data-price="3.50">
         <div class="product-img img-booster-jp">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -765,7 +776,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Stellar Miracle (JP)" data-price="3.50">
+      <div class="product-card" data-cat="booster" data-name="Booster Stellar Miracle (JP)" data-price="3.50">
         <div class="product-img" style="background:linear-gradient(145deg,#000a1a,#001a3d,#002a5c)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -783,7 +794,7 @@
       </div>
 
       <!-- BOOSTERS EN -->
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Twilight Masquerade (EN)" data-price="4.90">
+      <div class="product-card" data-cat="booster" data-name="Booster Twilight Masquerade (EN)" data-price="4.90">
         <div class="product-img img-booster-en">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -800,7 +811,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="booster" data-name="Booster Stellar Crown (EN)" data-price="4.90">
+      <div class="product-card" data-cat="booster" data-name="Booster Stellar Crown (EN)" data-price="4.90">
         <div class="product-img" style="background:linear-gradient(145deg,#001a0a,#003d18,#005c25)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -818,7 +829,7 @@
       </div>
 
       <!-- SLEEVES -->
-      <div class="product-card gsap-fade" data-cat="sleeve" data-name="Sleeve Classic (x65)" data-price="9.90">
+      <div class="product-card" data-cat="sleeve" data-name="Sleeve Classic (x65)" data-price="9.90">
         <div class="product-img img-sleeve">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -835,7 +846,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="sleeve" data-name="Sleeve Languette (x65)" data-price="12.90">
+      <div class="product-card" data-cat="sleeve" data-name="Sleeve Languette (x65)" data-price="12.90">
         <div class="product-img" style="background:linear-gradient(145deg,#00050f,#000f2e,#001a4a)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -852,7 +863,7 @@
       </div>
 
       <!-- PROTECTIONS -->
-      <div class="product-card gsap-fade" data-cat="protection" data-name="Protection ETB 100% UV Rigide" data-price="24.90">
+      <div class="product-card" data-cat="protection" data-name="Protection ETB 100% UV Rigide" data-price="24.90">
         <div class="product-img img-protection">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -869,7 +880,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="protection" data-name="Protection Display Rigide" data-price="34.90">
+      <div class="product-card" data-cat="protection" data-name="Protection Display Rigide" data-price="34.90">
         <div class="product-img" style="background:linear-gradient(145deg,#0a0800,#1f1800,#3d2e00)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -886,7 +897,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="protection" data-name="Bundle ETB + Display" data-price="49.90">
+      <div class="product-card" data-cat="protection" data-name="Bundle ETB + Display" data-price="49.90">
         <div class="product-img" style="background:linear-gradient(145deg,#0a0500,#281200,#451f00)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -904,7 +915,7 @@
       </div>
 
       <!-- TOPLOADERS -->
-      <div class="product-card gsap-fade" data-cat="toploader" data-name="Toploader Standard (x25)" data-price="6.90">
+      <div class="product-card" data-cat="toploader" data-name="Toploader Standard (x25)" data-price="6.90">
         <div class="product-img img-toploader">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -920,7 +931,7 @@
         </div>
       </div>
 
-      <div class="product-card gsap-fade" data-cat="toploader" data-name="Toploader Premium (x10)" data-price="8.90">
+      <div class="product-card" data-cat="toploader" data-name="Toploader Premium (x10)" data-price="8.90">
         <div class="product-img" style="background:linear-gradient(145deg,#050505,#0f0f0f,#1e1e1e)">
           <div class="pack-shine"></div>
           <div class="product-img-inner">
@@ -1318,11 +1329,14 @@ function initHeroAnimations() {
 
 // ─── PRODUCT CARDS SCROLL ANIMATION
 function initScrollAnimations() {
-  gsap.utils.toArray('.gsap-fade').forEach((el, i) => {
-    gsap.from(el, {
-      scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
-      opacity: 0, y: 36, duration: 0.6,
-      delay: (i % 4) * 0.08,
+  const cards = gsap.utils.toArray('.product-card');
+  // Set initial state via JS (not CSS) so fallback is visible
+  gsap.set(cards, { opacity: 0, y: 30 });
+  cards.forEach((el, i) => {
+    gsap.to(el, {
+      scrollTrigger: { trigger: el, start: 'top 95%', toggleActions: 'play none none none' },
+      opacity: 1, y: 0, duration: 0.55,
+      delay: (i % 4) * 0.07,
       ease: 'power2.out'
     });
   });
@@ -1590,6 +1604,9 @@ function loginUser(user) {
   currentUser = user;
   document.getElementById('accountBtn').style.display = 'flex';
   document.getElementById('loginBtn').style.display = 'none';
+  // Update hero CTA
+  const heroBtn = document.getElementById('heroAuthBtn');
+  if (heroBtn) { heroBtn.textContent = 'Mon compte →'; heroBtn.onclick = () => showView('account'); }
   document.getElementById('accountAvatar').textContent = user.firstName[0].toUpperCase();
   document.getElementById('accountName').textContent = user.firstName;
   document.getElementById('bigAvatar').textContent = user.firstName[0].toUpperCase();
@@ -1606,6 +1623,8 @@ function handleLogout() {
   currentUser = null;
   document.getElementById('accountBtn').style.display = 'none';
   document.getElementById('loginBtn').style.display = 'flex';
+  const heroBtn = document.getElementById('heroAuthBtn');
+  if (heroBtn) { heroBtn.textContent = 'Créer un compte'; heroBtn.onclick = () => showView('auth'); }
   showView('shop');
   showToast('Déconnecté');
 }
