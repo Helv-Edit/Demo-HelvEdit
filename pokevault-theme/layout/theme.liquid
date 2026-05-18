@@ -26,13 +26,7 @@
       Poke<span>Vault</span>
     </a>
 
-    <nav class="site-nav">
-      <a href="{{ routes.all_products_collection_url }}" {% if request.path == routes.all_products_collection_url %}aria-current="page"{% endif %}>Tout</a>
-      <a href="/collections/boosters" {% if request.path contains 'boosters' %}class="active"{% endif %}>Boosters</a>
-      <a href="/collections/sleeves" {% if request.path contains 'sleeves' %}class="active"{% endif %}>Sleeves</a>
-      <a href="/collections/protections" {% if request.path contains 'protections' %}class="active"{% endif %}>Protections</a>
-      <a href="/collections/toploaders" {% if request.path contains 'toploaders' %}class="active"{% endif %}>Toploaders</a>
-    </nav>
+    <nav class="site-nav"></nav>
 
     <div class="header-actions">
       {% if customer %}

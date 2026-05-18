@@ -158,56 +158,87 @@
     </svg>`;
   }
 
-  // ── Product filter (client-side, no page reload) ──────────────────────────
+  // ── Product filter — simple & reliable ───────────────────────────────────
   function initProductFilter() {
     const grid = document.getElementById('productGrid');
     const tabs = document.querySelectorAll('.filter-tab[data-cat]');
     if (!grid || !tabs.length) return;
 
     const cards = Array.from(grid.querySelectorAll('.product-card'));
+    let currentCat = 'all';
+    let animating = false;
 
-    // Initial stagger in
-    gsap.fromTo(cards,
-      { opacity: 0, y: 40, scale: 0.94 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.06, ease: 'power2.out', delay: 0.3 }
-    );
+    // Add detection by card title as fallback
+    function detectCat(card) {
+      // data-cat is set by Liquid (most reliable)
+      const dc = (card.dataset.cat || '').trim();
+      if (dc && dc !== 'other') return dc;
+      // Fallback: title-based detection
+      const title = (card.querySelector('.product-card__title')?.textContent || '').toLowerCase();
+      if (title.includes('booster')) return 'booster';
+      if (title.includes('sleeve') || title.includes('manche')) return 'sleeve';
+      if (title.includes('protection') || title.includes('etb') || title.includes('display')) return 'protection';
+      if (title.includes('toploader') || title.includes('top loader')) return 'toploader';
+      return 'other';
+    }
+
+    // Cache detected categories once
+    const cardCats = cards.map(detectCat);
+
+    // Initial reveal
+    gsap.set(cards, { opacity: 0, y: 30 });
+    gsap.to(cards, { opacity: 1, y: 0, duration: 0.5, stagger: 0.055, ease: 'power2.out', delay: 0.2 });
 
     tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
+      tab.addEventListener('click', () => {
         const cat = tab.dataset.cat;
+        if (cat === currentCat || animating) return;
+        currentCat = cat;
+        animating = true;
 
-        // Update active tab
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
 
-        // Filter cards
-        const show = cat === 'all' ? cards : cards.filter(c => {
-          const t = (c.dataset.type || '').toLowerCase();
-          const tags = (c.dataset.tags || '').toLowerCase();
-          return t.includes(cat) || tags.includes(cat);
+        const show = cat === 'all' ? cards : cards.filter((_, i) => cardCats[i] === cat);
+        const hide = cat === 'all' ? [] : cards.filter((_, i) => cardCats[i] !== cat);
+
+        // 1) Fade out hidden cards instantly
+        hide.forEach(c => {
+          c.style.opacity = '0';
+          c.style.pointerEvents = 'none';
+          c.style.position = 'absolute'; // remove from flow
+          c.style.visibility = 'hidden';
         });
-        const hide = cards.filter(c => !show.includes(c));
 
-        // GSAP FLIP-style: hide old, show new with stagger
-        if (hide.length) {
-          gsap.to(hide, { opacity: 0, scale: 0.88, y: -20, duration: 0.25, ease: 'power2.in',
-            onComplete: () => hide.forEach(c => { c.style.display = 'none'; })
-          });
-        }
+        // 2) Show kept cards, animate in
+        show.forEach(c => {
+          c.style.position = '';
+          c.style.visibility = '';
+          c.style.pointerEvents = '';
+        });
 
-        setTimeout(() => {
-          show.forEach(c => {
-            c.style.display = '';
-            c.style.opacity = '0';
-            c.style.transform = 'translateY(24px) scale(0.93)';
-          });
-          gsap.to(show, {
+        gsap.fromTo(show,
+          { opacity: 0, y: 20, scale: 0.95 },
+          {
             opacity: 1, y: 0, scale: 1,
-            duration: 0.45, stagger: 0.05, ease: 'power3.out',
-            clearProps: 'all'
-          });
-        }, hide.length ? 220 : 0);
+            duration: 0.4, stagger: 0.04, ease: 'power3.out',
+            clearProps: 'all',
+            onComplete: () => { animating = false; }
+          }
+        );
+
+        // Update count
+        const count = show.length;
+        const countEl = document.getElementById('catalogCount');
+        if (countEl) {
+          countEl.textContent = count + ' produit' + (count > 1 ? 's' : '');
+          gsap.fromTo(countEl, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2)' });
+        }
+        const titleEl = document.querySelector('.catalog-title');
+        if (titleEl) {
+          const labels = { all:'Tous les produits', booster:'Boosters', sleeve:'Sleeves', protection:'Protections', toploader:'Toploaders' };
+          titleEl.textContent = labels[cat] || 'Produits';
+        }
       });
     });
   }
