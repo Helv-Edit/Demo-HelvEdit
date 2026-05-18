@@ -786,6 +786,82 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 }
 
+/* ── SHOPIFY CUSTOMER PAGES (LOGIN/REGISTER) ────────────────────────────── */
+/* Customizer la page native Shopify /account/login et /account/register */
+
+.customer { background: var(--bg); color: var(--white); min-height: 100vh; }
+.customer main { padding: 3rem 1rem; }
+.customer-section { max-width: 500px; margin: 0 auto; }
+.customer-section h1 { font-family: var(--f-manga); font-size: 2.2rem; color: var(--yellow); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.customer-section form { background: rgba(22, 19, 16, 0.8); border: 1px solid var(--yellow); border-radius: var(--radius-lg); padding: 2rem; backdrop-filter: blur(10px); }
+
+/* Form labels et inputs */
+.customer form label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.customer form input[type="email"],
+.customer form input[type="password"],
+.customer form input[type="text"] {
+  width: 100%;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.customer form input:focus {
+  outline: none;
+  border-color: var(--yellow);
+  background: var(--bg-4);
+  box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.1);
+}
+.customer form input::placeholder { color: var(--faint); }
+
+/* Buttons */
+.customer form button,
+.customer form input[type="submit"] {
+  width: 100%;
+  background: var(--yellow);
+  color: #000;
+  font-family: var(--f-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(255, 203, 5, 0.2);
+}
+.customer form button:hover,
+.customer form input[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(255, 203, 5, 0.3);
+}
+
+/* Erreurs */
+.form__input--error { border-color: #dc2626 !important; background-color: rgba(220, 38, 38, 0.08) !important; }
+.form__input-error { color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem; }
+
+/* Links (forgot password, create account) */
+.customer-section a { color: var(--yellow); text-decoration: underline; transition: opacity 0.2s; }
+.customer-section a:hover { opacity: 0.8; text-decoration: none; }
+
+/* Fieldset et legend */
+.customer form fieldset { border: none; margin-bottom: 1.5rem; padding: 0; }
+.customer form legend { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+
+/* Account page spécifique */
+.customer .account { padding: 2rem 0; }
+.customer .account__heading { font-family: var(--f-manga); font-size: 1.8rem; color: var(--yellow); margin-bottom: 1.5rem; }
+.customer .account__content { display: grid; gap: 2rem; }
+.customer .order-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+.customer .order-card h3 { font-family: var(--f-display); font-weight: 700; margin-bottom: 0.75rem; }
+
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) { .site-nav { display: none; } }
 @media (max-width: 768px) {
