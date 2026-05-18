@@ -1,0 +1,105 @@
+<section id="catalog" class="catalog-wrapper">
+
+  <!-- Promo banner -->
+  <div class="promo-banner">
+    <div>
+      <h3>Livraison offerte dès 80€</h3>
+      <p>Partout en France — emballage renforcé pour vos cartes</p>
+    </div>
+    <div class="banner-perks">
+      <div class="perk"><div class="perk-dot"></div> Paiement sécurisé SSL</div>
+      <div class="perk"><div class="perk-dot"></div> Stock quotidien</div>
+      <div class="perk"><div class="perk-dot"></div> 100% authentique</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs — client-side, no page reload -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-cat="all">Tous</button>
+    <button class="filter-tab" data-cat="booster">Boosters</button>
+    <button class="filter-tab" data-cat="sleeve">Sleeves</button>
+    <button class="filter-tab" data-cat="protection">Protections</button>
+    <button class="filter-tab" data-cat="toploader">Toploaders</button>
+  </div>
+
+  <!-- Section header -->
+  <div class="catalog-header">
+    <span class="catalog-title">Tous les produits</span>
+    <span class="catalog-count" id="catalogCount">{{ section.settings.collection.products_count }} produits</span>
+  </div>
+
+  <!-- Product grid -->
+  {% assign coll = collections[section.settings.collection] %}
+  {% if coll != blank %}
+    <div class="products-grid" id="productGrid">
+      {% for product in coll.products limit: 50 %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Fallback: use all-products collection -->
+    <div class="products-grid" id="productGrid">
+      {% assign all_products = collections.all.products %}
+      {% for product in all_products limit: 50 %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</section>
+
+{% stylesheet %}
+/* Count update animation */
+@keyframes countPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.3); color: var(--yellow); }
+  100% { transform: scale(1); }
+}
+.catalog-count.pop { animation: countPop 0.3s ease; }
+{% endstylesheet %}
+
+{% javascript %}
+// Update count when filter changes
+document.addEventListener('DOMContentLoaded', function() {
+  const countEl = document.getElementById('catalogCount');
+  const titleEl = document.querySelector('.catalog-title');
+
+  const labels = {
+    all: 'Tous les produits',
+    booster: 'Boosters',
+    sleeve: 'Sleeves',
+    protection: 'Protections',
+    toploader: 'Toploaders'
+  };
+
+  // Observe filter tab clicks
+  document.querySelectorAll('.filter-tab[data-cat]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      setTimeout(() => {
+        const visible = document.querySelectorAll('#productGrid .product-card:not([style*="display: none"])').length;
+        if (countEl) {
+          countEl.textContent = visible + ' produit' + (visible > 1 ? 's' : '');
+          countEl.classList.add('pop');
+          setTimeout(() => countEl.classList.remove('pop'), 400);
+        }
+        if (titleEl) titleEl.textContent = labels[tab.dataset.cat] || 'Produits';
+      }, 250);
+    });
+  });
+});
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Catalogue produits",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection à afficher",
+      "info": "Laissez vide pour afficher tous les produits"
+    }
+  ],
+  "presets": [{ "name": "Catalogue produits" }]
+}
+{% endschema %}

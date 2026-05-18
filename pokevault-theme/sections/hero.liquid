@@ -1,9 +1,9 @@
 <section class="hero">
-  <div class="hero__inner">
+  <!-- Floating irezumi clouds background -->
+  <div id="irezumiClouds"></div>
 
-    <div class="hero__badge">
-      ✦ {{ section.settings.badge_text | default: 'La boutique collector' }}
-    </div>
+  <div class="hero__inner">
+    <div class="hero__badge">✦ La boutique collector</div>
 
     <h1 class="hero__title">
       {{ section.settings.title | default: 'La boutique des' }}<br>
@@ -15,19 +15,19 @@
     </p>
 
     <div class="hero__ctas">
-      <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="btn-manga btn-manga--primary">
-        {{ section.settings.cta_text | default: 'Voir les produits' }} →
+      <a href="#catalog" class="btn-primary-hero" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'});return false;">
+        Voir les produits →
       </a>
       {% if customer %}
-        <a href="{{ routes.account_url }}" class="btn-manga btn-manga--ghost">Mon compte</a>
+        <a href="{{ routes.account_url }}" class="btn-ghost-hero">Mon compte</a>
       {% else %}
-        <a href="{{ routes.account_register_url }}" class="btn-manga btn-manga--ghost">Créer un compte</a>
+        <a href="{{ routes.account_register_url }}" class="btn-ghost-hero">Créer un compte</a>
       {% endif %}
     </div>
 
     <div class="hero__stats">
       <div class="hero__stat">
-        <span class="hero__stat-num">500+</span>
+        <span class="hero__stat-num" data-count="500" data-suffix="+">500+</span>
         <span class="hero__stat-label">Références</span>
       </div>
       <div class="hero__stat">
@@ -35,11 +35,10 @@
         <span class="hero__stat-label">Langues FR·JP·EN</span>
       </div>
       <div class="hero__stat">
-        <span class="hero__stat-num">48H</span>
+        <span class="hero__stat-num" data-count="48" data-suffix="H">48H</span>
         <span class="hero__stat-label">Livraison France</span>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -47,12 +46,9 @@
 {
   "name": "Hero",
   "settings": [
-    { "type": "text", "id": "badge_text", "label": "Badge text", "default": "La boutique collector" },
     { "type": "text", "id": "title", "label": "Titre ligne 1", "default": "La boutique des" },
     { "type": "text", "id": "title_accent", "label": "Titre ligne 2", "default": "vrais dresseurs" },
-    { "type": "textarea", "id": "subtitle", "label": "Sous-titre" },
-    { "type": "text", "id": "cta_text", "label": "Bouton texte", "default": "Voir les produits" },
-    { "type": "url", "id": "cta_url", "label": "Bouton lien" }
+    { "type": "textarea", "id": "subtitle", "label": "Sous-titre" }
   ],
   "presets": [{ "name": "Hero" }]
 }

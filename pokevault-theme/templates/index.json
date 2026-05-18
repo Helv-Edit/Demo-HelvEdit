@@ -1,22 +1,17 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "hero": {
       "type": "hero",
-      "settings": {}
+      "settings": {
+        "title": "La boutique des",
+        "title_accent": "vrais dresseurs",
+        "subtitle": "Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro."
+      }
     },
-    "featured": {
-      "type": "featured-products",
+    "catalog": {
+      "type": "home-catalog",
       "settings": {}
     }
   },
-  "order": ["hero", "featured"]
+  "order": ["hero", "catalog"]
 }
