@@ -5,9 +5,12 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/page
 {% endcomment %}
 
-<h1>{{ page.title }}</h1>
-
-{{ page.content }}
+{%- if page.handle == 'connexion' -%}
+  {% section 'page-login' %}
+{%- else -%}
+  <h1>{{ page.title }}</h1>
+  {{ page.content }}
+{%- endif -%}
 
 {% schema %}
 {
