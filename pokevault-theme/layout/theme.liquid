@@ -14,6 +14,9 @@
 </head>
 <body>
 
+  <!-- SAKURA BACKGROUND -->
+  {% render 'sakura-background' %}
+
   <!-- CLOUD CURTAIN (login/checkout only) -->
   {{ 'cloud-transition.js' | asset_url | script_tag }}
   <script defer src="{{ 'pokevault-home.js' | asset_url }}"></script>
