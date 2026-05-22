@@ -1,6 +1,6 @@
 {% doc %}
-  Renders a manga-style product card for PokeVault theme.
-  Outputs data-cat attribute for client-side filtering.
+  Renders an Arcade Legend style product card for PokeVault.
+  Supports category filtering, language badges, and sale/new indicators.
 
   @param {product} product - The product to render
 
@@ -61,7 +61,6 @@
 
 <div class="product-card" data-cat="{{ cat }}" data-type="{{ product.type | downcase }}" data-tags="{{ product.tags | join: ' ' | downcase }}">
   <a href="{{ product.url }}" class="product-card__image {{ img_class }}" tabindex="-1">
-    <div class="pack-shine"></div>
     {% if product.featured_image %}
       <img
         src="{{ product.featured_image | image_url: width: 480 }}"
@@ -70,7 +69,7 @@
       >
     {% else %}
       <div class="product-card__image-placeholder">
-        <span class="pack-code" style="color:var(--yellow)">
+        <span class="pack-code">
           {% case cat %}
             {% when 'booster' %}EV
             {% when 'sleeve' %}SLV

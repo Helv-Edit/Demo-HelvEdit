@@ -34,7 +34,7 @@
     {%- for product in featured_collection.products limit: 16 -%}
       {% render 'product-card', product: product %}
     {%- else -%}
-      <p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:3rem 0">
+      <p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem 0">
         Aucun produit pour l'instant — ajoutez des produits dans l'admin Shopify.
       </p>
     {%- endfor -%}
