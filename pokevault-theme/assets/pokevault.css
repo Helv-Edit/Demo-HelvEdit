@@ -7,38 +7,24 @@
 
 :root {
   /* Brand */
-  --yellow:     #FFCB05;
-  --yellow-glow:rgba(255,203,5,0.18);
-  --yellow-dim: rgba(255,203,5,0.08);
   --red:        #E8001D;
+  --red-light:  #F24040;
+  --red-dark:   #B8001A;
 
-  /* Backgrounds — warm ink, not pure black */
-  --bg:         #0e0c0a;
-  --bg-2:       #161310;
-  --bg-3:       #1e1a16;
-  --bg-4:       #27221d;
-  --bg-glass:   rgba(22,19,16,0.85);
-
-  /* Text */
-  --white:      #f0ece6;
-  --muted:      #8a7f74;
-  --faint:      #4a4540;
-  --border:     rgba(255,255,255,0.08);
-  --border-2:   rgba(255,255,255,0.14);
-
-  /* Accent blue (irezumi clouds) */
-  --cloud-blue: #3b82f6;
-  --cloud-light:#93c5fd;
+  /* Paper & Ink (Zen aesthetic) */
+  --paper:      #f5ede0;
+  --paper-dark: #e8dccf;
+  --ink:        #0c0a09;
+  --ink-mute:   #5a4d3f;
 
   /* Fonts */
   --f-manga:   'Dela Gothic One', cursive;
   --f-display: 'Space Grotesk', sans-serif;
   --f-body:    'Inter', sans-serif;
 
-  /* Misc */
-  --radius:    8px;
-  --radius-lg: 14px;
-  --glow-y:    0 0 32px rgba(255,203,5,0.2);
+  /* Spacing & radius (minimal, traditional) */
+  --radius:    6px;
+  --radius-lg: 10px;
 }
 
 /* ── RESET ─────────────────────────────────────────────────────────────────── */
@@ -75,10 +61,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: #0c0a09;
   display: flex; align-items: center; gap: 0.5rem;
   letter-spacing: 0.02em;
-  text-shadow: 0 2px 8px rgba(12, 10, 9, 0.15);
-  transition: transform 0.2s;
+  text-shadow: none;
+  transition: opacity 0.2s;
 }
-.site-logo:hover { transform: scale(1.05); }
+.site-logo:hover { opacity: 0.8; }
 .site-logo span { color: #E8001D; font-weight: 900; }
 
 .logo-ball {
@@ -183,11 +169,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: 0.02em;
   color: #0c0a09;
   margin-bottom: 1.25rem;
-  text-shadow: 0 3px 12px rgba(12, 10, 9, 0.1);
+  text-shadow: 0 1px 4px rgba(12, 10, 9, 0.08);
 }
 .hero__title span {
   color: #E8001D;
-  text-shadow: 0 2px 8px rgba(232, 0, 29, 0.2);
+  text-shadow: none;
 }
 
 .hero__sub {
@@ -206,13 +192,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: #E8001D; color: #fff;
   border-radius: var(--radius);
   letter-spacing: 0.04em; text-transform: uppercase;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(232, 0, 29, 0.3);
+  transition: background 0.25s, box-shadow 0.25s;
+  box-shadow: 0 2px 8px rgba(232, 0, 29, 0.15);
 }
 .btn-primary-hero:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(232, 0, 29, 0.4);
   background: #C80018;
+  box-shadow: 0 4px 12px rgba(232, 0, 29, 0.25);
 }
 
 .btn-ghost-hero {
@@ -275,9 +260,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .filter-tabs {
   display: flex; gap: 0.4rem; flex-wrap: wrap;
   position: sticky; top: 66px; z-index: 50;
-  background: linear-gradient(180deg, rgba(248, 242, 237, 0.95), rgba(240, 230, 220, 0.92));
-  backdrop-filter: blur(16px);
-  padding: 0.85rem 0;
+  background: linear-gradient(180deg, rgba(245, 237, 224, 0.98), rgba(245, 237, 224, 0.98));
+  backdrop-filter: blur(12px);
+  padding: 1rem 2.5rem;
   margin-bottom: 1.75rem;
   border-bottom: 1px solid #d4c0a8;
 }
@@ -309,7 +294,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-family: var(--f-manga);
   font-size: 1.4rem; letter-spacing: 0.03em;
   color: #0c0a09;
-  text-shadow: 0 2px 8px rgba(12, 10, 9, 0.1);
+  text-shadow: none;
 }
 .catalog-count { font-size: 0.72rem; color: #5a4d3f; font-weight: 600; }
 
@@ -322,21 +307,19 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ── PRODUCT CARD ─────────────────────────────────────────────────────────── */
 .product-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 246, 240, 0.92));
-  border: 1px solid rgba(12, 10, 9, 0.12);
+  background: #ffffff;
+  border: 1px solid #e0d0c0;
   border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex; flex-direction: column;
   cursor: pointer;
-  will-change: transform;
-  transform-style: preserve-3d;
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-  box-shadow: 0 4px 16px rgba(12, 10, 9, 0.08);
+  will-change: box-shadow;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 2px 8px rgba(12, 10, 9, 0.06);
 }
 .product-card:hover {
-  border-color: #E8001D;
-  box-shadow: 0 12px 40px rgba(12, 10, 9, 0.15), 0 0 0 2px rgba(232, 0, 29, 0.1);
-  transform: translateY(-4px);
+  border-color: #d4c0a8;
+  box-shadow: 0 6px 16px rgba(12, 10, 9, 0.1);
 }
 
 .product-card__image {
