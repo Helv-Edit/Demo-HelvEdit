@@ -16,7 +16,7 @@
       gsap.registerPlugin(ScrollTrigger);
     }
     heroReveal();
-    initFloatingClouds();
+    // initFloatingClouds(); // Disabled: using Sakura background instead
     initProductFilter();
     initCardHover();
     initScrollAnimations();
