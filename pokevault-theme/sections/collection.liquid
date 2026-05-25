@@ -29,7 +29,7 @@
                 <div class="product-card__price">{{ product.price | money }}</div>
                 <form method="post" action="/cart/add">
                   <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-                  <button type="submit" class="btn btn--primary btn--sm">Add to Cart</button>
+                  <button type="submit" class="btn btn--primary btn--sm">{{ 'product.add_to_cart' | t }}</button>
                 </form>
               </div>
             </article>
@@ -37,7 +37,7 @@
         </div>
       {% else %}
         <div class="collection-empty">
-          <p>No products in this collection</p>
+          <p>{{ 'collection.empty' | t }}</p>
         </div>
       {% endif %}
     </main>

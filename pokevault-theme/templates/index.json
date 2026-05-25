@@ -16,6 +16,10 @@
       "type": "category-tiles",
       "settings": {}
     },
+    "featured": {
+      "type": "featured-products",
+      "settings": {}
+    },
     "reassurance": {
       "type": "reassurance-band",
       "settings": {}
@@ -25,6 +29,7 @@
     "announcement",
     "hero",
     "categories",
+    "featured",
     "reassurance"
   ]
 }

@@ -2,22 +2,21 @@
 
   <div class="promo-banner">
     <div>
-      <h3>Livraison offerte dès 80 CHF</h3>
-      <p>Partout en Suisse — emballage renforcé pour vos cartes</p>
+      <h3>{{ 'featured_products.promo_title' | t }}</h3>
+      <p>{{ 'featured_products.promo_subtitle' | t }}</p>
     </div>
     <div class="banner-perks">
-      <div class="perk"><span>🔒</span> Paiement sécurisé</div>
-      <div class="perk"><span>📦</span> Stock mis à jour quotidiennement</div>
-      <div class="perk"><span>⭐</span> Produits authentiques</div>
+      <div class="perk"><span class="perk-dot"></span> {{ 'featured_products.secure_payment' | t }}</div>
+      <div class="perk"><span class="perk-dot"></span> {{ 'featured_products.daily_stock' | t }}</div>
+      <div class="perk"><span class="perk-dot"></span> {{ 'featured_products.authentic' | t }}</div>
     </div>
   </div>
 
   <div class="filter-tabs">
-    <a href="{{ routes.all_products_collection_url }}" class="filter-tab active">Tous les produits</a>
-    <a href="/collections/boosters"    class="filter-tab">Boosters</a>
-    <a href="/collections/sleeves"     class="filter-tab">Sleeves</a>
-    <a href="/collections/protections" class="filter-tab">Protections</a>
-    <a href="/collections/toploaders"  class="filter-tab">Toploaders</a>
+    <a href="{{ routes.all_products_collection_url }}" class="filter-tab active">{{ 'featured_products.filter_all' | t }}</a>
+    <a href="/collections/acrylique" class="filter-tab">{{ 'featured_products.filter_acrylic' | t }}</a>
+    <a href="/collections/sleeves" class="filter-tab">{{ 'featured_products.filter_sleeves' | t }}</a>
+    <a href="/collections/toploaders" class="filter-tab">{{ 'featured_products.filter_toploaders' | t }}</a>
   </div>
 
   {%- assign featured_collection = collections[section.settings.collection] -%}
@@ -25,9 +24,9 @@
     {%- assign featured_collection = collections.all -%}
   {%- endif -%}
 
-  <div class="section-header">
-    <span class="section-title">Tous les produits</span>
-    <span class="section-count">{{ featured_collection.products_count }} produit{% if featured_collection.products_count != 1 %}s{% endif %}</span>
+  <div class="catalog-header">
+    <span class="catalog-title">{{ featured_collection.title | default: 'featured_products.filter_all' | t }}</span>
+    <span class="catalog-count">{{ featured_collection.products_count }} {{ 'featured_products.products_count' | t }}</span>
   </div>
 
   <div class="products-grid">
@@ -35,7 +34,7 @@
       {% render 'product-card', product: product %}
     {%- else -%}
       <p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem 0">
-        Aucun produit pour l'instant — ajoutez des produits dans l'admin Shopify.
+        {{ 'featured_products.no_products' | t }}
       </p>
     {%- endfor -%}
   </div>

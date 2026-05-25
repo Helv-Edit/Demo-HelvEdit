@@ -5,24 +5,24 @@
 <section class="category-tiles">
   <div class="category-tiles__container">
     <div class="tiles-grid">
-      <!-- Tile 1: Sealed Products -->
-      <a href="/collections/produits-scelles" class="category-tile" data-tile="sealed">
-        <div class="tile-background sealed-bg"></div>
+      <!-- Tile 1: Acrylic Cases -->
+      <a href="/collections/acrylique" class="category-tile" data-tile="acrylic">
+        <div class="tile-background acrylic-bg"></div>
         <div class="tile-overlay"></div>
         <div class="tile-content">
-          <h2 class="tile-title">{{ 'categories.sealed_products' | t }}</h2>
-          <p class="tile-description">{{ 'categories.sealed_description' | t }}</p>
+          <h2 class="tile-title">{{ 'categories.acrylic' | t }}</h2>
+          <p class="tile-description">{{ 'categories.acrylic_description' | t }}</p>
           <span class="tile-cta">{{ 'categories.explore' | t }} →</span>
         </div>
       </a>
 
-      <!-- Tile 2: Protections -->
-      <a href="/collections/protections" class="category-tile" data-tile="protections">
-        <div class="tile-background protections-bg"></div>
+      <!-- Tile 2: Sleeves & Toploaders -->
+      <a href="/collections/sleeves" class="category-tile" data-tile="sleeves">
+        <div class="tile-background sleeves-bg"></div>
         <div class="tile-overlay"></div>
         <div class="tile-content">
-          <h2 class="tile-title">{{ 'categories.protections' | t }}</h2>
-          <p class="tile-description">{{ 'categories.protections_description' | t }}</p>
+          <h2 class="tile-title">{{ 'categories.sleeves_toploaders' | t }}</h2>
+          <p class="tile-description">{{ 'categories.sleeves_toploaders_description' | t }}</p>
           <span class="tile-cta">{{ 'categories.explore' | t }} →</span>
         </div>
       </a>
@@ -109,12 +109,12 @@
     transform: scale(1.05);
   }
 
-  .sealed-bg {
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  .acrylic-bg {
+    background: linear-gradient(135deg, #E8F0F2 0%, var(--accent-secondary) 100%);
   }
 
-  .protections-bg {
-    background: linear-gradient(135deg, #D9C9BC 0%, var(--accent-secondary) 100%);
+  .sleeves-bg {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, #D9C9BC 100%);
   }
 
   .tile-overlay {

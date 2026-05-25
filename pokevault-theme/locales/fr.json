@@ -6,8 +6,10 @@
   },
   "header": {
     "home": "Accueil",
-    "sealed_products": "Produits Scellés",
-    "protections": "Protections",
+    "acrylic": "Acrylique",
+    "sleeves": "Sleeves",
+    "toploaders": "Toploaders",
+    "protections": "Toutes les Protections",
     "login": "Connexion",
     "cart": "Panier"
   },
@@ -19,14 +21,14 @@
       "email": "Adresse email",
       "password": "Mot de passe",
       "submit": "Se connecter",
-      "no_account": "Pas encore de compte?",
+      "no_account": "Pas encore de compte ?",
       "register": "En créer un ici",
-      "forgot_password": "Mot de passe oublié?"
+      "forgot_password": "Mot de passe oublié ?"
     }
   },
   "footer": {
     "about": "À propos de PokeVault",
-    "about_description": "Boutique premium de collectionneurs Pokémon TCG. Produits scellés authentiques et housses protectrices sur mesure.",
+    "about_description": "Spécialistes des protections TCG — coques acryliques sur mesure, sleeves premium et toploaders pour toute votre collection.",
     "links": "Liens Rapides",
     "about_page": "À Propos",
     "shipping": "Livraison",
@@ -36,8 +38,8 @@
     "privacy": "Politique de Confidentialité",
     "terms": "Conditions Générales",
     "refund": "Politique de Retour",
-    "newsletter": "Infolettre",
-    "newsletter_description": "Inscrivez-vous pour découvrir les nouveautés et les offres exclusives.",
+    "newsletter": "Newsletter",
+    "newsletter_description": "Recevez les nouveautés et offres exclusives en avant-première.",
     "email_placeholder": "Entrez votre adresse email",
     "subscribe": "S'inscrire",
     "all_rights": "Tous droits réservés."
@@ -47,41 +49,41 @@
     "empty": "Votre panier est vide",
     "subtotal": "Sous-total",
     "total": "Total",
-    "note": "Livraison en France uniquement — expédition sécurisée.",
+    "note": "Livraison sécurisée en France — emballage renforcé.",
     "checkout": "Procéder au paiement"
   },
   "announcement": {
-    "delivery_france": "🚚 Livraison en France uniquement — expédition sécurisée et soignée",
-    "authentic": "✅ Produits 100% Authentiques et Scellés",
-    "slot_3": "📦 Emballage Protecteur Renforcé"
+    "delivery_france": "🚚 Livraison sécurisée en France — emballage renforcé pour votre collection",
+    "authentic": "🛡️ Coques acryliques pour tous les TCG — Pokémon, Magic, Yu-Gi-Oh! & plus",
+    "slot_3": "✅ Protection UV 99% — poussière, rayures et humidité bloqués"
   },
   "hero": {
-    "badge": "✦ Boutique Premium Collector",
-    "title": "Pokémon TCG",
-    "title_accent": "Scellé & Authentique",
-    "subtitle": "Produits scellés en exclusivité et housses de protection premium. Tout pour les vrais collectionneurs.",
-    "cta_primary": "Voir les Produits Scellés",
-    "cta_secondary": "Explorer les Protections",
-    "stat_products": "Références",
-    "stat_authentic": "Authentique",
+    "badge": "✦ Spécialistes Protection TCG",
+    "title": "Protégez Vos",
+    "title_accent": "Collections TCG",
+    "subtitle": "Coques acryliques sur mesure, sleeves premium et toploaders pour tous les jeux de cartes — Pokémon, Magic, Yu-Gi-Oh!, One Piece et plus.",
+    "cta_primary": "Voir les Protections Acryliques",
+    "cta_secondary": "Sleeves & Toploaders",
+    "stat_products": "Formats Couverts",
+    "stat_authentic": "Protection UV",
     "stat_delivery": "Livraison France"
   },
   "categories": {
-    "sealed_products": "Produits Scellés",
-    "sealed_description": "Boosters, ETB, Bundles & Displays. Produits authentiques, scellés d'usine.",
-    "protections": "Housses Protectrices",
-    "protections_description": "Sleeves premium, toploaders & housses acryliques sur mesure.",
+    "acrylic": "Protections Acryliques",
+    "acrylic_description": "Coques sur mesure pour Display, ETB, Bundle et Booster. Protection UV 99%.",
+    "sleeves_toploaders": "Sleeves & Toploaders",
+    "sleeves_toploaders_description": "Sleeves premium et toploaders rigides — protégez chaque carte de votre collection.",
     "explore": "Découvrir"
   },
   "reassurance": {
-    "delivery_title": "Livraison France",
-    "delivery_desc": "Expédition sécurisée et attentive en France métropolitaine",
-    "authentic_title": "100% Authentique",
-    "authentic_desc": "Uniquement des produits authentiques scellés d'usine",
-    "packaging_title": "Emballage Renforcé",
-    "packaging_desc": "Protection supplémentaire pour votre collection précieuse",
-    "support_title": "Support Réactif",
-    "support_desc": "Réponses rapides à tous vos questions"
+    "delivery_title": "Livraison Sécurisée",
+    "delivery_desc": "Emballage renforcé, livraison soignée partout en France métropolitaine",
+    "uv_title": "Protection UV 99%",
+    "uv_desc": "Bloque les UV, la poussière, les rayures et l'humidité pour préserver votre collection",
+    "fit_title": "Sur Mesure",
+    "fit_desc": "Coques acryliques conçues spécifiquement pour chaque format de produit TCG",
+    "support_title": "Support Expert",
+    "support_desc": "Réponses rapides sur tous les formats et compatibilités"
   },
   "page_404": {
     "title": "Page Non Trouvée",
@@ -90,27 +92,48 @@
   },
   "pages": {
     "about_title": "À Propos de PokeVault",
-    "about_description": "Nous sommes des collectionneurs passionnés dédiés à fournir les meilleurs produits Pokémon TCG.",
+    "about_description": "Spécialistes des protections TCG, passionnés par la qualité collector.",
     "shipping_title": "Livraison et Expédition",
     "shipping_description": "Découvrez notre processus d'expédition sécurisé et attentionné.",
     "contact_title": "Nous Contacter",
-    "contact_description": "Avez-vous des questions ? Contactez notre équipe.",
-    "faq_title": "Questions Fréquemment Posées",
-    "faq_description": "Trouvez les réponses aux questions courantes sur nos produits et services."
+    "contact_description": "Questions sur un format ou une compatibilité ? Contactez notre équipe.",
+    "faq_title": "Questions Fréquentes",
+    "faq_description": "Réponses sur nos coques acryliques, sleeves et toploaders."
   },
   "collection": {
     "filters": "Filtres",
     "sort_by": "Trier par",
     "sort_default": "Meilleures ventes",
     "sort_title": "Titre A-Z",
-    "sort_price_low": "Prix: Le plus bas",
-    "sort_price_high": "Prix: Le plus élevé",
+    "sort_price_low": "Prix : le plus bas",
+    "sort_price_high": "Prix : le plus élevé",
     "sort_newest": "Le plus récent",
     "empty": "Aucun produit trouvé"
   },
   "product": {
     "add_to_cart": "Ajouter au panier",
-    "no_image": "Pas d'image"
+    "out_of_stock": "Rupture de stock",
+    "no_image": "Pas d'image",
+    "variants": "variantes",
+    "type_acrylic": "Coque Acrylique",
+    "type_sleeve": "Sleeve",
+    "type_toploader": "Toploader",
+    "type_default": "Protection",
+    "badge_new": "Nouveau",
+    "badge_promo": "Promo"
+  },
+  "featured_products": {
+    "promo_title": "Livraison offerte dès 80 €",
+    "promo_subtitle": "Emballage renforcé — tous formats",
+    "secure_payment": "Paiement sécurisé",
+    "daily_stock": "Stock mis à jour",
+    "authentic": "Produits authentiques",
+    "filter_all": "Tous",
+    "filter_acrylic": "Acrylique",
+    "filter_sleeves": "Sleeves",
+    "filter_toploaders": "Toploaders",
+    "no_products": "Aucun produit pour l'instant — ajoutez des produits dans l'admin Shopify.",
+    "products_count": "produit"
   },
   "pagination": {
     "previous": "Précédent",
@@ -130,7 +153,7 @@
       "name": "Tiroir du Panier"
     },
     "hero": {
-      "name": "Banneau",
+      "name": "Bannière",
       "title": "Titre Principal",
       "title_accent": "Titre Accent",
       "subtitle": "Texte Sous-titre"

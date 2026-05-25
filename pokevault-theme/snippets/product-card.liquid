@@ -19,43 +19,22 @@
     assign is_sale = true
   endif
 
-  assign lang_badge = ''
-  if product.tags contains 'fr'
-    assign lang_badge = 'fr'
-  elsif product.tags contains 'jp'
-    assign lang_badge = 'jp'
-  elsif product.tags contains 'en'
-    assign lang_badge = 'en'
-  endif
-
   assign title_lower = product.title | downcase
   assign type_lower = product.type | downcase
   assign tags_lower = product.tags | join: ' ' | downcase
 
-  assign cat = 'other'
-  if type_lower contains 'booster' or title_lower contains 'booster' or tags_lower contains 'booster'
-    assign cat = 'booster'
-  elsif type_lower contains 'sleeve' or title_lower contains 'sleeve' or tags_lower contains 'sleeve'
+  assign cat = 'acrylic'
+  if type_lower contains 'sleeve' or title_lower contains 'sleeve' or tags_lower contains 'sleeve'
     assign cat = 'sleeve'
-  elsif type_lower contains 'protection' or title_lower contains 'protection' or title_lower contains 'etb' or title_lower contains 'display' or tags_lower contains 'protection'
-    assign cat = 'protection'
   elsif type_lower contains 'toploader' or title_lower contains 'toploader' or tags_lower contains 'toploader'
     assign cat = 'toploader'
   endif
 
-  assign img_class = 'img-toploader'
-  if cat == 'booster'
-    if lang_badge == 'fr'
-      assign img_class = 'img-booster-fr'
-    elsif lang_badge == 'jp'
-      assign img_class = 'img-booster-jp'
-    else
-      assign img_class = 'img-booster-en'
-    endif
-  elsif cat == 'sleeve'
+  assign img_class = 'img-protection'
+  if cat == 'sleeve'
     assign img_class = 'img-sleeve'
-  elsif cat == 'protection'
-    assign img_class = 'img-protection'
+  elsif cat == 'toploader'
+    assign img_class = 'img-toploader'
   endif
 %}
 
@@ -87,25 +66,23 @@
     {% endif %}
 
     {% if is_new %}
-      <span class="product-badge badge--new product-badge--new-abs">Nouveau</span>
+      <span class="product-badge badge--new product-badge--new-abs">{{ 'product.badge_new' | t }}</span>
     {% elsif is_sale %}
-      <span class="product-badge badge--premium product-badge--new-abs">Promo</span>
+      <span class="product-badge badge--premium product-badge--new-abs">{{ 'product.badge_promo' | t }}</span>
     {% endif %}
   </a>
 
   <div class="product-card__info">
     <div class="product-card__type">
       {% case cat %}
-        {% when 'booster' %}Booster
-        {% when 'sleeve' %}Sleeve
-        {% when 'protection' %}Protection
-        {% when 'toploader' %}Toploader
-        {% else %}{{ product.type | default: 'Produit' }}
+        {% when 'sleeve' %}{{ 'product.type_sleeve' | t }}
+        {% when 'toploader' %}{{ 'product.type_toploader' | t }}
+        {% else %}{{ 'product.type_acrylic' | t }}
       {% endcase %}
     </div>
     <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
     {% if product.variants.size > 1 %}
-      <div class="product-card__variant">{{ product.variants.size }} variantes</div>
+      <div class="product-card__variant">{{ product.variants.size }} {{ 'product.variants' | t }}</div>
     {% endif %}
     <div class="product-card__footer">
       <div class="product-card__price">
@@ -119,7 +96,7 @@
         onclick="addToCart({{ first_variant.id }}, 1, this)"
         {% unless first_variant.available %}disabled{% endunless %}
       >
-        {% if first_variant.available %}+ Panier{% else %}Rupture{% endif %}
+        {% if first_variant.available %}{{ 'product.add_to_cart' | t }}{% else %}{{ 'product.out_of_stock' | t }}{% endif %}
       </button>
     </div>
   </div>

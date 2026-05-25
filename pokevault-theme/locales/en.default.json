@@ -6,8 +6,10 @@
   },
   "header": {
     "home": "Home",
-    "sealed_products": "Sealed Products",
-    "protections": "Protections",
+    "acrylic": "Acrylic Cases",
+    "sleeves": "Sleeves",
+    "toploaders": "Toploaders",
+    "protections": "All Protections",
     "login": "Login",
     "cart": "Cart"
   },
@@ -26,7 +28,7 @@
   },
   "footer": {
     "about": "About PokeVault",
-    "about_description": "Premium Pokémon TCG collector's store. Authentic sealed products and custom protective cases.",
+    "about_description": "TCG card protection specialists. Custom acrylic cases, premium sleeves and toploaders for all your collection.",
     "links": "Quick Links",
     "about_page": "About Us",
     "shipping": "Shipping",
@@ -37,7 +39,7 @@
     "terms": "Terms of Service",
     "refund": "Refund Policy",
     "newsletter": "Newsletter",
-    "newsletter_description": "Subscribe to our newsletter for new arrivals and exclusive offers.",
+    "newsletter_description": "Subscribe for new products and exclusive offers.",
     "email_placeholder": "Enter your email",
     "subscribe": "Subscribe",
     "all_rights": "All rights reserved."
@@ -47,41 +49,41 @@
     "empty": "Your cart is empty",
     "subtotal": "Subtotal",
     "total": "Total",
-    "note": "Delivery in France only — secure shipping.",
+    "note": "Secure shipping in France — reinforced packaging.",
     "checkout": "Proceed to Checkout"
   },
   "announcement": {
-    "delivery_france": "🚚 Delivery in France only — secure and care-free shipping",
-    "authentic": "✅ 100% Authentic & Sealed Products",
-    "slot_3": "📦 Reinforced Protective Packaging"
+    "delivery_france": "🚚 Secure shipping in France — reinforced packaging for your collection",
+    "authentic": "🛡️ Custom acrylic cases for all TCG — Pokémon, Magic, Yu-Gi-Oh! & more",
+    "slot_3": "✅ 99% UV protection — dust, scratch & humidity proof"
   },
   "hero": {
-    "badge": "✦ Premium Collector Store",
-    "title": "Pokémon TCG",
-    "title_accent": "Sealed & Authentic",
-    "subtitle": "Exclusive sealed products and premium protective cases. Everything for serious collectors.",
-    "cta_primary": "Browse Sealed Products",
-    "cta_secondary": "Explore Protections",
-    "stat_products": "Products",
-    "stat_authentic": "Authentic",
+    "badge": "✦ TCG Card Protection Specialists",
+    "title": "Protect Your",
+    "title_accent": "TCG Collection",
+    "subtitle": "Premium acrylic cases, sleeves and toploaders for all trading card games — Pokémon, Magic, Yu-Gi-Oh!, One Piece and more.",
+    "cta_primary": "Shop Acrylic Cases",
+    "cta_secondary": "Sleeves & Toploaders",
+    "stat_products": "Formats Covered",
+    "stat_authentic": "UV Protected",
     "stat_delivery": "France Shipping"
   },
   "categories": {
-    "sealed_products": "Sealed Products",
-    "sealed_description": "Boosters, ETB, Bundles & Displays. Authentic, factory-sealed products.",
-    "protections": "Protective Cases",
-    "protections_description": "Premium sleeves, toploaders & custom acrylic cases for each format.",
+    "acrylic": "Acrylic Cases",
+    "acrylic_description": "Custom-fit acrylic cases for Display, ETB, Bundle and Booster formats. 99% UV protection.",
+    "sleeves_toploaders": "Sleeves & Toploaders",
+    "sleeves_toploaders_description": "Premium card sleeves and rigid toploaders — protect every single card in your collection.",
     "explore": "Explore"
   },
   "reassurance": {
-    "delivery_title": "France Shipping",
-    "delivery_desc": "Secure & attentive delivery to mainland France",
-    "authentic_title": "100% Authentic",
-    "authentic_desc": "Only sealed authentic products from official distributors",
-    "packaging_title": "Reinforced Packaging",
-    "packaging_desc": "Extra protection for your valuable collection",
-    "support_title": "Responsive Support",
-    "support_desc": "Quick replies to all your questions and concerns"
+    "delivery_title": "Secure Shipping",
+    "delivery_desc": "Reinforced packaging, careful delivery across mainland France",
+    "uv_title": "99% UV Protection",
+    "uv_desc": "Blocks UV rays, dust, scratches and humidity to preserve your collection",
+    "fit_title": "Custom Fit",
+    "fit_desc": "Acrylic cases designed for each specific TCG product format",
+    "support_title": "Expert Support",
+    "support_desc": "Quick answers about all protection formats and compatibility"
   },
   "page_404": {
     "title": "Page Not Found",
@@ -90,13 +92,13 @@
   },
   "pages": {
     "about_title": "About PokeVault",
-    "about_description": "We are passionate collectors dedicated to providing the finest Pokémon TCG products.",
+    "about_description": "We are specialists in TCG card protection, passionate about collector-grade quality.",
     "shipping_title": "Shipping & Delivery",
     "shipping_description": "Learn about our secure and careful delivery process.",
     "contact_title": "Contact Us",
-    "contact_description": "Have questions? Get in touch with our team.",
+    "contact_description": "Questions about a format or compatibility? Get in touch.",
     "faq_title": "Frequently Asked Questions",
-    "faq_description": "Find answers to common questions about our products and services."
+    "faq_description": "Find answers about our acrylic cases, sleeves and toploaders."
   },
   "collection": {
     "filters": "Filters",
@@ -110,7 +112,28 @@
   },
   "product": {
     "add_to_cart": "Add to cart",
-    "no_image": "No image"
+    "out_of_stock": "Out of stock",
+    "no_image": "No image",
+    "variants": "variants",
+    "type_acrylic": "Acrylic Case",
+    "type_sleeve": "Sleeve",
+    "type_toploader": "Toploader",
+    "type_default": "Protection",
+    "badge_new": "New",
+    "badge_promo": "Sale"
+  },
+  "featured_products": {
+    "promo_title": "Free shipping from €80",
+    "promo_subtitle": "Reinforced packaging — all formats",
+    "secure_payment": "Secure payment",
+    "daily_stock": "Updated stock",
+    "authentic": "Authentic products",
+    "filter_all": "All",
+    "filter_acrylic": "Acrylic",
+    "filter_sleeves": "Sleeves",
+    "filter_toploaders": "Toploaders",
+    "no_products": "No products yet — add products in Shopify admin.",
+    "products_count": "product"
   },
   "pagination": {
     "previous": "Previous",
