@@ -1,0 +1,146 @@
+{% doc %}
+  Renders a trust/reassurance band with 4 benefit items:
+  - Delivery (France only)
+  - Authentic products
+  - Reinforced packaging
+  - Responsive support
+{% enddoc %}
+
+<section class="reassurance-band">
+  <div class="container">
+    <div class="reassurance-grid">
+      <!-- Item 1: Delivery -->
+      <div class="reassurance-item">
+        <div class="reassurance-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13" rx="2"/>
+            <path d="M16 8h4M16 12h4M16 16h4"/>
+            <path d="M5.5 20a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>
+            <path d="M17.5 20a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>
+          </svg>
+        </div>
+        <h3>{{ 'reassurance.delivery_title' | t }}</h3>
+        <p>{{ 'reassurance.delivery_desc' | t }}</p>
+      </div>
+
+      <!-- Item 2: Authentic -->
+      <div class="reassurance-item">
+        <div class="reassurance-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <h3>{{ 'reassurance.authentic_title' | t }}</h3>
+        <p>{{ 'reassurance.authentic_desc' | t }}</p>
+      </div>
+
+      <!-- Item 3: Packaging -->
+      <div class="reassurance-item">
+        <div class="reassurance-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 3h18v18H3z"/>
+            <path d="M3 3l9 6 9-6"/>
+            <path d="M12 15v6M6 9v6M18 9v6"/>
+          </svg>
+        </div>
+        <h3>{{ 'reassurance.packaging_title' | t }}</h3>
+        <p>{{ 'reassurance.packaging_desc' | t }}</p>
+      </div>
+
+      <!-- Item 4: Support -->
+      <div class="reassurance-item">
+        <div class="reassurance-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            <circle cx="9" cy="10" r="1"/>
+            <circle cx="12" cy="10" r="1"/>
+            <circle cx="15" cy="10" r="1"/>
+          </svg>
+        </div>
+        <h3>{{ 'reassurance.support_title' | t }}</h3>
+        <p>{{ 'reassurance.support_desc' | t }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .reassurance-band {
+    background-color: var(--bg-secondary);
+    padding: 4rem 2rem;
+    margin: 4rem 0;
+  }
+
+  .reassurance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .reassurance-item {
+    text-align: center;
+  }
+
+  .reassurance-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    background-color: rgba(255, 203, 5, 0.1);
+    color: var(--yellow);
+    transition: all 0.3s ease;
+  }
+
+  .reassurance-item:hover .reassurance-icon {
+    background-color: rgba(255, 203, 5, 0.2);
+    transform: scale(1.1);
+  }
+
+  .reassurance-item h3 {
+    font-size: 1rem;
+    font-family: var(--f-display);
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  .reassurance-item p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .reassurance-band {
+      padding: 2rem 1rem;
+      margin: 2rem 0;
+    }
+
+    .reassurance-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .reassurance-item h3 {
+      font-size: 0.9rem;
+    }
+
+    .reassurance-item p {
+      font-size: 0.8rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.reassurance_band.name",
+  "settings": []
+}
+{% endschema %}

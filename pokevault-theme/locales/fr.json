@@ -36,6 +36,11 @@
     "note": "Livraison en France uniquement — expédition sécurisée.",
     "checkout": "Procéder au paiement"
   },
+  "announcement": {
+    "delivery_france": "🚚 Livraison en France uniquement — expédition sécurisée et soignée",
+    "authentic": "✅ Produits 100% Authentiques et Scellés",
+    "slot_3": "📦 Emballage Protecteur Renforcé"
+  },
   "hero": {
     "badge": "✦ Boutique Premium Collector",
     "title": "Pokémon TCG",
@@ -47,7 +52,27 @@
     "stat_authentic": "Authentique",
     "stat_delivery": "Livraison France"
   },
+  "categories": {
+    "sealed_products": "Produits Scellés",
+    "sealed_description": "Boosters, ETB, Bundles & Displays. Produits authentiques, scellés d'usine.",
+    "protections": "Housses Protectrices",
+    "protections_description": "Sleeves premium, toploaders & housses acryliques sur mesure.",
+    "explore": "Découvrir"
+  },
+  "reassurance": {
+    "delivery_title": "Livraison France",
+    "delivery_desc": "Expédition sécurisée et attentive en France métropolitaine",
+    "authentic_title": "100% Authentique",
+    "authentic_desc": "Uniquement des produits authentiques scellés d'usine",
+    "packaging_title": "Emballage Renforcé",
+    "packaging_desc": "Protection supplémentaire pour votre collection précieuse",
+    "support_title": "Support Réactif",
+    "support_desc": "Réponses rapides à tous vos questions"
+  },
   "sections": {
+    "announcement_bar": {
+      "name": "Barre d'Annonces"
+    },
     "header": {
       "name": "En-tête"
     },
@@ -62,6 +87,12 @@
       "title": "Titre Principal",
       "title_accent": "Titre Accent",
       "subtitle": "Texte Sous-titre"
+    },
+    "category_tiles": {
+      "name": "Tuiles Catégories"
+    },
+    "reassurance_band": {
+      "name": "Bande de Réassurance"
     }
   }
 }

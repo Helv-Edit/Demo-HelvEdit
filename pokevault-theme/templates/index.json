@@ -1,17 +1,30 @@
 {
   "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {}
+    },
     "hero": {
       "type": "hero",
       "settings": {
-        "title": "La boutique des",
-        "title_accent": "vrais dresseurs",
-        "subtitle": "Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro."
+        "title": "hero.title",
+        "title_accent": "hero.title_accent",
+        "subtitle": "hero.subtitle"
       }
     },
-    "catalog": {
-      "type": "home-catalog",
+    "categories": {
+      "type": "category-tiles",
+      "settings": {}
+    },
+    "reassurance": {
+      "type": "reassurance-band",
       "settings": {}
     }
   },
-  "order": ["hero", "catalog"]
+  "order": [
+    "announcement",
+    "hero",
+    "categories",
+    "reassurance"
+  ]
 }

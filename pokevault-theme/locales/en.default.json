@@ -36,6 +36,11 @@
     "note": "Delivery in France only — secure shipping.",
     "checkout": "Proceed to Checkout"
   },
+  "announcement": {
+    "delivery_france": "🚚 Delivery in France only — secure and care-free shipping",
+    "authentic": "✅ 100% Authentic & Sealed Products",
+    "slot_3": "📦 Reinforced Protective Packaging"
+  },
   "hero": {
     "badge": "✦ Premium Collector Store",
     "title": "Pokémon TCG",
@@ -47,7 +52,27 @@
     "stat_authentic": "Authentic",
     "stat_delivery": "France Shipping"
   },
+  "categories": {
+    "sealed_products": "Sealed Products",
+    "sealed_description": "Boosters, ETB, Bundles & Displays. Authentic, factory-sealed products.",
+    "protections": "Protective Cases",
+    "protections_description": "Premium sleeves, toploaders & custom acrylic cases for each format.",
+    "explore": "Explore"
+  },
+  "reassurance": {
+    "delivery_title": "France Shipping",
+    "delivery_desc": "Secure & attentive delivery to mainland France",
+    "authentic_title": "100% Authentic",
+    "authentic_desc": "Only sealed authentic products from official distributors",
+    "packaging_title": "Reinforced Packaging",
+    "packaging_desc": "Extra protection for your valuable collection",
+    "support_title": "Responsive Support",
+    "support_desc": "Quick replies to all your questions and concerns"
+  },
   "sections": {
+    "announcement_bar": {
+      "name": "Announcement Bar"
+    },
     "header": {
       "name": "Header"
     },
@@ -62,6 +87,12 @@
       "title": "Main Title",
       "title_accent": "Accent Title",
       "subtitle": "Subtitle Text"
+    },
+    "category_tiles": {
+      "name": "Category Tiles"
+    },
+    "reassurance_band": {
+      "name": "Reassurance Band"
     }
   }
 }
