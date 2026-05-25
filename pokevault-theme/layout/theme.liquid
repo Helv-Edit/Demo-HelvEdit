@@ -5,49 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% render 'meta-tags' %}
   {{ content_for_header }}
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   {{ 'pokevault.css' | asset_url | stylesheet_tag }}
+
+  <!-- GSAP CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
 
-  <!-- SAKURA BACKGROUND -->
-  {% render 'sakura-background' %}
+  <!-- ═══ HEADER ═══ -->
+  {% section 'header' %}
 
-  <!-- CLOUD CURTAIN (login/checkout only) -->
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main id="shopify-section-content">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  {% section 'footer' %}
+
+  <!-- ═══ CART DRAWER ═══ -->
+  {% section 'cart-drawer' %}
+
+  <!-- ═══ CLOUD TRANSITION (login/checkout only) ═══ -->
   {{ 'cloud-transition.js' | asset_url | script_tag }}
+
+  <!-- ═══ GLOBAL SCRIPTS ═══ -->
   <script defer src="{{ 'pokevault-home.js' | asset_url }}"></script>
   <script defer src="{{ 'customer-pages.js' | asset_url }}"></script>
-
-  <!-- ═══ HEADER -->
-  <header class="site-header">
-
-    <a href="{{ routes.root_url }}" class="site-logo">
-      <div class="logo-icon"></div>
-      Poke<span>Vault</span>
-    </a>
-
-    <nav class="site-nav"></nav>
-
-    <div class="header-actions">
-      {% if customer %}
-        <a href="{{ routes.account_url }}" class="header-btn header-btn--account">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          {{ customer.first_name }}
-        </a>
-      {% else %}
-        <a href="/pages/connexion" class="header-btn">Connexion</a>
-        <a href="/pages/connexion" class="header-btn header-btn--account">Créer un compte</a>
-      {% endif %}
-      <button class="header-btn" id="cartToggle" aria-label="Panier">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 01-8 0"/>
         </svg>

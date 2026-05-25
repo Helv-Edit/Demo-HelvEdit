@@ -1,72 +1,67 @@
 {
-  "404": {
-    "title": "404",
-    "not_found": "Page not found.",
-    "back_to_shopping": "Back to shopping"
+  "general": {
+    "close": "Close",
+    "search": "Search"
   },
-  "blog": {
-    "article_comments": "Comments",
-    "article_metadata_html": "{{ date }} by {{ author }}",
-    "comment_form_body": "Comment",
-    "comment_form_email": "Email",
-    "comment_form_name": "Name",
-    "comment_form_submit": "Post",
-    "comment_form_title": "Add a comment"
+  "header": {
+    "home": "Home",
+    "sealed_products": "Sealed Products",
+    "protections": "Protections",
+    "login": "Login",
+    "cart": "Cart"
+  },
+  "footer": {
+    "about": "About PokeVault",
+    "about_description": "Premium Pokémon TCG collector's store. Authentic sealed products and custom protective cases.",
+    "links": "Quick Links",
+    "about_page": "About Us",
+    "shipping": "Shipping",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "refund": "Refund Policy",
+    "newsletter": "Newsletter",
+    "newsletter_description": "Subscribe to our newsletter for new arrivals and exclusive offers.",
+    "email_placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "all_rights": "All rights reserved."
   },
   "cart": {
-    "checkout": "Checkout",
-    "title": "Cart",
-    "update": "Update",
-    "remove": "Remove"
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "note": "Delivery in France only — secure shipping.",
+    "checkout": "Proceed to Checkout"
   },
-  "customers": {
-    "login": {
-      "title": "Connectez-vous",
-      "email": "Adresse email",
-      "password": "Mot de passe",
-      "submit": "SE CONNECTER",
-      "forgot_password": "Mot de passe oublié ?",
-      "no_account": "Créer un compte",
-      "tab": "Connexion",
-      "success": "Connecté ! Redirection...",
-      "already_connected": "Bienvenue !"
+  "hero": {
+    "badge": "✦ Premium Collector Store",
+    "title": "Pokémon TCG",
+    "title_accent": "Sealed & Authentic",
+    "subtitle": "Exclusive sealed products and premium protective cases. Everything for serious collectors.",
+    "cta_primary": "Browse Sealed Products",
+    "cta_secondary": "Explore Protections",
+    "stat_products": "Products",
+    "stat_authentic": "Authentic",
+    "stat_delivery": "France Shipping"
+  },
+  "sections": {
+    "header": {
+      "name": "Header"
     },
-    "register": {
-      "title": "Créer un compte",
-      "first_name": "Prénom",
-      "last_name": "Nom",
-      "email": "Adresse email",
-      "password": "Mot de passe",
-      "password_hint": "Minimum 6 caractères",
-      "submit": "CRÉER MON COMPTE",
-      "have_account": "J'ai déjà un compte",
-      "tab": "Créer un compte"
+    "footer": {
+      "name": "Footer"
     },
-    "account": "Aller au compte",
-    "create_account": "Créer un compte",
-    "have_account": "J'ai déjà un compte",
-    "or": "ou"
-  },
-  "collections": {
-    "title": "Collections"
-  },
-  "gift_card": {
-    "add_to_apple_wallet": "Add to Apple Wallet",
-    "card": "Gift card",
-    "expired": "This gift card has expired",
-    "expires_on": "Expires on {{ expires_on }}",
-    "use_at_checkout": "Use this gift card at checkout"
-  },
-  "password": {
-    "title": "This shop is private",
-    "password": "Password",
-    "enter": "Enter"
-  },
-  "search": {
-    "title": "Search",
-    "placeholder": "Search articles, pages, or products",
-    "submit": "Search",
-    "no_results_html": "No results found for {{ terms }}",
-    "results_for_html": "{{ count }} results found for {{ terms }}"
+    "cart_drawer": {
+      "name": "Cart Drawer"
+    },
+    "hero": {
+      "name": "Hero",
+      "title": "Main Title",
+      "title_accent": "Accent Title",
+      "subtitle": "Subtitle Text"
+    }
   }
 }

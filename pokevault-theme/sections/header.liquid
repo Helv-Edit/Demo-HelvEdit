@@ -1,77 +1,158 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+{% doc %}
+  Renders the site header with logo, navigation, and action buttons (account, cart).
+  Header is sticky and includes responsive mobile navigation.
+{% enddoc %}
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+<header class="site-header">
+  <!-- Logo -->
+  <a href="{{ routes.root_url }}" class="site-logo">
+    <span>PokeVault</span>
+  </a>
 
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <a href="{{ routes.root_url }}" class="nav-link">{{ 'header.home' | t }}</a>
+    <a href="/collections/produits-scelles" class="nav-link">{{ 'header.sealed_products' | t }}</a>
+    <a href="/collections/protections" class="nav-link">{{ 'header.protections' | t }}</a>
+  </nav>
+
+  <!-- Action Buttons (Account + Cart) -->
+  <div class="header-actions">
+    {% if customer %}
+      <a href="{{ routes.account_url }}" class="header-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/>
+        </svg>
+        {{ customer.first_name }}
+      </a>
+    {% else %}
+      <a href="/account/login" class="header-btn">{{ 'header.login' | t }}</a>
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+    <button class="header-btn" id="cart-toggle" aria-label="{{ 'header.cart' | t }}">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="9" cy="21" r="1"/>
+        <circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+      </svg>
+      <span id="cart-count" class="cart-count" style="display: none;">0</span>
+    </button>
   </div>
 </header>
 
 {% stylesheet %}
-  header {
-    height: 5rem;
+  /* Header extends global styles from pokevault.css */
+  .site-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  header a {
+
+  .site-logo {
+    font-family: var(--f-manga);
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+  }
+
+  .site-logo:hover {
+    color: var(--yellow);
+  }
+
+  .site-logo span {
+    color: var(--yellow);
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 2.5rem;
+    flex: 1;
+    justify-content: center;
+    margin: 0 2rem;
+  }
+
+  .nav-link {
+    font-family: var(--f-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--yellow);
+    border-bottom-color: var(--yellow);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .header-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
     position: relative;
     text-decoration: none;
-    color: var(--color-foreground);
+  }
+
+  .header-btn:hover {
+    background-color: var(--bg-secondary);
+    color: var(--yellow);
+  }
+
+  .header-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--yellow);
+    color: var(--bg-primary);
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 0.7rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
+
+  @media (max-width: 768px) {
+    .site-nav {
+      display: none;
+    }
+
+    .site-logo {
+      font-size: 1.25rem;
+    }
+
+    .header-actions {
+      gap: 1rem;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
-    }
-  ]
+  "name": "t:sections.header.name",
+  "settings": []
 }
 {% endschema %}

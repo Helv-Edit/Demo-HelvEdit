@@ -1,0 +1,67 @@
+{
+  "general": {
+    "close": "Fermer",
+    "search": "Rechercher"
+  },
+  "header": {
+    "home": "Accueil",
+    "sealed_products": "Produits Scellés",
+    "protections": "Protections",
+    "login": "Connexion",
+    "cart": "Panier"
+  },
+  "footer": {
+    "about": "À propos de PokeVault",
+    "about_description": "Boutique premium de collectionneurs Pokémon TCG. Produits scellés authentiques et housses protectrices sur mesure.",
+    "links": "Liens Rapides",
+    "about_page": "À Propos",
+    "shipping": "Livraison",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "legal": "Mentions Légales",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions Générales",
+    "refund": "Politique de Retour",
+    "newsletter": "Infolettre",
+    "newsletter_description": "Inscrivez-vous pour découvrir les nouveautés et les offres exclusives.",
+    "email_placeholder": "Entrez votre adresse email",
+    "subscribe": "S'inscrire",
+    "all_rights": "Tous droits réservés."
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "note": "Livraison en France uniquement — expédition sécurisée.",
+    "checkout": "Procéder au paiement"
+  },
+  "hero": {
+    "badge": "✦ Boutique Premium Collector",
+    "title": "Pokémon TCG",
+    "title_accent": "Scellé & Authentique",
+    "subtitle": "Produits scellés en exclusivité et housses de protection premium. Tout pour les vrais collectionneurs.",
+    "cta_primary": "Voir les Produits Scellés",
+    "cta_secondary": "Explorer les Protections",
+    "stat_products": "Références",
+    "stat_authentic": "Authentique",
+    "stat_delivery": "Livraison France"
+  },
+  "sections": {
+    "header": {
+      "name": "En-tête"
+    },
+    "footer": {
+      "name": "Pied de page"
+    },
+    "cart_drawer": {
+      "name": "Tiroir du Panier"
+    },
+    "hero": {
+      "name": "Banneau",
+      "title": "Titre Principal",
+      "title_accent": "Titre Accent",
+      "subtitle": "Texte Sous-titre"
+    }
+  }
+}

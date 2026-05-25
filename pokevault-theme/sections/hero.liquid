@@ -1,52 +1,228 @@
+{% doc %}
+  Hero section — full-width banner with animated title and CTA buttons.
+{% enddoc %}
+
 <section class="hero">
-  <div class="hero__inner">
-    <div class="hero__badge">✦ La boutique collector</div>
+  <div class="hero__background"></div>
+
+  <div class="hero__content">
+    <div class="hero__badge">{{ 'hero.badge' | t }}</div>
 
     <h1 class="hero__title">
-      {{ section.settings.title | default: 'La boutique des' }}<br>
-      <span>{{ section.settings.title_accent | default: 'vrais dresseurs' }}</span>
+      {{ section.settings.title | default: 'hero.title' | t }}<br>
+      <span class="hero__accent">{{ section.settings.title_accent | default: 'hero.title_accent' | t }}</span>
     </h1>
 
-    <p class="hero__sub">
-      {{ section.settings.subtitle | default: "Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro." }}
+    <p class="hero__subtitle">
+      {{ section.settings.subtitle | default: 'hero.subtitle' | t }}
     </p>
 
     <div class="hero__ctas">
-      <a href="#catalog" class="btn-primary-hero" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'});return false;">
-        Voir les produits →
+      <a href="/collections/produits-scelles" class="btn btn--primary btn--lg">
+        {{ 'hero.cta_primary' | t }} →
       </a>
-      {% if customer %}
-        <a href="{{ routes.account_url }}" class="btn-ghost-hero">Mon compte</a>
-      {% else %}
-        <a href="{{ routes.account_register_url }}" class="btn-ghost-hero">Créer un compte</a>
-      {% endif %}
+      <a href="/collections/protections" class="btn btn--secondary btn--lg">
+        {{ 'hero.cta_secondary' | t }}
+      </a>
     </div>
 
     <div class="hero__stats">
       <div class="hero__stat">
-        <span class="hero__stat-num" data-count="500" data-suffix="+">500+</span>
-        <span class="hero__stat-label">Références</span>
+        <div class="hero__stat-value">500+</div>
+        <div class="hero__stat-label">{{ 'hero.stat_products' | t }}</div>
       </div>
       <div class="hero__stat">
-        <span class="hero__stat-num">3</span>
-        <span class="hero__stat-label">Langues FR·JP·EN</span>
+        <div class="hero__stat-value">100%</div>
+        <div class="hero__stat-label">{{ 'hero.stat_authentic' | t }}</div>
       </div>
       <div class="hero__stat">
-        <span class="hero__stat-num" data-count="48" data-suffix="H">48H</span>
-        <span class="hero__stat-label">Livraison France</span>
+        <div class="hero__stat-value">48H</div>
+        <div class="hero__stat-label">{{ 'hero.stat_delivery' | t }}</div>
       </div>
     </div>
   </div>
 </section>
 
+{% stylesheet %}
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 4rem;
+  }
+
+  .hero__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    z-index: 0;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    padding: 0 2rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero__badge {
+    display: inline-block;
+    font-family: var(--f-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--yellow);
+    border-radius: var(--radius-lg);
+  }
+
+  .hero__title {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-family: var(--f-manga);
+  }
+
+  .hero__accent {
+    color: var(--yellow);
+    display: block;
+  }
+
+  .hero__subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .hero__ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .hero__stat {
+    text-align: center;
+  }
+
+  .hero__stat-value {
+    font-family: var(--f-manga);
+    font-size: 2rem;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      min-height: 500px;
+      margin-bottom: 2rem;
+    }
+
+    .hero__title {
+      font-size: 2.25rem;
+    }
+
+    .hero__ctas {
+      flex-direction: column;
+    }
+
+    .hero__ctas .btn {
+      width: 100%;
+    }
+
+    .hero__stats {
+      flex-direction: column;
+      gap: 1.5rem;
+      border-top: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  // Simple fade-in animation for stats on scroll
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.gsap) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.to('.hero__stat', {
+        scrollTrigger: '.hero__stats',
+        duration: 0.6,
+        stagger: 0.15,
+        y: 0,
+        opacity: 1
+      });
+    }
+  });
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "Hero",
+  "name": "t:sections.hero.name",
   "settings": [
-    { "type": "text", "id": "title", "label": "Titre ligne 1", "default": "La boutique des" },
-    { "type": "text", "id": "title_accent", "label": "Titre ligne 2", "default": "vrais dresseurs" },
-    { "type": "textarea", "id": "subtitle", "label": "Sous-titre" }
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.hero.title",
+      "default": "hero.title"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "t:sections.hero.title_accent",
+      "default": "hero.title_accent"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "t:sections.hero.subtitle",
+      "default": "hero.subtitle"
+    }
   ],
-  "presets": [{ "name": "Hero" }]
+  "presets": [
+    {
+      "name": "t:sections.hero.name"
+    }
+  ]
 }
 {% endschema %}
