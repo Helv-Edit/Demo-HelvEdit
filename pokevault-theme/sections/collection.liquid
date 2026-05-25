@@ -1,116 +1,159 @@
-<div class="page-wrapper">
+{% doc %}
+  Renders a collection page with hero, product grid, and basic layout.
+{% enddoc %}
 
-  <!-- Promo banner manga -->
-  <div class="promo-banner">
-    <div>
-      <h3>Livraison offerte dès 80€</h3>
-      <p>Partout en France — emballage renforcé pour vos cartes</p>
+<div class="collection-page">
+  <section class="collection-hero">
+    <div class="collection-hero__content">
+      <h1 class="collection-hero__title">{{ collection.title }}</h1>
+      {% if collection.description %}
+        <p class="collection-hero__description">{{ collection.description }}</p>
+      {% endif %}
     </div>
-    <div class="banner-perks">
-      <div class="perk"><div class="perk-dot"></div> Paiement sécurisé SSL</div>
-      <div class="perk"><div class="perk-dot"></div> Stock mis à jour quotidiennement</div>
-      <div class="perk"><div class="perk-dot"></div> Produits 100% authentiques</div>
-    </div>
-  </div>
+  </section>
 
-  <!-- Filter tabs avec animation manga -->
-  <div class="filter-tabs" id="filterTabs">
-    {% assign cur_tag = current_tags | first %}
-    <a href="{{ routes.all_products_collection_url }}" class="filter-tab {% unless cur_tag %}active{% endunless %}">
-      Tous les produits
-    </a>
-    <a href="{{ routes.all_products_collection_url }}/booster" class="filter-tab {% if cur_tag == 'booster' %}active{% endif %}">Boosters</a>
-    <a href="{{ routes.all_products_collection_url }}/sleeve" class="filter-tab {% if cur_tag == 'sleeve' %}active{% endif %}">Sleeves</a>
-    <a href="{{ routes.all_products_collection_url }}/protection" class="filter-tab {% if cur_tag == 'protection' %}active{% endif %}">Protections</a>
-    <a href="{{ routes.all_products_collection_url }}/toploader" class="filter-tab {% if cur_tag == 'toploader' %}active{% endif %}">Toploaders</a>
-  </div>
+  <div class="collection-container">
+    <main class="collection-main">
+      {% if collection.products_count > 0 %}
+        <div class="products-grid">
+          {% for product in collection.products %}
+            <article class="product-card">
+              <a href="{{ product.url }}" class="product-card__link">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}" loading="lazy" />
+                {% endif %}
+              </a>
 
-  <!-- Section header -->
-  <div class="section-header">
-    <span class="section-title">
-      {% if collection.title %}{{ collection.title }}{% else %}Tous les produits{% endif %}
-    </span>
-    <span class="section-count">{{ collection.products_count }} produit{{ collection.products_count | pluralize: '', 's' }}</span>
-  </div>
-
-  <!-- Product grid manga panels -->
-  {% paginate collection.products by 24 %}
-    {% if collection.products.size > 0 %}
-      <div class="products-grid" id="productsGrid">
-        {% for product in collection.products %}
-          {% render 'product-card', product: product %}
-        {% endfor %}
-      </div>
-
-      {% if paginate.pages > 1 %}
-        <div style="margin-top:2rem;text-align:center">
-          {{ paginate | default_pagination }}
+              <div class="product-card__content">
+                <h3 class="product-card__title">{{ product.title }}</h3>
+                <div class="product-card__price">{{ product.price | money }}</div>
+                <form method="post" action="/cart/add">
+                  <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+                  <button type="submit" class="btn btn--primary btn--sm">Add to Cart</button>
+                </form>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="collection-empty">
+          <p>No products in this collection</p>
         </div>
       {% endif %}
-
-    {% else %}
-      <div style="text-align:center;padding:4rem 2rem;color:var(--text-muted)">
-        <p style="font-family:var(--f-manga);font-size:2rem;color:var(--red);margin-bottom:1rem">AUCUN PRODUIT</p>
-        <p style="font-size:0.85rem">Cette collection est vide pour l'instant.</p>
-      </div>
-    {% endif %}
-  {% endpaginate %}
-
+    </main>
+  </div>
 </div>
 
 {% stylesheet %}
-  /* Manga filter tab transitions */
-  .filter-tab {
-    position: relative;
+  .collection-page {
+    min-height: 100vh;
+  }
+
+  .collection-hero {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-hero__title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .collection-hero__description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2rem;
+  }
+
+  .product-card {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-secondary);
+  }
+
+  .product-card__link {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
     overflow: hidden;
   }
-  .filter-tab::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--yellow);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.2s ease;
-    z-index: -1;
-    opacity: 0.1;
-  }
-  .filter-tab:hover::after { transform: scaleX(1); }
 
-  /* Card appear animation */
-  @keyframes cardAppear {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .product-card__link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
   }
-  .product-card {
-    animation: cardAppear 0.4s ease both;
+
+  .product-card:hover .product-card__link img {
+    transform: scale(1.05);
   }
-  {% for i in (1..15) %}
-    .product-card:nth-child({{ i }}) { animation-delay: {{ i | minus: 1 | times: 0.05 }}s; }
-  {% endfor %}
+
+  .product-card__content {
+    padding: 1.5rem;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .product-card__price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-warm);
+    margin-bottom: 1rem;
+  }
+
+  .product-card .btn {
+    width: 100%;
+  }
+
+  .collection-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .collection-hero {
+      padding: 2rem 1rem;
+    }
+  }
 {% endstylesheet %}
-
-{% javascript %}
-  // Manga transition on filter tab click
-  document.querySelectorAll('.filter-tabs .filter-tab').forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      const href = tab.getAttribute('href');
-      if (href && href !== window.location.pathname) {
-        e.preventDefault();
-        if (typeof mangaTransition === 'function') {
-          mangaTransition(() => { window.location.href = href; });
-        } else {
-          window.location.href = href;
-        }
-      }
-    });
-  });
-{% endjavascript %}
 
 {% schema %}
 {
   "name": "Collection",
-  "settings": [],
-  "presets": [{ "name": "Collection" }]
+  "settings": []
 }
 {% endschema %}

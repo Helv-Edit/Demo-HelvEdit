@@ -1,7 +1,8 @@
 {
   "general": {
     "close": "Fermer",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "products": "produits"
   },
   "header": {
     "home": "Accueil",
@@ -83,6 +84,24 @@
     "contact_description": "Avez-vous des questions ? Contactez notre équipe.",
     "faq_title": "Questions Fréquemment Posées",
     "faq_description": "Trouvez les réponses aux questions courantes sur nos produits et services."
+  },
+  "collection": {
+    "filters": "Filtres",
+    "sort_by": "Trier par",
+    "sort_default": "Meilleures ventes",
+    "sort_title": "Titre A-Z",
+    "sort_price_low": "Prix: Le plus bas",
+    "sort_price_high": "Prix: Le plus élevé",
+    "sort_newest": "Le plus récent",
+    "empty": "Aucun produit trouvé"
+  },
+  "product": {
+    "add_to_cart": "Ajouter au panier",
+    "no_image": "Pas d'image"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant"
   },
   "sections": {
     "announcement_bar": {
