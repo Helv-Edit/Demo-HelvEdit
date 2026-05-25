@@ -74,7 +74,7 @@
     width: 100%;
     max-width: 400px;
     height: 100%;
-    background-color: var(--bg-primary);
+    background-color: #FFFFFF;
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -176,26 +176,33 @@
 {% endstylesheet %}
 
 {% javascript %}
-  document.addEventListener('DOMContentLoaded', function() {
+  function initCartDrawer() {
     const cartToggle = document.getElementById('cart-toggle');
     const cartDrawer = document.getElementById('cart-drawer');
     const cartClose = document.getElementById('cart-close');
     const overlay = document.querySelector('.cart-drawer__overlay');
 
-    if (cartToggle) {
-      cartToggle.addEventListener('click', function() {
+    // Open cart
+    if (cartToggle && cartDrawer) {
+      cartToggle.addEventListener('click', function(e) {
+        e.preventDefault();
         cartDrawer.classList.add('active');
       });
     }
 
-    if (cartClose) {
-      cartClose.addEventListener('click', function() {
+    // Close cart — close button
+    if (cartClose && cartDrawer) {
+      cartClose.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         cartDrawer.classList.remove('active');
       });
     }
 
-    if (overlay) {
-      overlay.addEventListener('click', function() {
+    // Close cart — overlay click
+    if (overlay && cartDrawer) {
+      overlay.addEventListener('click', function(e) {
+        e.preventDefault();
         cartDrawer.classList.remove('active');
       });
     }
@@ -207,17 +214,27 @@
         .then(data => {
           const count = data.item_count;
           const countEl = document.getElementById('cart-count');
-          if (count > 0) {
-            countEl.textContent = count;
-            countEl.style.display = 'flex';
-          } else {
-            countEl.style.display = 'none';
+          if (countEl) {
+            if (count > 0) {
+              countEl.textContent = count;
+              countEl.style.display = 'flex';
+            } else {
+              countEl.style.display = 'none';
+            }
           }
-        });
+        })
+        .catch(err => console.error('Cart count error:', err));
     }
 
     updateCartCount();
-  });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartDrawer);
+  } else {
+    initCartDrawer();
+  }
 {% endjavascript %}
 
 {% schema %}

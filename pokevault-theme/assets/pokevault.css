@@ -4,40 +4,42 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Brand — Pokémon + Japon */
-  --yellow:            #FFCB05;  /* Pokémon jaune */
-  --blue-irezumi:      #4A6FA5;  /* Nuages bleus irezumi */
-  --blue-light:        #6B8CC6;  /* Bleu clair épuré */
+  /* PokeVault v2 — Palette Française, Clean, Épuré */
 
-  /* Fonds — Palette chaude, jamais blanc pur */
-  --bg-primary:        #0e0c0a;  /* Brun très sombre, base */
-  --bg-secondary:      #1a1815;  /* Gris-brun chaleureux */
-  --bg-tertiary:       #2a2520;  /* Pour les alternances de sections */
+  /* Fonds — Gris base + teintes pastels */
+  --bg-primary:        #4E515A;  /* Gris foncé base */
+  --bg-secondary:      #F5F3F0;  /* Clair (sections alternées) */
+  --bg-tertiary:       #EFCEB5;  /* Peach/beige clair */
 
   /* Textes */
-  --text-primary:      #F5F3F0;  /* Texte clair sur fonds sombres */
-  --text-secondary:    #D4CECA;  /* Texte secondaire, labels */
-  --text-muted:        #9A9289;  /* Texte très assourdi */
+  --text-primary:      #2B2B2B;  /* Gris foncé sur fonds clairs */
+  --text-secondary:    #6B6B6B;  /* Gris moyen */
+  --text-muted:        #A9A1A7;  /* Gris clair mauve */
+  --text-light:        #F5F3F0;  /* Clair sur fonds sombres */
 
-  /* Accents et bordures */
-  --accent:            var(--yellow);
-  --border:            #3A3530;  /* Bordures sombres subtiles */
-  --border-hover:      var(--blue-irezumi);
+  /* Accents */
+  --accent-primary:    #A11A1C;  /* Rouge foncé — boutons, highlights */
+  --accent-secondary:  #99BCC3;  /* Bleu-gris pastel — hover, borders */
+  --accent-warm:       #E5B57D;  /* Or/ocre — prix, badges */
+  --accent-mauve:      #A9A1A7;  /* Mauve pastel — doux */
 
-  /* Fonts */
-  --f-manga:           'Dela Gothic One', cursive;    /* Titres boldiques */
-  --f-display:         'Space Grotesk', sans-serif;   /* Display méga */
-  --f-body:            'Inter', sans-serif;           /* Corps lisible */
+  /* Bordures */
+  --border:            #D9D3D0;  /* Bordures légères */
+  --border-dark:       #999999;  /* Bordures plus visibles */
+
+  /* Fonts — Clean & Modern */
+  --f-display:         'Space Grotesk', sans-serif;   /* Titres */
+  --f-body:            'Inter', sans-serif;           /* Corps */
 
   /* Spacing & radius */
   --radius-sm:         4px;
   --radius:            8px;
   --radius-lg:         12px;
 
-  /* Shadow */
-  --shadow-sm:         0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow:            0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg:         0 8px 24px rgba(0, 0, 0, 0.6);
+  /* Shadow — Subtiles */
+  --shadow-sm:         0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow:            0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg:         0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* ── RESET & BASE ──────────────────────────────────────────────────────────────────── */
@@ -53,7 +55,7 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   color: var(--text-primary);
   font-family: var(--f-body);
   font-size: 16px;
@@ -154,14 +156,15 @@ p {
 }
 
 .btn--primary {
-  background-color: var(--yellow);
-  color: var(--bg-primary);
-  border-color: var(--yellow);
+  background-color: var(--accent-primary);
+  color: #FFFFFF;
+  border-color: var(--accent-primary);
 }
 
 .btn--primary:hover {
   background-color: transparent;
-  color: var(--yellow);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
   box-shadow: var(--shadow);
 }
 
@@ -191,7 +194,7 @@ p {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--bg-primary);
+  background: #FFFFFF;
   border-bottom: 1px solid var(--border);
   height: 80px;
   padding: 0 2rem;
@@ -202,22 +205,23 @@ p {
 }
 
 .site-logo {
-  font-family: var(--f-manga);
-  font-size: 1.5rem;
+  font-family: var(--f-display);
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-decoration: none;
 }
 
 .site-logo:hover {
-  color: var(--yellow);
+  color: var(--accent-primary);
 }
 
 .site-logo span {
-  color: var(--yellow);
+  color: var(--accent-primary);
 }
 
 .site-nav {

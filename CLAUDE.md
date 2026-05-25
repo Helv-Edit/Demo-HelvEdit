@@ -78,24 +78,31 @@ demo-helvedit/
 
 ## 🎨 Design — Règles à respecter
 
-**Identité visuelle PokeVault :**
-- Police titres : `Dela Gothic One` (manga bold)
-- Police display : `Space Grotesk`
-- Police corps : `Inter`
-- Couleur accent : `#FFCB05` (jaune Pokémon)
-- Background : `#0e0c0a` (brun très sombre, pas noir pur)
-- Style : manga japonais, nuages irezumi bleus, JAMAIS générique
+**Identité visuelle PokeVault v2 (Français, Clean, Épuré) :**
+- Police titres : `Space Grotesk` (moderne, sans-serif, élégant)
+- Police display : `Space Grotesk` (cohérent, clair)
+- Police corps : `Inter` (lisible, neutre)
+- **Palette principale :**
+  - Background : `#4E515A` (gris foncé — base)
+  - Accent primaire : `#A11A1C` (rouge foncé — boutons, highlights)
+  - Accent secondaire : `#99BCC3` (bleu-gris pastel — hover, borders)
+  - Texte principal : `#F5F3F0` (clair, high contrast)
+  - Texte secondaire : `#D4CECA` (gris clair)
+  - Warm accent : `#E5B57D` (or/ocre — prix, badges)
+  - Peach : `#EFCEB5` (beige clair — sections alternées)
+  - Mauve : `#A9A1A7` (pastels doux)
+- **Style :** Français, clean, épuré, minimaliste. **JAMAIS manga/néon.** Site professionnel de vente premium.
 
 **Animations :**
-- GSAP via CDN pour tout (déjà chargé dans theme.liquid)
-- `pokevault-home.js` gère hero reveal, filtre FLIP, 3D hover cards, nuages flottants
-- Cloud transition (nuages jaunes anime) → seulement pour `/checkout` et `/account`
-- AUCUNE animation qui cache du contenu (leçon apprise)
+- GSAP via CDN pour smooth transitions (déjà chargé)
+- Animations subtiles : fade-in, stagger, smooth hover (pas de bruit)
+- Polish visuel avec Emil Design principles
+- AUCUNE animation qui cache du contenu
 
-**Architecture SPA :**
-- Homepage = page unique avec filtres client-side (pas de rechargement)
-- Les onglets Tout/Boosters/Sleeves/Protections/Toploaders filtrent via `data-cat`
-- `data-cat` est assigné dans `product-card.liquid` via `product.type` + titre + tags
+**Architecture & Langue :**
+- **Langue par défaut : FRANÇAIS** (sélecteur EN en haut à droite)
+- Homepage = page unique avec filtres client-side
+- Sections modulaires et réutilisables
 
 ---
 

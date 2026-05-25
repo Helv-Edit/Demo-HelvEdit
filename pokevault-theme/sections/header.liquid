@@ -16,8 +16,15 @@
     <a href="/collections/protections" class="nav-link">{{ 'header.protections' | t }}</a>
   </nav>
 
-  <!-- Action Buttons (Account + Cart) -->
+  <!-- Action Buttons (Language + Account + Cart) -->
   <div class="header-actions">
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <a href="?locale=fr" class="lang-btn {% if localization.current_locale.iso_code == 'fr' %}active{% endif %}">FR</a>
+      <span class="lang-separator">/</span>
+      <a href="?locale=en" class="lang-btn {% if localization.current_locale.iso_code == 'en' %}active{% endif %}">EN</a>
+    </div>
+
     {% if customer %}
       <a href="{{ routes.account_url }}" class="header-btn">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -94,7 +101,35 @@
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
+  }
+
+  .language-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--f-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .lang-btn {
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+  }
+
+  .lang-btn:hover,
+  .lang-btn.active {
+    color: var(--accent-primary);
+    background-color: rgba(161, 26, 28, 0.1);
+  }
+
+  .lang-separator {
+    color: var(--border);
   }
 
   .header-btn {
