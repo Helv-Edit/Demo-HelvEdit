@@ -1,1663 +1,1158 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PokeVault — Boutique Collector France</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokeVault — Protections TCG</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="pokevault-theme/assets/cloud-transition.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <style>
+    /* ═══ TOKENS ═══════════════════════════════════════════════════════════ */
     :root {
-      --yellow: #FFCB05;
-      --yellow-dim: rgba(255,203,5,0.1);
-      --dark: #0d1117;
-      --dark2: #161c2a;
-      --dark3: #1e2638;
-      --dark4: #28334a;
-      --dark5: #324060;
-      --text: #eef0f5;
-      --muted: #8892a4;
-      --faint: #4a5568;
-      --border: #1e2638;
-      --border2: #283348;
-      --success: #22c55e;
-      --error: #ef4444;
-      --radius: 10px;
-      --radius-lg: 16px;
+      --red:        #A11A1C;
+      --red-dark:   #8a1518;
+      --yellow:     #E5B57D;
+      --amber:      #F5A623;
+      --card-bg:    #E8EBF4;
+      --border:     #E4E4E4;
+      --text:       #1a1a1a;
+      --muted:      #777;
+      --bg:         #FFFFFF;
+      --f-display:  'Space Grotesk', sans-serif;
+      --f-body:     'Inter', sans-serif;
+      --radius:     8px;
+      --radius-lg:  14px;
     }
 
+    /* ═══ RESET ════════════════════════════════════════════════════════════ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      background: var(--dark);
+      font-family: var(--f-body);
+      font-size: 16px;
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ═══ ANNOUNCEMENT BAR ═════════════════════════════════════════════════ */
+    .announcement-bar {
+      background: var(--amber);
+      padding: 0.55rem 2rem;
+      text-align: center;
+      font-family: var(--f-display);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: 0.02em;
+      position: relative;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* ─── VIEWS ─── */
-    .view { display: none; }
-    .view.active { display: block; }
-    .view-enter { animation: viewIn 0.4s ease forwards; }
-    @keyframes viewIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-
-    /* ─── HEADER ─── */
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
+    .ann-items { position: relative; flex: 1; min-height: 18px; }
+    .ann-item {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      text-align: center;
     }
+    .ann-item.active { position: relative; opacity: 1; }
+
+    /* ═══ HEADER ════════════════════════════════════════════════════════════ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #EBEBEB;
+      height: 64px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
     .logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.35rem; font-weight: 800;
-      letter-spacing: -0.02em; cursor: pointer;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .logo-ball {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: conic-gradient(var(--yellow) 0deg 180deg, #1a1a1a 180deg 360deg);
-      border: 2px solid var(--border2);
+      font-family: var(--f-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
       flex-shrink: 0;
     }
-    .logo span { color: var(--yellow); }
-    nav { display: flex; gap: 0.25rem; }
-    nav button {
-      background: none; border: none; color: var(--muted);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.82rem; font-weight: 500; padding: 0.4rem 0.85rem;
-      border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    }
-    nav button:hover { color: var(--text); background: var(--dark3); }
-    nav button.active { color: var(--yellow); background: var(--yellow-dim); }
-    .header-right { display: flex; gap: 0.6rem; align-items: center; }
-    .cart-btn, .account-btn {
-      background: none; border: 1px solid var(--border2); color: var(--text);
-      font-family: inherit; font-size: 0.82rem; font-weight: 500;
-      padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s;
-    }
-    .cart-btn:hover { border-color: var(--yellow); color: var(--yellow); }
-    .account-btn { border-color: rgba(255,203,5,0.25); color: var(--yellow); }
-    .account-btn:hover { background: var(--yellow-dim); }
-    .account-avatar {
-      width: 20px; height: 20px; background: var(--yellow); color: #000;
-      border-radius: 50%; font-size: 0.65rem; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .cart-count {
-      background: var(--yellow); color: #000; font-size: 0.65rem; font-weight: 800;
-      width: 17px; height: 17px; border-radius: 50%;
-      display: none; align-items: center; justify-content: center;
-    }
-    .cart-count.visible { display: flex; }
+    .logo span { color: var(--red); }
 
-    /* ─── HERO ─── */
-    .hero {
-      position: relative; overflow: hidden;
-      padding: 5.5rem 2rem 4rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
+    .header-spacer { flex: 1; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
     }
-    .hero-bg {
-      position: absolute; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% -5%, rgba(255,203,5,0.09) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 50% at 85% 110%, rgba(99,120,255,0.1) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(30,180,120,0.05) 0%, transparent 60%);
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      margin-right: 0.5rem;
     }
-    .hero-noise {
-      position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    .lang-btn {
+      font-family: var(--f-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      padding: 0.2rem 0.25rem;
+      transition: color 0.15s;
     }
-    .hero-particles { position: absolute; inset: 0; pointer-events: none; }
-    .particle {
-      position: absolute; width: 4px; height: 4px; border-radius: 50%;
-      background: var(--yellow); opacity: 0;
-    }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: var(--yellow-dim);
-      border: 1px solid rgba(255,203,5,0.25);
-      color: var(--yellow); font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 0.3rem 0.9rem; border-radius: 20px; margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.2rem, 5.5vw, 4rem);
-      font-weight: 800; line-height: 1.1;
-      letter-spacing: -0.03em; margin-bottom: 1.1rem;
-    }
-    .hero h1 .highlight {
-      color: var(--yellow);
+    .lang-btn:hover, .lang-btn.active { color: var(--text); }
+    .lang-sep { font-size: 0.6rem; color: #ddd; }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #444;
       position: relative;
+      transition: background 0.15s;
     }
-    .hero > .hero-content > p {
-      color: var(--muted); font-size: 1rem; max-width: 480px;
-      margin: 0 auto 2rem; line-height: 1.75;
-    }
-    .hero-ctas { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
-    .btn-primary {
-      background: var(--yellow); color: #000; border: none;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      padding: 0.75rem 1.6rem; border-radius: 8px; cursor: pointer;
-      transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem;
-    }
-    .btn-primary:hover { background: #ffd700; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,203,5,0.25); }
-    .btn-ghost {
-      background: none; color: var(--muted); border: 1px solid var(--border2);
-      font-family: inherit; font-size: 0.88rem; font-weight: 500;
-      padding: 0.75rem 1.4rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-ghost:hover { color: var(--text); border-color: var(--faint); }
-    .hero-stats { display: flex; justify-content: center; gap: 3.5rem; }
-    .stat { text-align: center; }
-    .stat-num {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.6rem; font-weight: 800; color: var(--yellow);
-      letter-spacing: -0.02em;
-    }
-    .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.04em; }
-    .stat-divider { width: 1px; background: var(--border2); height: 40px; align-self: center; }
+    .icon-btn:hover { background: #F2F2F2; }
+    .icon-btn svg { width: 20px; height: 20px; }
 
-    /* ─── MAIN ─── */
-    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .cart-badge {
+      position: absolute;
+      top: 2px; right: 2px;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 700;
+      min-width: 15px;
+      height: 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 2px;
+      display: none;
+    }
 
-    /* ─── BANNER ─── */
-    .banner {
-      background: linear-gradient(135deg, rgba(255,203,5,0.05) 0%, rgba(59,76,202,0.05) 100%);
-      border: 1px solid rgba(255,203,5,0.12);
-      border-radius: var(--radius-lg); padding: 1.25rem 1.75rem;
+    /* ═══ HERO ══════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      min-height: 420px;
+      max-height: 720px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
       margin-bottom: 2.5rem;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
     }
-    .banner-text h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .banner-text p { font-size: 0.78rem; color: var(--muted); }
-    .banner-perks { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-    .perk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); }
-    .perk-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--yellow); flex-shrink: 0; }
 
-    /* ─── FILTER ─── */
-    .filter-tabs { display: flex; gap: 0.4rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      /* Remplace ce gradient par ton image : background-image: url('hero-bg.jpg'); background-size: cover; background-position: center; */
+      background: linear-gradient(135deg, #1a0a2e 0%, #3d1060 25%, #1a1040 50%, #0d1a40 75%, #1a2060 100%);
+    }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 100%);
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3.5rem 2rem 0;
+    }
+
+    .hero__title {
+      font-family: var(--f-display);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.25);
+    }
+
+    /* ═══ CATALOG ═══════════════════════════════════════════════════════════ */
+    .catalog-wrapper {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .catalog-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
     .filter-tab {
-      background: var(--dark3); border: 1px solid var(--border);
-      color: var(--muted); font-family: inherit; font-size: 0.78rem; font-weight: 500;
-      padding: 0.38rem 1rem; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+      font-family: var(--f-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.45rem 1.1rem;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: #777;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .filter-tab:hover { color: var(--text); border-color: var(--border2); }
-    .filter-tab.active { background: var(--yellow-dim); border-color: rgba(255,203,5,0.35); color: var(--yellow); }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-    .section-title { font-size: 1rem; font-weight: 700; }
-    .section-count { font-size: 0.78rem; color: var(--muted); }
+    .filter-tab:hover { border-color: var(--red); color: var(--red); }
+    .filter-tab.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
 
-    /* ─── PRODUCT GRID ─── */
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 1.1rem; }
+    .catalog-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .catalog-title {
+      font-family: var(--f-display);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .catalog-count { font-size: 0.78rem; color: var(--muted); }
+
+    /* ═══ PRODUCT GRID ══════════════════════════════════════════════════════ */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    /* ═══ PRODUCT CARD ══════════════════════════════════════════════════════ */
     .product-card {
-      background: var(--dark2); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4,0,0.2,1); cursor: pointer;
-      display: flex; flex-direction: column;
-      transform-style: preserve-3d;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .product-card:hover {
-      border-color: rgba(255,203,5,0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,203,5,0.1);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
     }
 
-    /* ─── PRODUCT IMAGE (CSS ART) ─── */
-    .product-img {
-      aspect-ratio: 1; position: relative; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+    .product-card__image-wrap {
+      padding: 1.25rem 1.25rem 0.5rem;
+      position: relative;
     }
-    .product-img-inner {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 1;
+
+    .product-card__image {
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    .pack-code {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.2rem; font-weight: 800;
+
+    .product-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-card__image img { transform: scale(1.04); }
+
+    .product-card__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--f-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: rgba(0,0,0,0.12);
+      letter-spacing: 0.05em;
+    }
+
+    .product-card__badges {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      z-index: 2;
+    }
+    .pv-badge {
+      font-family: var(--f-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+    }
+    .pv-badge--new, .pv-badge--sale { background: var(--yellow); color: #2B2B2B; }
+    .pv-badge--out { background: #1a1a1a; color: #fff; }
+
+    .product-card__info {
+      padding: 0.6rem 1rem 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .product-card__title {
+      font-family: var(--f-body);
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #1a1a1a;
+    }
+
+    .product-card__price-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+    .price-main {
+      font-family: var(--f-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* ═══ REASSURANCE ═══════════════════════════════════════════════════════ */
+    .reassurance-band {
+      background: #F9F9F9;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 2rem;
+      margin: 2rem 0 0;
+    }
+
+    .reassurance-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .reassurance-item {
+      text-align: center;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .reassurance-item:hover { transform: translateY(-4px); }
+
+    .reassurance-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(229, 181, 125, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: var(--yellow);
+      transition: all 0.3s ease;
+    }
+    .reassurance-item:hover .reassurance-icon {
+      background: var(--yellow);
+      color: #fff;
+      transform: scale(1.1);
+    }
+    .reassurance-item h3 {
+      font-family: var(--f-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .reassurance-item p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem 1.5rem;
+      margin-top: 0;
+    }
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+    .footer-logo {
+      font-family: var(--f-display);
+      font-size: 1.2rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
-      text-shadow: 0 2px 20px currentColor;
+      margin-bottom: 0.75rem;
+      display: block;
     }
-    .pack-label {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
-      text-transform: uppercase; opacity: 0.75; margin-top: 0.3rem;
-      text-align: center; max-width: 120px;
+    .footer-logo span { color: var(--red); }
+    .footer-tagline { font-size: 0.82rem; color: var(--muted); line-height: 1.7; max-width: 240px; }
+    .footer-col h4 {
+      font-family: var(--f-display);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      margin-bottom: 1rem;
     }
-    /* Pokéball watermark */
-    .product-img::after {
-      content: '';
-      position: absolute; bottom: -20px; right: -20px;
-      width: 80px; height: 80px; border-radius: 50%;
-      border: 12px solid rgba(255,255,255,0.04);
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-col a { font-size: 0.82rem; color: var(--muted); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-bottom p { font-size: 0.75rem; color: var(--muted); }
+
+    /* ═══ CART DRAWER ═══════════════════════════════════════════════════════ */
+    .cart-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: flex-end;
+      align-items: stretch;
+      visibility: hidden;
       pointer-events: none;
     }
-    .pack-shine {
-      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
-      pointer-events: none;
-      transition: transform 0.6s ease;
+    .cart-drawer.active {
+      visibility: visible;
+      pointer-events: all;
     }
-    .product-card:hover .pack-shine { transform: translateX(30%); }
-
-    /* Product type gradients — couleurs vives */
-    .img-booster-fr { background: linear-gradient(145deg, #14073a 0%, #2d0f72 60%, #4a1fa8 100%); }
-    .img-booster-jp { background: linear-gradient(145deg, #3a0707 0%, #7a0f0f 60%, #b51a1a 100%); }
-    .img-booster-en { background: linear-gradient(145deg, #073a14 0%, #0f7a2a 60%, #159e38 100%); }
-    .img-sleeve     { background: linear-gradient(145deg, #07203a 0%, #0f4a7a 60%, #1a6eb5 100%); }
-    .img-protection { background: linear-gradient(145deg, #3a2407 0%, #7a5010 60%, #b87820 100%); }
-    .img-toploader  { background: linear-gradient(145deg, #141a28 0%, #1e2a40 60%, #2a3a55 100%); }
-
-    .product-badge {
-      position: absolute; top: 10px; left: 10px; z-index: 2;
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 4px;
-    }
-    .badge-new-abs { position: absolute; top: 10px; right: 10px; z-index: 2; }
-    .badge-fr { background: #002395; color: #fff; }
-    .badge-jp { background: #BC002D; color: #fff; }
-    .badge-en { background: #00692b; color: #fff; }
-    .badge-new { background: var(--yellow); color: #000; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 4px; }
-    .badge-premium { background: linear-gradient(135deg, #b8860b, #ffd700); color: #000; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 4px; }
-
-    .product-info { padding: 0.9rem 1rem; flex: 1; display: flex; flex-direction: column; }
-    .product-category { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 0.3rem; }
-    .product-name { font-size: 0.88rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.2rem; flex: 1; }
-    .product-sub { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.7rem; }
-    .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-    .product-price { font-size: 1rem; font-weight: 700; color: var(--yellow); }
-    .product-price .old { font-size: 0.72rem; font-weight: 400; color: var(--faint); text-decoration: line-through; margin-right: 0.3rem; }
-    .add-btn {
-      background: var(--dark4); border: 1px solid var(--border2); color: var(--text);
-      font-family: inherit; font-size: 0.72rem; font-weight: 600;
-      padding: 0.38rem 0.7rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
-    }
-    .add-btn:hover { background: var(--yellow); border-color: var(--yellow); color: #000; }
-    .add-btn.added { background: rgba(255,203,5,0.12); border-color: var(--yellow); color: var(--yellow); }
-
-    /* ─── CART SIDEBAR ─── */
     .cart-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-      z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
       backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      cursor: pointer;
     }
-    .cart-overlay.open { opacity: 1; pointer-events: all; }
-    .cart-sidebar {
-      position: fixed; top: 0; right: 0; width: 370px; max-width: 100vw;
-      height: 100vh; background: var(--dark2); border-left: 1px solid var(--border);
-      z-index: 201; transform: translateX(100%);
+    .cart-drawer.active .cart-overlay { opacity: 1; }
+
+    .cart-panel {
+      position: relative;
+      width: 420px;
+      max-width: 100vw;
+      height: 100%;
+      background: #fff;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+      transform: translateX(100%);
       transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      display: flex; flex-direction: column;
+      box-shadow: -8px 0 32px rgba(0,0,0,0.1);
     }
-    .cart-sidebar.open { transform: translateX(0); }
-    .cart-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .cart-header h3 { font-size: 0.95rem; font-weight: 700; }
-    .close-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 0.2rem; line-height: 1; transition: color 0.2s; }
-    .close-btn:hover { color: var(--text); }
-    .cart-items { flex: 1; overflow-y: auto; padding: 0.75rem 1rem; }
-    .cart-empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
-    .cart-empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.5; }
-    .cart-empty p { font-size: 0.85rem; }
-    .cart-item { display: flex; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); align-items: center; }
-    .cart-item-img {
-      width: 44px; height: 44px; border-radius: 8px;
+    .cart-drawer.active .cart-panel { transform: translateX(0); }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .cart-header-left { display: flex; align-items: baseline; gap: 0.75rem; }
+    .cart-header h2 {
+      font-family: var(--f-display);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cart-header-count { font-size: 0.75rem; color: var(--muted); }
+
+    .cart-close {
+      width: 32px; height: 32px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.7);
-      flex-shrink: 0; overflow: hidden;
-    }
-    .cart-item-info { flex: 1; min-width: 0; }
-    .cart-item-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .cart-item-price { font-size: 0.78rem; color: var(--yellow); margin-top: 0.15rem; }
-    .cart-item-qty { display: flex; align-items: center; gap: 0.4rem; }
-    .qty-btn {
-      background: var(--dark4); border: 1px solid var(--border); color: var(--text);
-      width: 22px; height: 22px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
-      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-    }
-    .qty-btn:hover { border-color: var(--yellow); color: var(--yellow); }
-    .qty-num { font-size: 0.82rem; font-weight: 600; min-width: 16px; text-align: center; }
-    .cart-footer-panel { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
-    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
-    .cart-total-label { font-size: 0.82rem; color: var(--muted); }
-    .cart-total-price { font-size: 1.15rem; font-weight: 700; color: var(--yellow); }
-    .checkout-btn {
-      width: 100%; background: var(--yellow); color: #000; border: none;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      padding: 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    }
-    .checkout-btn:hover { background: #ffd700; }
-
-    /* ─── AUTH VIEW ─── */
-    .auth-wrapper { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .auth-box {
-      background: var(--dark2); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 2.25rem; width: 100%; max-width: 400px;
-    }
-    .auth-tabs { display: flex; gap: 0; margin-bottom: 1.75rem; background: var(--dark3); border-radius: 8px; padding: 3px; }
-    .auth-tab {
-      flex: 1; background: none; border: none; color: var(--muted);
-      font-family: inherit; font-size: 0.82rem; font-weight: 600;
-      padding: 0.45rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
-    }
-    .auth-tab.active { background: var(--dark4); color: var(--text); }
-    .auth-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 800; margin-bottom: 0.35rem; letter-spacing: -0.01em; }
-    .auth-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.75rem; }
-
-    /* ─── FORM ─── */
-    .form-group { margin-bottom: 1.1rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-    label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--muted); margin-bottom: 0.35rem; letter-spacing: 0.05em; text-transform: uppercase; }
-    input, select {
-      width: 100%; background: var(--dark3); border: 1px solid var(--border);
-      color: var(--text); font-family: inherit; font-size: 0.88rem;
-      padding: 0.65rem 0.9rem; border-radius: 8px; transition: border-color 0.2s; outline: none;
-    }
-    input:focus, select:focus { border-color: rgba(255,203,5,0.45); background: var(--dark4); }
-    input::placeholder { color: var(--faint); }
-    select option { background: var(--dark3); }
-    .form-error { font-size: 0.72rem; color: var(--error); margin-top: 0.25rem; display: none; }
-    .form-error.show { display: block; }
-    .submit-btn {
-      width: 100%; background: var(--yellow); color: #000; border: none;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      padding: 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 0.4rem;
-    }
-    .submit-btn:hover { background: #ffd700; }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .auth-divider { text-align: center; color: var(--muted); font-size: 0.75rem; margin: 1rem 0; position: relative; }
-    .auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 38%; height: 1px; background: var(--border); }
-    .auth-divider::before { left: 0; }
-    .auth-divider::after { right: 0; }
-    .back-link { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 0.78rem; cursor: pointer; padding: 0; margin-top: 1.1rem; display: block; text-align: center; transition: color 0.2s; }
-    .back-link:hover { color: var(--text); }
-
-    /* ─── PASSWORD STRENGTH ─── */
-    .pw-strength { display: flex; gap: 3px; margin-top: 6px; height: 3px; }
-    .pw-bar { flex: 1; border-radius: 2px; background: var(--border2); transition: background 0.3s; }
-    .pw-bar.active-weak { background: var(--error); }
-    .pw-bar.active-medium { background: var(--yellow); }
-    .pw-bar.active-strong { background: var(--success); }
-
-    /* ─── CHECKOUT ─── */
-    .checkout-wrapper { max-width: 980px; margin: 0 auto; padding: 2.5rem 2rem; }
-    .checkout-progress {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-bottom: 2.75rem;
-    }
-    .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; position: relative; }
-    .progress-step:not(:last-child)::after {
-      content: ''; position: absolute; top: 15px; left: calc(50% + 16px);
-      width: calc(100% + 16px); height: 1px; background: var(--border);
-    }
-    .progress-step.done:not(:last-child)::after { background: var(--yellow); }
-    .progress-dot {
-      width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem; font-weight: 700; color: var(--muted);
-      background: var(--dark2); z-index: 1; transition: all 0.3s;
-    }
-    .progress-step.active .progress-dot { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
-    .progress-step.done .progress-dot { border-color: var(--yellow); background: var(--yellow); color: #000; }
-    .progress-label { font-size: 0.68rem; color: var(--muted); white-space: nowrap; }
-    .progress-step.active .progress-label { color: var(--yellow); font-weight: 600; }
-    .progress-spacer { width: 80px; height: 1px; background: var(--border); margin-bottom: 18px; }
-    .progress-spacer.done { background: var(--yellow); }
-    .checkout-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.75rem; align-items: start; }
-    .checkout-form-box { background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; }
-    .checkout-form-box h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
-    .checkout-summary { background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; position: sticky; top: 80px; }
-    .checkout-summary h3 { font-size: 0.72rem; font-weight: 700; margin-bottom: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-    .summary-item { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
-    .summary-item-name { color: var(--muted); flex: 1; margin-right: 0.4rem; }
-    .summary-item-qty { color: var(--faint); font-size: 0.72rem; margin-right: 0.4rem; }
-    .summary-item-price { font-weight: 600; color: var(--text); }
-    .summary-divider { height: 1px; background: var(--border); margin: 0.9rem 0; }
-    .summary-row { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.45rem; }
-    .summary-row .label { color: var(--muted); }
-    .summary-total { display: flex; justify-content: space-between; align-items: center; margin-top: 0.9rem; }
-    .summary-total .label { font-weight: 700; }
-    .summary-total .amount { font-size: 1.25rem; font-weight: 800; color: var(--yellow); }
-    .summary-shipping { font-size: 0.72rem; color: var(--success); text-align: right; margin-top: 0.2rem; }
-    .delivery-options { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
-    .delivery-option {
-      display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1rem;
-      background: var(--dark3); border: 1px solid var(--border);
-      border-radius: 10px; cursor: pointer; transition: all 0.2s;
-    }
-    .delivery-option:hover { border-color: rgba(255,203,5,0.25); }
-    .delivery-option.selected { border-color: var(--yellow); background: rgba(255,203,5,0.04); }
-    .delivery-option input[type=radio] { accent-color: var(--yellow); }
-    .delivery-option-info { flex: 1; }
-    .delivery-option-name { font-size: 0.85rem; font-weight: 600; }
-    .delivery-option-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.12rem; }
-    .delivery-option-price { font-size: 0.88rem; font-weight: 700; color: var(--yellow); }
-    .next-btn {
-      width: 100%; background: var(--yellow); color: #000; border: none;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      padding: 0.85rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 1.25rem;
-    }
-    .next-btn:hover { background: #ffd700; box-shadow: 0 4px 16px rgba(255,203,5,0.2); }
-
-    /* ─── PAYMENT ─── */
-    .card-preview {
-      background: linear-gradient(135deg, #0d0d20, #1a1a35);
-      border-radius: 14px; padding: 1.4rem; margin-bottom: 1.6rem;
-      border: 1px solid rgba(255,203,5,0.15); position: relative; overflow: hidden;
-    }
-    .card-preview::before {
-      content: ''; position: absolute; top: -40px; right: -40px;
-      width: 120px; height: 120px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,203,5,0.08), transparent 70%);
-    }
-    .card-chip { font-size: 1.4rem; margin-bottom: 1rem; }
-    .card-number-display { font-size: 1.05rem; font-weight: 600; letter-spacing: 0.18em; color: var(--text); margin-bottom: 1rem; font-family: monospace; }
-    .card-bottom { display: flex; justify-content: space-between; }
-    .card-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
-    .card-value { font-size: 0.82rem; font-weight: 600; }
-    .payment-methods { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; }
-    .pay-method {
-      flex: 1; padding: 0.6rem 0.4rem; background: var(--dark3); border: 1px solid var(--border);
-      border-radius: 8px; cursor: pointer; text-align: center; font-size: 1.1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      color: var(--muted);
       transition: all 0.2s;
     }
-    .pay-method:hover { border-color: rgba(255,203,5,0.25); }
-    .pay-method.selected { border-color: var(--yellow); background: rgba(255,203,5,0.04); }
-    .pay-method-label { font-size: 0.62rem; color: var(--muted); margin-top: 0.2rem; }
-    .card-input-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.9rem; }
-    .secure-badge {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-size: 0.72rem; color: var(--muted); margin-top: 1.1rem;
-      padding: 0.65rem 0.85rem; background: var(--dark3); border-radius: 8px;
-    }
+    .cart-close:hover { border-color: var(--red); color: var(--red); }
 
-    /* ─── CONFIRMATION ─── */
-    .confirm-wrapper { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .confirm-box {
-      background: var(--dark2); border: 1px solid rgba(34,197,94,0.2);
-      border-radius: var(--radius-lg); padding: 2.75rem 2.25rem; text-align: center;
-      max-width: 460px; width: 100%;
+    .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+
+    .cart-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 200px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+      gap: 0.75rem;
     }
-    .confirm-icon {
-      width: 68px; height: 68px; background: rgba(34,197,94,0.1);
-      border: 1.5px solid rgba(34,197,94,0.35); border-radius: 50%;
+    .cart-empty svg { opacity: 0.25; }
+
+    .cart-line {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .cart-line:last-child { border-bottom: none; }
+    .cart-line-img {
+      width: 60px; height: 60px;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--f-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.2);
+    }
+    .cart-line-info { flex: 1; min-width: 0; }
+    .cart-line-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .cart-line-footer { display: flex; align-items: center; justify-content: space-between; }
+    .cart-line-price { font-family: var(--f-display); font-size: 0.88rem; font-weight: 700; color: var(--red); }
+    .cart-line-qty { display: flex; align-items: center; gap: 0.4rem; }
+    .qty-btn {
+      width: 26px; height: 26px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.7rem; margin: 0 auto 1.4rem;
-      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: all 0.15s;
     }
-    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .confirm-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .confirm-box p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
-    .order-ref { background: var(--dark3); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1.4rem 0; }
-    .order-ref .ref-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
-    .order-ref .ref-num { font-size: 1.15rem; font-weight: 800; color: var(--yellow); letter-spacing: 0.08em; }
-    .confirm-details { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; margin-top: 1.25rem; }
-    .confirm-detail { display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: var(--muted); }
-    .back-shop-btn {
-      width: 100%; background: var(--yellow); color: #000; border: none;
-      font-family: inherit; font-size: 0.88rem; font-weight: 700;
-      padding: 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 1.75rem;
-    }
-    .back-shop-btn:hover { background: #ffd700; }
+    .qty-btn:hover { border-color: var(--red); color: var(--red); }
+    .qty-num { font-size: 0.85rem; font-weight: 700; min-width: 20px; text-align: center; }
 
-    /* ─── ACCOUNT ─── */
-    .account-wrapper { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem; }
-    .account-header {
-      display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2.25rem;
-      padding: 1.4rem; background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    .cart-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
-    .account-avatar-big {
-      width: 56px; height: 56px; background: var(--yellow); color: #000;
-      border-radius: 50%; font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.4rem; font-weight: 800;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .cart-summary { margin-bottom: 1rem; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
     }
-    .account-name { font-size: 1.05rem; font-weight: 700; }
-    .account-email { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
-    .account-section { margin-bottom: 1.75rem; }
-    .account-section h3 { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.9rem; }
-    .order-card { background: var(--dark2); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.9rem; transition: border-color 0.2s; }
-    .order-card:hover { border-color: var(--border2); }
-    .order-card-ref { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.2rem; }
-    .order-card-name { font-size: 0.88rem; font-weight: 600; }
-    .order-card-status { font-size: 0.68rem; font-weight: 600; padding: 0.22rem 0.6rem; border-radius: 20px; }
-    .status-delivered { background: rgba(34,197,94,0.1); color: var(--success); }
-    .status-transit { background: rgba(255,203,5,0.1); color: var(--yellow); }
-    .order-card-price { font-size: 0.95rem; font-weight: 700; color: var(--yellow); }
-    .logout-btn {
-      background: none; border: 1px solid var(--border); color: var(--muted);
-      font-family: inherit; font-size: 0.82rem; font-weight: 500;
-      padding: 0.5rem 1.1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    .summary-row--total {
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-size: 1rem;
     }
-    .logout-btn:hover { border-color: var(--error); color: var(--error); }
+    .summary-row--total strong { color: var(--text); }
+    .cart-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.5; }
 
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--border); padding: 3rem 2rem 2rem;
-      max-width: 1200px; margin: 0 auto;
+    .btn-checkout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: var(--red);
+      color: #fff;
+      font-family: var(--f-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.9rem;
+      border-radius: var(--radius);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+      cursor: pointer;
     }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
-    .footer-brand .footer-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .footer-brand .footer-logo span { color: var(--yellow); }
-    .footer-brand p { font-size: 0.78rem; color: var(--muted); line-height: 1.7; max-width: 240px; }
-    .footer-col h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; color: var(--text); }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-    .footer-links a, .footer-links span { font-size: 0.78rem; color: var(--muted); cursor: pointer; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--yellow); }
-    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 2rem; border-top: 1px solid var(--border); }
-    .footer-bottom p { font-size: 0.72rem; color: var(--faint); }
-    .footer-badges { display: flex; gap: 0.5rem; }
-    .footer-badge { font-size: 0.6rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); color: var(--faint); }
+    .btn-checkout:hover { background: var(--red-dark); }
 
-    /* ─── TOAST ─── */
-    .toast {
-      position: fixed; bottom: 2rem; left: 50%;
-      transform: translateX(-50%) translateY(16px);
-      background: var(--dark3); border: 1px solid rgba(255,203,5,0.2);
-      color: var(--text); font-size: 0.8rem; font-weight: 500;
-      padding: 0.55rem 1.1rem; border-radius: 8px; z-index: 400;
-      opacity: 0; transition: all 0.3s; white-space: nowrap;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    /* ═══ RESPONSIVE ════════════════════════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .products-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
-      nav { display: none; }
-      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
-      .cart-sidebar { width: 100vw; }
-      .banner { flex-direction: column; }
-      .checkout-layout { grid-template-columns: 1fr; }
-      .checkout-summary { position: static; }
-      .form-row { grid-template-columns: 1fr; }
-      .card-input-row { grid-template-columns: 1fr; }
-      .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
-      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .reassurance-grid { grid-template-columns: repeat(2, 1fr); }
+      .catalog-wrapper { padding: 0 1rem 3rem; }
+      .hero { height: 55vh; min-height: 300px; }
+      .cart-panel { width: 100%; border-left: none; border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; transform: translateY(100%); }
+      .cart-drawer { align-items: flex-end; justify-content: stretch; }
+      .cart-drawer.active .cart-panel { transform: translateY(0); }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+      .hero__content { padding: 2.5rem 1.5rem 0; }
     }
-
-    /* ─── CARD ANIMATIONS CSS ─── */
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .product-card {
-      animation: cardIn 0.5s ease forwards;
-      animation-delay: var(--card-delay, 0s);
-      opacity: 0; /* initial, sera overridé par l'animation */
-    }
-
-    /* ─── HERO ANIMATIONS CSS ─── */
-    @keyframes heroFadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .hero-badge  { animation: heroFadeUp 0.6s ease 0.1s forwards; opacity: 0; }
-    .hero h1     { animation: heroFadeUp 0.7s ease 0.25s forwards; opacity: 0; }
-    .hero > .hero-content > p { animation: heroFadeUp 0.6s ease 0.4s forwards; opacity: 0; }
-    .hero-ctas   { animation: heroFadeUp 0.5s ease 0.55s forwards; opacity: 0; }
-    .hero-stats  { animation: heroFadeUp 0.5s ease 0.7s forwards; opacity: 0; }
   </style>
 </head>
 <body>
 
-<!-- ═══ HEADER -->
-<header>
-  <div class="logo" onclick="showView('shop')">
-    <div class="logo-ball"></div>
-    Poke<span>Vault</span>
+<!-- ═══ ANNOUNCEMENT BAR ═══════════════════════════════════════════════════ -->
+<div class="announcement-bar">
+  <div class="ann-items">
+    <div class="ann-item active">🚚 Livraison sécurisée en France — emballage renforcé pour votre collection</div>
+    <div class="ann-item">🛡️ Coques acryliques pour tous les TCG — Pokémon, Magic, Yu-Gi-Oh! & plus</div>
+    <div class="ann-item">✅ Protection UV 99% — poussière, rayures et humidité bloqués</div>
   </div>
-  <nav id="shopNav">
-    <button class="nav-btn active" data-filter="all">Tout</button>
-    <button class="nav-btn" data-filter="booster">Boosters</button>
-    <button class="nav-btn" data-filter="sleeve">Sleeves</button>
-    <button class="nav-btn" data-filter="protection">Protections</button>
-    <button class="nav-btn" data-filter="toploader">Toploaders</button>
-  </nav>
-  <div class="header-right">
-    <button class="account-btn" id="accountBtn" style="display:none" onclick="showView('account')">
-      <div class="account-avatar" id="accountAvatar">?</div>
-      <span id="accountName">Mon compte</span>
+</div>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <a href="#" class="logo">Poke<span>Vault</span></a>
+
+  <div class="header-spacer"></div>
+
+  <div class="header-actions">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('fr',this)">FR</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+
+    <button class="icon-btn" title="Compte">
+      <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
     </button>
-    <button class="account-btn" id="loginBtn" onclick="showView('auth')" style="border-color:var(--border2);color:var(--muted)">
-      Connexion
-    </button>
-    <button class="cart-btn" id="cartToggle">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      Panier
-      <span class="cart-count" id="cartCount">0</span>
+
+    <button class="icon-btn" id="cart-toggle" title="Panier">
+      <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+      </svg>
+      <span class="cart-badge" id="cart-badge">0</span>
     </button>
   </div>
 </header>
 
-<!-- ═══ VIEW: SHOP -->
-<div class="view active" id="view-shop">
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-noise"></div>
-    <div class="hero-particles" id="heroParticles"></div>
-    <div class="hero-content">
-      <div class="hero-badge" id="heroBadge">✦ La boutique collector</div>
-      <h1 id="heroTitle">La boutique des<br><span class="highlight">vrais dresseurs</span></h1>
-      <p id="heroSub">Boosters, sleeves et protections premium — tout ce qu'il faut pour collectionner comme un pro.</p>
-      <div class="hero-ctas" id="heroCtas">
-        <button class="btn-primary" onclick="document.querySelector('main').scrollIntoView({behavior:'smooth'})">
-          Voir les produits →
-        </button>
-        <button class="btn-ghost" id="heroAuthBtn" onclick="showView('auth')">Créer un compte</button>
+<!-- ═══ HERO ═════════════════════════════════════════════════════════════════ -->
+<!-- Pour ajouter ton image : remplace le div.hero__bg par :
+     <img src="hero-bg.jpg" class="hero__bg" style="object-fit:cover;width:100%;height:100%;position:absolute;inset:0">
+-->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <h1 class="hero__title" id="hero-title">Protections Acryliques</h1>
+  </div>
+</section>
+
+<!-- ═══ CATALOGUE ════════════════════════════════════════════════════════════ -->
+<div class="catalog-wrapper">
+
+  <div class="catalog-filters">
+    <button class="filter-tab active" data-cat="all">Tous</button>
+    <button class="filter-tab" data-cat="acrylic">Acrylique</button>
+    <button class="filter-tab" data-cat="sleeve">Sleeves</button>
+    <button class="filter-tab" data-cat="toploader">Toploaders</button>
+  </div>
+
+  <div class="catalog-header">
+    <span class="catalog-title" id="catalog-title">Tous les produits</span>
+    <span class="catalog-count" id="catalog-count">8 produits</span>
+  </div>
+
+  <div class="products-grid" id="product-grid">
+
+    <!-- Protection Acrylique Display -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">DISPLAY</div>
+        </div>
       </div>
-      <div class="hero-stats" id="heroStats">
-        <div class="stat">
-          <div class="stat-num" data-count="500">0</div>
-          <div class="stat-label">Références</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">3</div>
-          <div class="stat-label">Langues — FR · JP · EN</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num" data-count="48">0</div>
-          <div class="stat-label">Heures livraison</div>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique Display</span>
+        <div class="product-card__price-row">
+          <span class="price-main">29,99 €</span>
         </div>
       </div>
     </div>
-  </section>
 
-  <main>
-    <div class="banner">
-      <div class="banner-text">
-        <h3>Livraison offerte dès 80€</h3>
-        <p>Partout en France — emballage renforcé pour vos cartes</p>
+    <!-- Protection Acrylique Coffret -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">COFFRET</div>
+        </div>
       </div>
-      <div class="banner-perks">
-        <div class="perk"><div class="perk-dot"></div> Paiement sécurisé SSL</div>
-        <div class="perk"><div class="perk-dot"></div> Stock mis à jour quotidiennement</div>
-        <div class="perk"><div class="perk-dot"></div> Produits 100% authentiques</div>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique Coffret</span>
+        <div class="product-card__price-row">
+          <span class="price-main">24,99 €</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protection Acrylique Bundle -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">BUNDLE</div>
+        </div>
+      </div>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique Bundle</span>
+        <div class="product-card__price-row">
+          <span class="price-main">19,99 €</span>
+        </div>
       </div>
     </div>
 
-    <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="all">Tous les produits</button>
-      <button class="filter-tab" data-filter="booster">Boosters</button>
-      <button class="filter-tab" data-filter="sleeve">Sleeves</button>
-      <button class="filter-tab" data-filter="protection">Protections</button>
-      <button class="filter-tab" data-filter="toploader">Toploaders</button>
-    </div>
-
-    <div class="section-header">
-      <span class="section-title" id="sectionTitle">Tous les produits</span>
-      <span class="section-count" id="sectionCount"></span>
-    </div>
-
-    <div class="products-grid" id="productsGrid">
-
-      <!-- BOOSTERS FR -->
-      <div class="product-card" data-cat="booster" data-name="Booster Écarlate & Violet" data-price="4.90" data-color="img-booster-fr">
-        <div class="product-img img-booster-fr">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#c084fc">EV</div>
-            <div class="pack-label" style="color:#a855f7">Écarlate & Violet</div>
-          </div>
-          <span class="product-badge badge-fr">FR</span>
-          <span class="badge-new badge-new-abs">Nouveau</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Écarlate & Violet</div>
-          <div class="product-sub">Série de base — 10 cartes</div>
-          <div class="product-footer"><div class="product-price">4,90 €</div><button class="add-btn">+ Panier</button></div>
+    <!-- Protection Acrylique ETB -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">ETB</div>
         </div>
       </div>
-
-      <div class="product-card" data-cat="booster" data-name="Booster Fable Nébuleuse" data-price="4.90" data-color="img-booster-fr">
-        <div class="product-img img-booster-fr" style="background:linear-gradient(145deg,#030d1a,#0a2040,#1a3a6e)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#60a5fa">EV6.5</div>
-            <div class="pack-label" style="color:#3b82f6">Fable Nébuleuse</div>
-          </div>
-          <span class="product-badge badge-fr">FR</span>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique ETB</span>
+        <div class="product-card__price-row">
+          <span class="price-main">22,99 €</span>
         </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Fable Nébuleuse</div>
-          <div class="product-sub">EV6.5 — 10 cartes</div>
-          <div class="product-footer"><div class="product-price">4,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="booster" data-name="Booster Couronne Stellaire" data-price="4.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#0f0a00,#2e1f00,#4a3200)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#fbbf24">EV7</div>
-            <div class="pack-label" style="color:#f59e0b">Couronne Stellaire</div>
-          </div>
-          <span class="product-badge badge-fr">FR</span>
-          <span class="badge-premium badge-new-abs">Promo</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Couronne Stellaire</div>
-          <div class="product-sub">EV7 — 10 cartes</div>
-          <div class="product-footer"><div class="product-price"><span class="old">5,50 €</span>4,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="booster" data-name="Booster Mascarade Crépusculaire" data-price="4.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#0a0015,#1a0035,#2e0055)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#e879f9">EV6</div>
-            <div class="pack-label" style="color:#d946ef">Mascarade Crép.</div>
-          </div>
-          <span class="product-badge badge-fr">FR</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Mascarade Crépusculaire</div>
-          <div class="product-sub">EV6 — 10 cartes</div>
-          <div class="product-footer"><div class="product-price">4,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <!-- BOOSTERS JP -->
-      <div class="product-card" data-cat="booster" data-name="Booster Cyber Judge (JP)" data-price="3.50">
-        <div class="product-img img-booster-jp">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#f87171">SV5M</div>
-            <div class="pack-label" style="color:#ef4444">Cyber Judge</div>
-          </div>
-          <span class="product-badge badge-jp">JP</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Cyber Judge</div>
-          <div class="product-sub">SV5M — Japonais — 5 cartes</div>
-          <div class="product-footer"><div class="product-price">3,50 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="booster" data-name="Booster Stellar Miracle (JP)" data-price="3.50">
-        <div class="product-img" style="background:linear-gradient(145deg,#000a1a,#001a3d,#002a5c)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#38bdf8">SV7</div>
-            <div class="pack-label" style="color:#0ea5e9">Stellar Miracle</div>
-          </div>
-          <span class="product-badge badge-jp">JP</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Stellar Miracle</div>
-          <div class="product-sub">SV7 — Japonais — 5 cartes</div>
-          <div class="product-footer"><div class="product-price">3,50 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <!-- BOOSTERS EN -->
-      <div class="product-card" data-cat="booster" data-name="Booster Twilight Masquerade (EN)" data-price="4.90">
-        <div class="product-img img-booster-en">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#4ade80">SV6</div>
-            <div class="pack-label" style="color:#22c55e">Twil. Masquerade</div>
-          </div>
-          <span class="product-badge badge-en">EN</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Twilight Masquerade</div>
-          <div class="product-sub">SV6 — Anglais — 10 cartes</div>
-          <div class="product-footer"><div class="product-price">4,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="booster" data-name="Booster Stellar Crown (EN)" data-price="4.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#001a0a,#003d18,#005c25)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#86efac">SV7</div>
-            <div class="pack-label" style="color:#4ade80">Stellar Crown</div>
-          </div>
-          <span class="product-badge badge-en">EN</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Booster</div>
-          <div class="product-name">Booster Stellar Crown</div>
-          <div class="product-sub">SV7 — Anglais — 10 cartes</div>
-          <div class="product-footer"><div class="product-price">4,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <!-- SLEEVES -->
-      <div class="product-card" data-cat="sleeve" data-name="Sleeve Classic (x65)" data-price="9.90">
-        <div class="product-img img-sleeve">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#93c5fd">×65</div>
-            <div class="pack-label" style="color:#60a5fa">Classic Sleeve</div>
-          </div>
-          <span class="badge-new badge-new-abs">Nouveau</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Sleeve</div>
-          <div class="product-name">Sleeve Classic</div>
-          <div class="product-sub">Par 65 — Protection standard</div>
-          <div class="product-footer"><div class="product-price">9,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="sleeve" data-name="Sleeve Languette (x65)" data-price="12.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#00050f,#000f2e,#001a4a)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#a5b4fc">×65</div>
-            <div class="pack-label" style="color:#818cf8">Sleeve Languette</div>
-          </div>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Sleeve</div>
-          <div class="product-name">Sleeve Languette</div>
-          <div class="product-sub">Par 65 — Ouverture facilitée</div>
-          <div class="product-footer"><div class="product-price">12,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <!-- PROTECTIONS -->
-      <div class="product-card" data-cat="protection" data-name="Protection ETB 100% UV Rigide" data-price="24.90">
-        <div class="product-img img-protection">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#fcd34d">ETB</div>
-            <div class="pack-label" style="color:#f59e0b">UV Rigide Aimantée</div>
-          </div>
-          <span class="badge-premium badge-new-abs">Premium</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Protection ETB</div>
-          <div class="product-name">Protection ETB 100% UV</div>
-          <div class="product-sub">Rigide aimantée — Anti-UV total</div>
-          <div class="product-footer"><div class="product-price">24,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="protection" data-name="Protection Display Rigide" data-price="34.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#0a0800,#1f1800,#3d2e00)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#fde68a">DISP</div>
-            <div class="pack-label" style="color:#fbbf24">Display Rigide</div>
-          </div>
-          <span class="badge-premium badge-new-abs">Premium</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Protection Display</div>
-          <div class="product-name">Protection Display Rigide</div>
-          <div class="product-sub">Aimantée — 36 boosters</div>
-          <div class="product-footer"><div class="product-price">34,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="protection" data-name="Bundle ETB + Display" data-price="49.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#0a0500,#281200,#451f00)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#fb923c">BDNL</div>
-            <div class="pack-label" style="color:#f97316">ETB + Display</div>
-          </div>
-          <span class="badge-new badge-new-abs">Bundle</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Protection Display</div>
-          <div class="product-name">Bundle Protection Complète</div>
-          <div class="product-sub">Display + ETB inclus</div>
-          <div class="product-footer"><div class="product-price"><span class="old">59,80 €</span>49,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <!-- TOPLOADERS -->
-      <div class="product-card" data-cat="toploader" data-name="Toploader Standard (x25)" data-price="6.90">
-        <div class="product-img img-toploader">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#d1d5db">×25</div>
-            <div class="pack-label" style="color:#9ca3af">Toploader 35pt</div>
-          </div>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Toploader</div>
-          <div class="product-name">Toploader Standard</div>
-          <div class="product-sub">Par 25 — 35pt — Cartes standard</div>
-          <div class="product-footer"><div class="product-price">6,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="toploader" data-name="Toploader Premium (x10)" data-price="8.90">
-        <div class="product-img" style="background:linear-gradient(145deg,#050505,#0f0f0f,#1e1e1e)">
-          <div class="pack-shine"></div>
-          <div class="product-img-inner">
-            <div class="pack-code" style="color:#FFCB05">×10</div>
-            <div class="pack-label" style="color:#d4a800">Toploader 55pt</div>
-          </div>
-          <span class="badge-premium badge-new-abs">Premium</span>
-        </div>
-        <div class="product-info">
-          <div class="product-category">Toploader</div>
-          <div class="product-name">Toploader Premium</div>
-          <div class="product-sub">Par 10 — 55pt — Cartes épaisses</div>
-          <div class="product-footer"><div class="product-price">8,90 €</div><button class="add-btn">+ Panier</button></div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <div class="logo-ball"></div>
-          Poke<span>Vault</span>
-        </div>
-        <p>La boutique collector Pokémon TCG en France. Boosters, sleeves et protections premium livrés en 24/48h.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Boutique</h4>
-        <ul class="footer-links">
-          <li><a onclick="applyFilter('booster');document.querySelector('main').scrollIntoView({behavior:'smooth'})">Boosters</a></li>
-          <li><a onclick="applyFilter('sleeve');document.querySelector('main').scrollIntoView({behavior:'smooth'})">Sleeves</a></li>
-          <li><a onclick="applyFilter('protection');document.querySelector('main').scrollIntoView({behavior:'smooth'})">Protections</a></li>
-          <li><a onclick="applyFilter('toploader');document.querySelector('main').scrollIntoView({behavior:'smooth'})">Toploaders</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Aide</h4>
-        <ul class="footer-links">
-          <li><span>Livraison & retours</span></li>
-          <li><span>Authenticité garantie</span></li>
-          <li><span>Contact</span></li>
-          <li><span>FAQ</span></li>
-        </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2025 PokeVault — Tous droits réservés · Site conçu par <strong style="color:var(--yellow)">Helv'Edit</strong></p>
-      <div class="footer-badges">
-        <span class="footer-badge">SSL</span>
-        <span class="footer-badge">Colissimo</span>
-        <span class="footer-badge">Chronopost</span>
+
+    <!-- Protection Acrylique UPC -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">UPC</div>
+        </div>
+      </div>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique UPC</span>
+        <div class="product-card__price-row">
+          <span class="price-main">34,99 €</span>
+        </div>
       </div>
     </div>
-  </footer>
-</div>
 
-<!-- ═══ VIEW: AUTH -->
-<div class="view" id="view-auth">
-  <div class="auth-wrapper">
-    <div class="auth-box">
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Se connecter</button>
-        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Créer un compte</button>
-      </div>
-
-      <div id="formLogin">
-        <div class="auth-title">Bon retour 👋</div>
-        <div class="auth-subtitle">Connectez-vous pour accéder à votre compte</div>
-        <div class="form-group">
-          <label>Adresse e-mail</label>
-          <input type="email" id="loginEmail" placeholder="vous@exemple.fr" />
-        </div>
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" />
-          <div class="form-error" id="loginError">E-mail ou mot de passe incorrect</div>
-        </div>
-        <button class="submit-btn" onclick="handleLogin()">Se connecter →</button>
-        <div class="auth-divider">ou</div>
-        <div style="font-size:0.75rem;color:var(--muted);text-align:center">
-          Pas encore de compte ? <button onclick="switchAuthTab('register')" style="background:none;border:none;color:var(--yellow);cursor:pointer;font-size:inherit;font-weight:600">Créer un compte</button>
+    <!-- Protection Acrylique Cartes -->
+    <div class="product-card" data-cat="acrylic">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">CARTES</div>
         </div>
       </div>
-
-      <div id="formRegister" style="display:none">
-        <div class="auth-title">Rejoindre PokeVault</div>
-        <div class="auth-subtitle">Créez votre compte collector en quelques secondes</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Prénom</label>
-            <input type="text" id="regFirstName" placeholder="Jean" />
-          </div>
-          <div class="form-group">
-            <label>Nom</label>
-            <input type="text" id="regLastName" placeholder="Dupont" />
-          </div>
+      <div class="product-card__info">
+        <span class="product-card__title">Protection Acrylique Cartes</span>
+        <div class="product-card__price-row">
+          <span class="price-main">14,99 €</span>
         </div>
-        <div class="form-group">
-          <label>Adresse e-mail</label>
-          <input type="email" id="regEmail" placeholder="vous@exemple.fr" />
-        </div>
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" id="regPassword" placeholder="8 caractères minimum" oninput="updatePwStrength(this.value)" />
-          <div class="pw-strength">
-            <div class="pw-bar" id="pwBar1"></div>
-            <div class="pw-bar" id="pwBar2"></div>
-            <div class="pw-bar" id="pwBar3"></div>
-          </div>
-          <div class="form-error" id="regError">Veuillez remplir tous les champs</div>
-        </div>
-        <button class="submit-btn" onclick="handleRegister()">Créer mon compte →</button>
       </div>
+    </div>
 
-      <button class="back-link" onclick="showView('shop')">← Continuer sans compte</button>
+    <!-- Sleeves -->
+    <div class="product-card" data-cat="sleeve">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">SLEEVE</div>
+        </div>
+      </div>
+      <div class="product-card__info">
+        <span class="product-card__title">Sleeves Premium</span>
+        <div class="product-card__price-row">
+          <span class="price-main">9,99 €</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toploaders -->
+    <div class="product-card" data-cat="toploader">
+      <div class="product-card__image-wrap">
+        <div class="product-card__image">
+          <div class="product-card__placeholder">TOP</div>
+        </div>
+      </div>
+      <div class="product-card__info">
+        <span class="product-card__title">Toploaders Rigides</span>
+        <div class="product-card__price-row">
+          <span class="price-main">12,99 €</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /products-grid -->
+</div><!-- /catalog-wrapper -->
+
+<!-- ═══ REASSURANCE ══════════════════════════════════════════════════════════ -->
+<section class="reassurance-band">
+  <div class="reassurance-grid">
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="1" y="3" width="15" height="13" rx="2"/>
+          <path d="M16 8h4l3 5v3h-7V8z"/>
+          <circle cx="5.5" cy="18.5" r="1.5"/><circle cx="18.5" cy="18.5" r="1.5"/>
+        </svg>
+      </div>
+      <h3>Livraison Sécurisée</h3>
+      <p>Emballage renforcé, livraison soignée partout en France métropolitaine</p>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h3>Protection UV 99%</h3>
+      <p>Bloque les UV, la poussière, les rayures et l'humidité pour préserver votre collection</p>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18M9 21V9"/>
+        </svg>
+      </div>
+      <h3>Sur Mesure</h3>
+      <p>Coques acryliques conçues spécifiquement pour chaque format de produit TCG</p>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          <circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>
+        </svg>
+      </div>
+      <h3>Support Expert</h3>
+      <p>Réponses rapides sur tous les formats et compatibilités</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <span class="footer-logo">Poke<span>Vault</span></span>
+      <p class="footer-tagline">Spécialistes des protections TCG — coques acryliques sur mesure, sleeves premium et toploaders pour toute votre collection.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Protections</h4>
+      <ul>
+        <li><a href="#">Acrylique Display</a></li>
+        <li><a href="#">Acrylique ETB</a></li>
+        <li><a href="#">Acrylique Bundle</a></li>
+        <li><a href="#">Sleeves</a></li>
+        <li><a href="#">Toploaders</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Informations</h4>
+      <ul>
+        <li><a href="#">À propos</a></li>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Légal</h4>
+      <ul>
+        <li><a href="#">Politique de confidentialité</a></li>
+        <li><a href="#">Conditions générales</a></li>
+        <li><a href="#">Politique de retour</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 PokeVault. Tous droits réservés.</p>
+    <p style="font-size:0.72rem;color:#bbb;">Par Helv'Edit</p>
+  </div>
+</footer>
+
+<!-- ═══ CART DRAWER ══════════════════════════════════════════════════════════ -->
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <div class="cart-panel">
+    <div class="cart-header">
+      <div class="cart-header-left">
+        <h2>Panier</h2>
+        <span class="cart-header-count" id="cart-header-count"></span>
+      </div>
+      <button class="cart-close" id="cart-close">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">
+        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+        </svg>
+        <p>Votre panier est vide</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Sous-total</span>
+          <span id="cart-subtotal">—</span>
+        </div>
+        <div class="summary-row summary-row--total">
+          <strong>Total</strong>
+          <strong id="cart-total">—</strong>
+        </div>
+        <p class="cart-note">Livraison sécurisée en France — emballage renforcé.</p>
+      </div>
+      <button class="btn-checkout">
+        Procéder au paiement
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
 
-<!-- ═══ VIEW: CHECKOUT -->
-<div class="view" id="view-checkout">
-  <div class="checkout-wrapper">
-    <div class="checkout-progress" id="checkoutProgress">
-      <div class="progress-step active" id="step-delivery">
-        <div class="progress-dot">1</div>
-        <div class="progress-label">Livraison</div>
-      </div>
-      <div class="progress-spacer" id="spacer-1"></div>
-      <div class="progress-step" id="step-payment">
-        <div class="progress-dot">2</div>
-        <div class="progress-label">Paiement</div>
-      </div>
-      <div class="progress-spacer" id="spacer-2"></div>
-      <div class="progress-step" id="step-confirm">
-        <div class="progress-dot">✓</div>
-        <div class="progress-label">Confirmation</div>
-      </div>
-    </div>
-
-    <!-- STEP 1: DELIVERY -->
-    <div id="checkoutDelivery">
-      <div class="checkout-layout">
-        <div>
-          <div class="checkout-form-box">
-            <h2>Adresse de livraison</h2>
-            <div class="form-row">
-              <div class="form-group"><label>Prénom</label><input type="text" id="dlvFirst" placeholder="Jean" /></div>
-              <div class="form-group"><label>Nom</label><input type="text" id="dlvLast" placeholder="Dupont" /></div>
-            </div>
-            <div class="form-group"><label>Adresse</label><input type="text" id="dlvAddress" placeholder="12 rue de la Paix" /></div>
-            <div class="form-row">
-              <div class="form-group"><label>Code postal</label><input type="text" id="dlvZip" placeholder="75001" maxlength="5" /></div>
-              <div class="form-group"><label>Ville</label><input type="text" id="dlvCity" placeholder="Paris" /></div>
-            </div>
-            <div class="form-group">
-              <label>Région</label>
-              <select id="dlvCanton">
-                <option value="">Sélectionner</option>
-                <option>Île-de-France</option><option>Auvergne-Rhône-Alpes</option>
-                <option>Provence-Alpes-Côte d'Azur</option><option>Occitanie</option>
-                <option>Nouvelle-Aquitaine</option><option>Grand Est</option>
-                <option>Hauts-de-France</option><option>Normandie</option>
-                <option>Bretagne</option><option>Pays de la Loire</option>
-                <option>Bourgogne-Franche-Comté</option><option>Centre-Val de Loire</option>
-                <option>Corse</option>
-              </select>
-            </div>
-            <div class="form-group"><label>Téléphone</label><input type="tel" id="dlvPhone" placeholder="+33 6 00 00 00 00" /></div>
-          </div>
-
-          <div class="checkout-form-box" style="margin-top:1.1rem">
-            <h2>Mode de livraison</h2>
-            <div class="delivery-options">
-              <label class="delivery-option selected" id="opt-standard">
-                <input type="radio" name="delivery" value="standard" checked onchange="selectDelivery(this)" />
-                <div class="delivery-option-info">
-                  <div class="delivery-option-name">Colissimo — Standard</div>
-                  <div class="delivery-option-desc">Livraison en 2-3 jours ouvrés · Suivi inclus</div>
-                </div>
-                <div class="delivery-option-price" id="price-standard">5,90 €</div>
-              </label>
-              <label class="delivery-option" id="opt-express">
-                <input type="radio" name="delivery" value="express" onchange="selectDelivery(this)" />
-                <div class="delivery-option-info">
-                  <div class="delivery-option-name">Chronopost — Express</div>
-                  <div class="delivery-option-desc">Livraison le lendemain avant 13h · Prioritaire</div>
-                </div>
-                <div class="delivery-option-price">12,90 €</div>
-              </label>
-            </div>
-          </div>
-
-          <button class="next-btn" onclick="goToPayment()">Continuer vers le paiement →</button>
-        </div>
-        <div class="checkout-summary" id="summaryDelivery"></div>
-      </div>
-    </div>
-
-    <!-- STEP 2: PAYMENT -->
-    <div id="checkoutPayment" style="display:none">
-      <div class="checkout-layout">
-        <div>
-          <div class="checkout-form-box">
-            <h2>Moyen de paiement</h2>
-            <div class="payment-methods">
-              <div class="pay-method selected" id="pm-card" onclick="selectPayMethod('card')">
-                <div>💳</div><div class="pay-method-label">Carte</div>
-              </div>
-              <div class="pay-method" id="pm-paypal" onclick="selectPayMethod('paypal')">
-                <div>🅿️</div><div class="pay-method-label">PayPal</div>
-              </div>
-              <div class="pay-method" id="pm-apple" onclick="selectPayMethod('apple')">
-                <div>🍎</div><div class="pay-method-label">Apple Pay</div>
-              </div>
-            </div>
-
-            <div id="cardForm">
-              <div class="card-preview">
-                <div class="card-chip">💳</div>
-                <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
-                <div class="card-bottom">
-                  <div><div class="card-label">Titulaire</div><div class="card-value" id="cardNameDisplay">VOTRE NOM</div></div>
-                  <div><div class="card-label">Expiration</div><div class="card-value" id="cardExpDisplay">MM/AA</div></div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Numéro de carte</label>
-                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
-              </div>
-              <div class="form-group">
-                <label>Titulaire de la carte</label>
-                <input type="text" id="cardName" placeholder="JEAN DUPONT" />
-              </div>
-              <div class="card-input-row">
-                <div class="form-group"><label>Expiration</label><input type="text" id="cardExp" placeholder="MM/AA" maxlength="5" /></div>
-                <div class="form-group" style="grid-column:span 2"><label>CVV</label><input type="text" id="cardCvv" placeholder="•••" maxlength="3" /></div>
-              </div>
-            </div>
-
-            <div id="paypalForm" style="display:none;text-align:center;padding:2rem 0">
-              <div style="font-size:2.5rem;margin-bottom:1rem">🅿️</div>
-              <div style="font-weight:700;margin-bottom:0.5rem">Paiement PayPal</div>
-              <p style="font-size:0.82rem;color:var(--muted)">Vous serez redirigé vers PayPal pour finaliser le paiement</p>
-            </div>
-
-            <div id="appleForm" style="display:none;text-align:center;padding:2rem 0">
-              <div style="font-size:2.5rem;margin-bottom:1rem">🍎</div>
-              <div style="font-weight:700;margin-bottom:0.5rem">Apple Pay</div>
-              <p style="font-size:0.82rem;color:var(--muted)">Confirmez avec Face ID ou Touch ID pour payer</p>
-            </div>
-
-            <div class="secure-badge">
-              <span>🔒</span>
-              <span>Paiement 100% sécurisé — Données chiffrées SSL/TLS — PCI DSS compliant</span>
-            </div>
-            <button class="next-btn" onclick="confirmOrder()">Confirmer la commande →</button>
-            <button class="back-link" onclick="goToDelivery()">← Modifier la livraison</button>
-          </div>
-        </div>
-        <div class="checkout-summary" id="summaryPayment"></div>
-      </div>
-    </div>
-
-    <!-- STEP 3: CONFIRMATION -->
-    <div id="checkoutConfirm" style="display:none">
-      <div class="confirm-wrapper">
-        <div class="confirm-box">
-          <div class="confirm-icon">✓</div>
-          <h2>Commande confirmée !</h2>
-          <p>Merci pour votre commande. Vous recevrez un e-mail de confirmation avec le numéro de suivi de votre colis.</p>
-          <div class="order-ref">
-            <div class="ref-label">Numéro de commande</div>
-            <div class="ref-num" id="orderRef">#PV-000000</div>
-          </div>
-          <div class="confirm-details">
-            <div class="confirm-detail"><span>📦</span><span>Expédition sous 24h via Colissimo</span></div>
-            <div class="confirm-detail"><span>📧</span><span>Confirmation et suivi envoyés par e-mail</span></div>
-            <div class="confirm-detail"><span>🚚</span><span>Livraison estimée : 2-3 jours ouvrés</span></div>
-          </div>
-          <button class="back-shop-btn" onclick="showView('shop')">Continuer mes achats →</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ VIEW: ACCOUNT -->
-<div class="view" id="view-account">
-  <div class="account-wrapper">
-    <div class="account-header">
-      <div class="account-avatar-big" id="bigAvatar">?</div>
-      <div>
-        <div class="account-name" id="bigName">Mon compte</div>
-        <div class="account-email" id="bigEmail">—</div>
-      </div>
-      <button class="logout-btn" style="margin-left:auto" onclick="handleLogout()">Se déconnecter</button>
-    </div>
-    <div class="account-section">
-      <h3>Mes commandes</h3>
-      <div class="order-card">
-        <div><div class="order-card-ref">#PV-241198</div><div class="order-card-name">3× Booster + Sleeve Classic</div></div>
-        <span class="order-card-status status-delivered">Livré</span>
-        <div class="order-card-price">24,60 €</div>
-      </div>
-      <div class="order-card">
-        <div><div class="order-card-ref">#PV-241052</div><div class="order-card-name">Protection ETB + Toploader ×25</div></div>
-        <span class="order-card-status status-transit">En transit</span>
-        <div class="order-card-price">31,80 €</div>
-      </div>
-    </div>
-    <div class="account-section">
-      <h3>Mes informations</h3>
-      <div class="checkout-form-box">
-        <div class="form-row">
-          <div class="form-group"><label>Prénom</label><input type="text" id="profileFirst" /></div>
-          <div class="form-group"><label>Nom</label><input type="text" id="profileLast" /></div>
-        </div>
-        <div class="form-group"><label>E-mail</label><input type="email" id="profileEmail" /></div>
-        <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+33 6 00 00 00 00" /></div>
-        <button class="submit-btn" style="margin-top:0.4rem" onclick="showToast('Informations sauvegardées ✓')">Sauvegarder</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CART SIDEBAR -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h3>Mon panier</h3>
-    <button class="close-btn" id="closeCart">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Votre panier est vide</p></div>
-  </div>
-  <div class="cart-footer-panel" id="cartFooter" style="display:none">
-    <div class="cart-total">
-      <span class="cart-total-label">Sous-total</span>
-      <span class="cart-total-price" id="cartTotal">0,00 €</span>
-    </div>
-    <button class="checkout-btn" onclick="startCheckout()">Passer la commande →</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════════════ -->
 <script>
-gsap.registerPlugin(ScrollTrigger);
+/* ── Announcement bar rotation ─────────────────────────────────────────── */
+(function() {
+  const items = document.querySelectorAll('.ann-item');
+  let idx = 0;
+  setInterval(() => {
+    items[idx].classList.remove('active');
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('active');
+  }, 5000);
+})();
 
-// ─── STATE
-let cart = [];
-let currentUser = null;
-let deliveryMethod = 'standard';
-let payMethod = 'card';
-
-// ─── HERO ANIMATIONS (particules GSAP seulement)
-function initHeroAnimations() {
-  // Compteurs animés (CSS animation gère l'apparition, GSAP gère le count)
-  setTimeout(() => {
-    document.querySelectorAll('.stat-num[data-count]').forEach(el => {
-      const target = parseInt(el.dataset.count);
-      const suffix = target === 48 ? 'h' : '+';
-      let start = 0;
-      const step = Math.ceil(target / 40);
-      const timer = setInterval(() => {
-        start = Math.min(start + step, target);
-        el.textContent = start + suffix;
-        if (start >= target) clearInterval(timer);
-      }, 40);
-    });
-  }, 800);
-
-  // Particules flottantes
-  const container = document.getElementById('heroParticles');
-  if (container && typeof gsap !== 'undefined') {
-    for (let i = 0; i < 10; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.top = Math.random() * 100 + '%';
-      container.appendChild(p);
-      gsap.to(p, {
-        opacity: Math.random() * 0.35 + 0.05,
-        y: -50 - Math.random() * 60,
-        x: (Math.random() - 0.5) * 50,
-        duration: 3 + Math.random() * 4,
-        delay: Math.random() * 3,
-        repeat: -1, yoyo: true,
-        ease: 'sine.inOut'
-      });
-    }
+/* ── Lang switcher (demo) ──────────────────────────────────────────────── */
+const translations = {
+  fr: {
+    hero: 'Protections Acryliques',
+    all: 'Tous les produits',
+    count: 'produits',
+    catalogAll: 'Tous'
+  },
+  en: {
+    hero: 'Acrylic Protections',
+    all: 'All products',
+    count: 'products',
+    catalogAll: 'All'
   }
+};
+let currentLang = 'fr';
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = translations[lang];
+  document.getElementById('hero-title').textContent = t.hero;
+  const visible = document.querySelectorAll('.product-card:not([style*="display: none"])');
+  document.getElementById('catalog-count').textContent = visible.length + ' ' + t.count;
 }
 
-// ─── PRODUCT CARDS : délai CSS en cascade
-function initScrollAnimations() {
-  document.querySelectorAll('.product-card').forEach((card, i) => {
-    card.style.setProperty('--card-delay', (i % 4) * 0.08 + 's');
+/* ── Product filter ────────────────────────────────────────────────────── */
+(function() {
+  const tabs  = document.querySelectorAll('.filter-tab');
+  const cards = document.querySelectorAll('.product-card');
+  const titleEl = document.getElementById('catalog-title');
+  const countEl = document.getElementById('catalog-count');
+  const labels = { all: 'Tous les produits', acrylic: 'Protections Acryliques', sleeve: 'Sleeves', toploader: 'Toploaders' };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const cat = this.dataset.cat;
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+
+      let visible = 0;
+      cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      titleEl.textContent = labels[cat] || 'Produits';
+      countEl.textContent = visible + ' ' + (currentLang === 'fr' ? 'produits' : 'products');
+
+      // GSAP stagger si disponible
+      if (window.gsap) {
+        const shown = Array.from(cards).filter(c => c.style.display !== 'none');
+        gsap.fromTo(shown, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.04, ease: 'power2.out' });
+      }
+    });
   });
-}
+})();
 
-// ─── VIEW ROUTER
-function showView(view) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const target = document.getElementById('view-' + view);
-  target.classList.add('active');
-  target.classList.add('view-enter');
-  setTimeout(() => target.classList.remove('view-enter'), 400);
-  window.scrollTo(0, 0);
-  closeCart();
-}
+/* ── Cart (demo) ───────────────────────────────────────────────────────── */
+(function() {
+  const drawer   = document.getElementById('cart-drawer');
+  const overlay  = document.getElementById('cart-overlay');
+  const toggle   = document.getElementById('cart-toggle');
+  const closeBtn = document.getElementById('cart-close');
+  const badge    = document.getElementById('cart-badge');
+  let cartItems  = [];
 
-// ─── FILTER
-const allCards = document.querySelectorAll('.product-card');
-const filterBtns = document.querySelectorAll('.filter-tab, .nav-btn');
-const labels = { all: 'Tous les produits', booster: 'Boosters', sleeve: 'Sleeves', protection: 'Protections', toploader: 'Toploaders' };
+  function openCart() {
+    drawer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    renderCart();
+  }
+  function closeCart() {
+    drawer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 
-function applyFilter(filter) {
-  filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
-  let visible = 0;
-  allCards.forEach(card => {
-    const show = filter === 'all' || card.dataset.cat === filter;
-    card.style.display = show ? '' : 'none';
-    if (show) visible++;
-  });
-  document.getElementById('sectionTitle').textContent = labels[filter] || 'Tous les produits';
-  document.getElementById('sectionCount').textContent = visible + ' produit' + (visible > 1 ? 's' : '');
-}
+  toggle.addEventListener('click', openCart);
+  overlay.addEventListener('click', closeCart);
+  closeBtn.addEventListener('click', closeCart);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
 
-filterBtns.forEach(btn => btn.addEventListener('click', () => applyFilter(btn.dataset.filter)));
-applyFilter('all');
+  function renderCart() {
+    const itemsEl = document.getElementById('cart-items');
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const totalEl = document.getElementById('cart-total');
+    const headerCount = document.getElementById('cart-header-count');
 
-// ─── CART
-document.querySelectorAll('.add-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const card = btn.closest('.product-card');
-    const name = card.dataset.name, price = parseFloat(card.dataset.price);
-    const ex = cart.find(i => i.name === name);
-    ex ? ex.qty++ : cart.push({ name, price, qty: 1, color: card.dataset.color || 'img-toploader' });
-    btn.textContent = '✓ Ajouté'; btn.classList.add('added');
-    setTimeout(() => { btn.textContent = '+ Panier'; btn.classList.remove('added'); }, 1400);
-    updateCart();
-    showToast(name.split('(')[0].trim() + ' ajouté');
-    // Bounce animation on cart button
-    gsap.from('#cartToggle', { scale: 1.15, duration: 0.3, ease: 'elastic.out(1,0.5)' });
-  });
-});
+    if (cartItems.length === 0) {
+      itemsEl.innerHTML = '<div class="cart-empty"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><p>Votre panier est vide</p></div>';
+      subtotalEl.textContent = '—';
+      totalEl.textContent = '—';
+      headerCount.textContent = '';
+      badge.style.display = 'none';
+      return;
+    }
 
-function updateCart() {
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const count = cart.reduce((s, i) => s + i.qty, 0);
-  const countEl = document.getElementById('cartCount');
-  countEl.textContent = count;
-  countEl.classList.toggle('visible', count > 0);
-  const itemsEl = document.getElementById('cartItems');
-  const footerEl = document.getElementById('cartFooter');
-  if (cart.length === 0) {
-    itemsEl.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Votre panier est vide</p></div>';
-    footerEl.style.display = 'none';
-  } else {
-    itemsEl.innerHTML = cart.map((item, idx) => `
-      <div class="cart-item">
-        <div class="cart-item-img ${item.color || 'img-toploader'}" style="font-size:0.6rem;font-weight:800;color:rgba(255,255,255,0.5)">PV</div>
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.name.split('(')[0].trim()}</div>
-          <div class="cart-item-price">${(item.price * item.qty).toFixed(2).replace('.',',')} €</div>
-        </div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+    const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+    const totalStr = total.toFixed(2).replace('.', ',') + ' €';
+    subtotalEl.textContent = totalStr;
+    totalEl.textContent = totalStr;
+
+    const count = cartItems.reduce((s, i) => s + i.qty, 0);
+    headerCount.textContent = count + ' produit' + (count > 1 ? 's' : '');
+    badge.textContent = count;
+    badge.style.display = 'flex';
+
+    itemsEl.innerHTML = cartItems.map((item, i) => `
+      <div class="cart-line">
+        <div class="cart-line-img">${item.name.slice(0,3).toUpperCase()}</div>
+        <div class="cart-line-info">
+          <div class="cart-line-title">${item.name}</div>
+          <div class="cart-line-footer">
+            <div class="cart-line-price">${(item.price * item.qty).toFixed(2).replace('.', ',')} €</div>
+            <div class="cart-line-qty">
+              <button class="qty-btn" onclick="window.pvCart.update(${i}, ${item.qty - 1})">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="window.pvCart.update(${i}, ${item.qty + 1})">+</button>
+            </div>
+          </div>
         </div>
       </div>`).join('');
-    footerEl.style.display = 'block';
-    document.getElementById('cartTotal').textContent = total.toFixed(2).replace('.',',') + ' €';
   }
-}
 
-function changeQty(idx, delta) {
-  cart[idx].qty += delta;
-  if (cart[idx].qty <= 0) cart.splice(idx, 1);
-  updateCart();
-}
+  window.pvCart = {
+    add(name, price) {
+      const existing = cartItems.find(i => i.name === name);
+      if (existing) { existing.qty++; }
+      else { cartItems.push({ name, price, qty: 1 }); }
+      renderCart();
+      openCart();
+    },
+    update(idx, qty) {
+      if (qty <= 0) cartItems.splice(idx, 1);
+      else cartItems[idx].qty = qty;
+      renderCart();
+    }
+  };
 
-function fmtPrice(n) { return n.toFixed(2).replace('.',',') + ' €'; }
-
-function buildSummaryHTML(showDelivery = false) {
-  const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const dlvCost = deliveryMethod === 'express' ? 12.90 : (sub >= 80 ? 0 : 5.90);
-  const total = sub + dlvCost;
-  const freeShip = sub >= 80 && deliveryMethod !== 'express';
-  return `
-    <h3>Récapitulatif</h3>
-    ${cart.map(i => `
-      <div class="summary-item">
-        <span class="summary-item-name">${i.name.split('(')[0].trim()}</span>
-        <span class="summary-item-qty">×${i.qty}</span>
-        <span class="summary-item-price">${fmtPrice(i.price * i.qty)}</span>
-      </div>`).join('')}
-    <div class="summary-divider"></div>
-    <div class="summary-row"><span class="label">Sous-total</span><span>${fmtPrice(sub)}</span></div>
-    ${showDelivery ? `<div class="summary-row"><span class="label">Livraison</span><span>${freeShip ? '<span style="color:var(--success)">Offerte</span>' : fmtPrice(dlvCost)}</span></div>` : ''}
-    <div class="summary-total">
-      <span class="label">Total</span>
-      <span class="amount">${fmtPrice(total)}</span>
-    </div>
-    ${freeShip ? '<div class="summary-shipping">✓ Livraison offerte appliquée</div>' : ''}
-  `;
-}
-
-// ─── CART SIDEBAR
-const overlay = document.getElementById('cartOverlay');
-const sidebar = document.getElementById('cartSidebar');
-function openCart() { overlay.classList.add('open'); sidebar.classList.add('open'); }
-function closeCart() { overlay.classList.remove('open'); sidebar.classList.remove('open'); }
-document.getElementById('cartToggle').addEventListener('click', openCart);
-document.getElementById('closeCart').addEventListener('click', closeCart);
-overlay.addEventListener('click', closeCart);
-
-// ─── CHECKOUT FLOW
-function startCheckout() {
-  if (cart.length === 0) return;
-  closeCart();
-  if (currentUser) { showCheckoutStep('delivery'); } else { showView('auth'); }
-}
-
-function showCheckoutStep(step) {
-  showView('checkout');
-  document.getElementById('checkoutDelivery').style.display = step === 'delivery' ? '' : 'none';
-  document.getElementById('checkoutPayment').style.display = step === 'payment' ? '' : 'none';
-  document.getElementById('checkoutConfirm').style.display = step === 'confirm' ? '' : 'none';
-  ['delivery','payment','confirm'].forEach((s, i) => {
-    const el = document.getElementById('step-' + s);
-    const idx = ['delivery','payment','confirm'].indexOf(step);
-    el.className = 'progress-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  // Ajouter au panier via click sur les cards
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const name = this.querySelector('.product-card__title').textContent;
+      const priceStr = this.querySelector('.price-main').textContent;
+      const price = parseFloat(priceStr.replace(',', '.').replace(' €', ''));
+      window.pvCart.add(name, price);
+    });
   });
-  document.getElementById('spacer-1').className = 'progress-spacer' + (['payment','confirm'].includes(step) ? ' done' : '');
-  document.getElementById('spacer-2').className = 'progress-spacer' + (step === 'confirm' ? ' done' : '');
-  if (step === 'delivery') document.getElementById('summaryDelivery').innerHTML = buildSummaryHTML(false);
-  if (step === 'payment') document.getElementById('summaryPayment').innerHTML = buildSummaryHTML(true);
-  if (currentUser) {
-    document.getElementById('dlvFirst').value = currentUser.firstName || '';
-    document.getElementById('dlvLast').value = currentUser.lastName || '';
-  }
-}
+})();
 
-function selectDelivery(radio) {
-  deliveryMethod = radio.value;
-  document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
-  radio.closest('.delivery-option').classList.add('selected');
-  const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const el = document.getElementById('price-standard');
-  if (el) el.textContent = (sub >= 80 && deliveryMethod !== 'express') ? 'Offerte' : '5,90 €';
-}
+/* ── GSAP animations ───────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.gsap) return;
+  gsap.registerPlugin(ScrollTrigger);
 
-function goToPayment() {
-  const fields = ['dlvFirst','dlvLast','dlvAddress','dlvZip','dlvCity','dlvCanton','dlvPhone'];
-  for (const f of fields) {
-    if (!document.getElementById(f).value.trim()) { showToast('Veuillez remplir tous les champs'); return; }
-  }
-  showCheckoutStep('payment');
-}
+  // Hero title
+  gsap.from('.hero__title', { opacity: 0, y: -20, duration: 0.8, ease: 'power2.out', delay: 0.2 });
 
-function goToDelivery() { showCheckoutStep('delivery'); }
-
-function selectPayMethod(method) {
-  payMethod = method;
-  ['card','paypal','apple'].forEach(m => {
-    document.getElementById('pm-' + m).classList.toggle('selected', m === method);
-    const form = document.getElementById(m + 'Form');
-    if (form) form.style.display = m === method ? '' : 'none';
+  // Cards stagger on scroll
+  gsap.from('.product-card', {
+    scrollTrigger: { trigger: '#product-grid', start: 'top 90%' },
+    opacity: 0, y: 20, duration: 0.4, stagger: 0.05, ease: 'power2.out'
   });
-}
 
-function confirmOrder() {
-  if (payMethod === 'card') {
-    const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
-    const name = document.getElementById('cardName').value.trim();
-    const exp = document.getElementById('cardExp').value.trim();
-    const cvv = document.getElementById('cardCvv').value.trim();
-    if (!num || !name || !exp || !cvv) { showToast('Veuillez compléter les informations de carte'); return; }
-  }
-  const ref = '#PV-' + Math.floor(100000 + Math.random() * 900000);
-  document.getElementById('orderRef').textContent = ref;
-  cart = []; updateCart();
-  showCheckoutStep('confirm');
-  gsap.from('.confirm-box', { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' });
-}
-
-// ─── CARD LIVE PREVIEW
-document.getElementById('cardNumber').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g,'').substring(0,16);
-  this.value = v.replace(/(.{4})/g,'$1 ').trim();
-  document.getElementById('cardNumDisplay').textContent = this.value || '•••• •••• •••• ••••';
-});
-document.getElementById('cardName').addEventListener('input', function() {
-  document.getElementById('cardNameDisplay').textContent = this.value.toUpperCase() || 'VOTRE NOM';
-});
-document.getElementById('cardExp').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g,'');
-  if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
-  this.value = v;
-  document.getElementById('cardExpDisplay').textContent = this.value || 'MM/AA';
-});
-
-// ─── PASSWORD STRENGTH
-function updatePwStrength(val) {
-  const bars = [document.getElementById('pwBar1'), document.getElementById('pwBar2'), document.getElementById('pwBar3')];
-  bars.forEach(b => b.className = 'pw-bar');
-  if (!val) return;
-  const strong = val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val);
-  const medium = val.length >= 6;
-  if (strong) { bars.forEach(b => { b.className = 'pw-bar active-strong'; }); }
-  else if (medium) { bars[0].className = 'pw-bar active-medium'; bars[1].className = 'pw-bar active-medium'; }
-  else { bars[0].className = 'pw-bar active-weak'; }
-}
-
-// ─── AUTH
-function switchAuthTab(tab) {
-  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-  document.getElementById('formLogin').style.display = tab === 'login' ? '' : 'none';
-  document.getElementById('formRegister').style.display = tab === 'register' ? '' : 'none';
-}
-
-function handleLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPassword').value;
-  const err = document.getElementById('loginError');
-  if (!email || !pass) { err.classList.add('show'); return; }
-  err.classList.remove('show');
-  const stored = JSON.parse(localStorage.getItem('pvUser') || 'null');
-  if (stored && stored.email === email && stored.password === pass) {
-    loginUser(stored);
-  } else if (!stored && email && pass.length >= 4) {
-    loginUser({ email, firstName: 'Client', lastName: '', password: pass });
-  } else {
-    err.classList.add('show');
-  }
-}
-
-function handleRegister() {
-  const first = document.getElementById('regFirstName').value.trim();
-  const last = document.getElementById('regLastName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const pass = document.getElementById('regPassword').value;
-  const err = document.getElementById('regError');
-  if (!first || !last || !email || pass.length < 6) {
-    err.classList.add('show');
-    err.textContent = pass.length < 6 ? 'Mot de passe minimum 6 caractères' : 'Veuillez remplir tous les champs';
-    return;
-  }
-  err.classList.remove('show');
-  const user = { firstName: first, lastName: last, email, password: pass };
-  localStorage.setItem('pvUser', JSON.stringify(user));
-  loginUser(user);
-}
-
-function loginUser(user) {
-  currentUser = user;
-  document.getElementById('accountBtn').style.display = 'flex';
-  document.getElementById('loginBtn').style.display = 'none';
-  // Update hero CTA
-  const heroBtn = document.getElementById('heroAuthBtn');
-  if (heroBtn) { heroBtn.textContent = 'Mon compte →'; heroBtn.onclick = () => showView('account'); }
-  document.getElementById('accountAvatar').textContent = user.firstName[0].toUpperCase();
-  document.getElementById('accountName').textContent = user.firstName;
-  document.getElementById('bigAvatar').textContent = user.firstName[0].toUpperCase();
-  document.getElementById('bigName').textContent = user.firstName + ' ' + user.lastName;
-  document.getElementById('bigEmail').textContent = user.email;
-  document.getElementById('profileFirst').value = user.firstName;
-  document.getElementById('profileLast').value = user.lastName;
-  document.getElementById('profileEmail').value = user.email;
-  showToast('Bonjour ' + user.firstName + ' 👋');
-  if (cart.length > 0) { showCheckoutStep('delivery'); } else { showView('shop'); }
-}
-
-function handleLogout() {
-  currentUser = null;
-  document.getElementById('accountBtn').style.display = 'none';
-  document.getElementById('loginBtn').style.display = 'flex';
-  const heroBtn = document.getElementById('heroAuthBtn');
-  if (heroBtn) { heroBtn.textContent = 'Créer un compte'; heroBtn.onclick = () => showView('auth'); }
-  showView('shop');
-  showToast('Déconnecté');
-}
-
-// ─── TOAST
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ─── INIT
-const saved = JSON.parse(localStorage.getItem('pvUser') || 'null');
-if (saved) loginUser(saved);
-
-window.addEventListener('load', () => {
-  initHeroAnimations();
-  initScrollAnimations();
+  // Reassurance
+  gsap.from('.reassurance-item', {
+    scrollTrigger: { trigger: '.reassurance-band', start: 'top 85%' },
+    opacity: 0, y: 30, duration: 0.6, stagger: 0.12, ease: 'power3.out'
+  });
 });
 </script>
+
 </body>
 </html>
