@@ -12,6 +12,11 @@
   <!-- Spacer central -->
   <div class="site-nav-spacer"></div>
 
+  <!-- Mobile burger -->
+  <button class="burger-btn" id="burger-btn" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
   <!-- Actions droite -->
   <div class="header-actions">
 
@@ -65,6 +70,26 @@
   </div>
 </header>
 
+<!-- Mobile menu -->
+<nav class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <div class="mobile-nav-links">
+    <a href="{{ routes.root_url }}" class="mobile-nav-link">{{ 'header.home' | t }} →</a>
+    <a href="/collections/acrylique" class="mobile-nav-link">{{ 'header.acrylic' | t }} →</a>
+    <a href="/collections/sleeves" class="mobile-nav-link">{{ 'header.sleeves' | t }} →</a>
+    <a href="/collections/toploaders" class="mobile-nav-link">{{ 'header.toploaders' | t }} →</a>
+  </div>
+  {% if localization.available_locales.size > 1 %}
+    {% form 'localization' %}
+      {% for locale in localization.available_locales %}
+        <button type="submit" name="locale_code" value="{{ locale.iso_code }}"
+          class="lang-btn{% if locale.iso_code == localization.current_locale.iso_code %} lang-btn--active{% endif %}">
+          {{ locale.endonym_name | capitalize }}
+        </button>
+      {% endfor %}
+    {% endform %}
+  {% endif %}
+</nav>
+
 {% stylesheet %}
   .site-header {
     display: flex;
@@ -92,6 +117,77 @@
 
   /* ── Spacer ── */
   .site-nav-spacer { flex: 1; }
+
+  /* ── Burger ── */
+  .burger-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .burger-btn:hover { background: #F2F2F2; }
+  .burger-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #444;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    transform-origin: center;
+  }
+  .burger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .burger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── Mobile menu drawer ── */
+  .mobile-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 1px solid #EBEBEB;
+    padding: 1rem 1.5rem 1.5rem;
+    z-index: 99;
+    transform: translateY(-110%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .mobile-menu.open { transform: translateY(0); }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #EBEBEB;
+    padding-bottom: 1rem;
+  }
+  .mobile-nav-link {
+    font-family: var(--f-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #F4F4F4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.2s;
+  }
+  .mobile-nav-link:last-child { border-bottom: none; }
+  .mobile-nav-link:hover { color: var(--red); }
+
+  @media (max-width: 768px) {
+    .burger-btn { display: flex; }
+    .header-actions .lang-switcher { display: none; }
+  }
 
   /* ── Actions ── */
   .header-actions {
@@ -194,9 +290,27 @@
   }
 {% endstylesheet %}
 
-{% javascript %}
-  /* Pas de JS nécessaire — les boutons lang-btn soumettent le form nativement */
-{% endjavascript %}
+<script>
+  (function() {
+    var burger = document.getElementById('burger-btn');
+    var menu   = document.getElementById('mobile-menu');
+    if (!burger || !menu) return;
+    burger.addEventListener('click', function() {
+      var open = burger.classList.toggle('open');
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open);
+      menu.setAttribute('aria-hidden', !open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    document.addEventListener('click', function(e) {
+      if (!burger.contains(e.target) && !menu.contains(e.target)) {
+        burger.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {

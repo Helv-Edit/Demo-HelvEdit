@@ -170,8 +170,11 @@
     .hero__bg {
       position: absolute;
       inset: 0;
-      /* Remplace ce gradient par ton image : background-image: url('hero-bg.jpg'); background-size: cover; background-position: center; */
-      background: linear-gradient(135deg, #1a0a2e 0%, #3d1060 25%, #1a1040 50%, #0d1a40 75%, #1a2060 100%);
+      background-image: url('hero-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      /* Fallback si pas d'image : gradient approximant la photo néon/manga */
+      background-color: #1a0a2e;
     }
 
     .hero__overlay {
