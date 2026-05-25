@@ -1,0 +1,42 @@
+{% doc %}
+  Hero section for login page.
+{% enddoc %}
+
+<section class="login-hero">
+  <div class="login-hero__content">
+    <h1 class="login-hero__title">{{ 'customer.login.title' | t }}</h1>
+    <p class="login-hero__subtitle">{{ 'customer.login.subtitle' | t }}</p>
+  </div>
+</section>
+
+{% stylesheet %}
+  .login-hero {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .login-hero__content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .login-hero__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .login-hero__subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Login Hero",
+  "settings": []
+}
+{% endschema %}

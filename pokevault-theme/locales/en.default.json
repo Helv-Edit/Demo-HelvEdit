@@ -11,6 +11,19 @@
     "login": "Login",
     "cart": "Cart"
   },
+  "customer": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Welcome back to PokeVault",
+      "form_title": "Account Login",
+      "email": "Email address",
+      "password": "Password",
+      "submit": "Sign In",
+      "no_account": "Don't have an account?",
+      "register": "Create one here",
+      "forgot_password": "Forgot your password?"
+    }
+  },
   "footer": {
     "about": "About PokeVault",
     "about_description": "Premium Pokémon TCG collector's store. Authentic sealed products and custom protective cases.",

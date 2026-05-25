@@ -11,6 +11,19 @@
     "login": "Connexion",
     "cart": "Panier"
   },
+  "customer": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Bienvenue chez PokeVault",
+      "form_title": "Connexion au Compte",
+      "email": "Adresse email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "no_account": "Pas encore de compte?",
+      "register": "En créer un ici",
+      "forgot_password": "Mot de passe oublié?"
+    }
+  },
   "footer": {
     "about": "À propos de PokeVault",
     "about_description": "Boutique premium de collectionneurs Pokémon TCG. Produits scellés authentiques et housses protectrices sur mesure.",
