@@ -11,7 +11,7 @@
           class: 'hero__bg-img',
           alt: section.settings.title }}
     {% else %}
-      <div class="hero__bg-fallback"></div>
+      <div class="hero__bg-fallback" style="background-image: url('{{ 'hero-bg.webp' | asset_url }}');"></div>
     {% endif %}
     <div class="hero__overlay"></div>
   </div>
@@ -62,7 +62,9 @@
   .hero__bg-fallback {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1a0825 0%, #2d1045 25%, #1a1040 50%, #0d1a40 75%, #1a1560 100%);
+    background-size: cover;
+    background-position: center;
+    background-color: #1a0825;
   }
 
   .hero__overlay {
