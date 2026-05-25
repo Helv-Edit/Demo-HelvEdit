@@ -1,0 +1,96 @@
+{
+  "collections": [
+    {
+      "title": "Produits Scellés",
+      "handle": "produits-scelles",
+      "description": "Boosters, ETB, Bundles & Displays. Produits authentiques, scellés d'usine."
+    },
+    {
+      "title": "Protections",
+      "handle": "protections",
+      "description": "Sleeves premium, toploaders & housses acryliques sur mesure."
+    }
+  ],
+  "products": [
+    {
+      "title": "Sleeves Premium Clear (100pcs)",
+      "handle": "sleeves-premium-clear",
+      "product_type": "Protection",
+      "collection": "protections",
+      "vendor": "PokeVault",
+      "price": 9.99,
+      "description": "Lot de 100 protège-cartes standards transparents. Haute qualité, sans acide.",
+      "image_url": "https://images.unsplash.com/photo-1590080876-1aa284f50a14?w=500"
+    },
+    {
+      "title": "Top Loader Rigid (50pcs)",
+      "handle": "toploader-rigid-50",
+      "product_type": "Protection",
+      "collection": "protections",
+      "vendor": "PokeVault",
+      "price": 24.99,
+      "description": "50 toploaders rigides pour cartes standard. Protection maximale.",
+      "image_url": "https://images.unsplash.com/photo-1590080876-1aa284f50a14?w=500"
+    },
+    {
+      "title": "Boîte Acrylique pour Booster",
+      "handle": "boite-acrylique-booster",
+      "product_type": "Protection",
+      "collection": "protections",
+      "vendor": "PokeVault",
+      "price": 12.99,
+      "description": "Boîte transparente acrylique sur mesure pour protéger un booster Pokémon.",
+      "image_url": "https://images.unsplash.com/photo-1590080876-1aa284f50a14?w=500"
+    },
+    {
+      "title": "Boîte Acrylique pour ETB",
+      "handle": "boite-acrylique-etb",
+      "product_type": "Protection",
+      "collection": "protections",
+      "vendor": "PokeVault",
+      "price": 19.99,
+      "description": "Boîte acrylique pour Elite Trainer Box. Préservez votre collection.",
+      "image_url": "https://images.unsplash.com/photo-1590080876-1aa284f50a14?w=500"
+    },
+    {
+      "title": "Boîte Acrylique pour Display",
+      "handle": "boite-acrylique-display",
+      "product_type": "Protection",
+      "collection": "protections",
+      "vendor": "PokeVault",
+      "price": 34.99,
+      "description": "Boîte acrylique grande taille pour protéger un Display complet.",
+      "image_url": "https://images.unsplash.com/photo-1590080876-1aa284f50a14?w=500"
+    },
+    {
+      "title": "Scarlet & Violet Display Booster Box",
+      "handle": "scarlet-violet-display",
+      "product_type": "Pokémon Sealed",
+      "collection": "produits-scelles",
+      "vendor": "PokeVault",
+      "price": 89.99,
+      "description": "Display complet Scarlet & Violet - 36 boosters (Pokémon TCG).",
+      "image_url": "https://images.unsplash.com/photo-1570303387789-d1fa9f6ebf6a?w=500"
+    },
+    {
+      "title": "Scarlet & Violet Booster Bundle",
+      "handle": "scarlet-violet-bundle",
+      "product_type": "Pokémon Sealed",
+      "collection": "produits-scelles",
+      "vendor": "PokeVault",
+      "price": 29.99,
+      "description": "Bundle 3 boosters Scarlet & Violet + 1 booster promo.",
+      "image_url": "https://images.unsplash.com/photo-1570303387789-d1fa9f6ebf6a?w=500"
+    },
+    {
+      "title": "Scarlet & Violet Booster Single",
+      "handle": "scarlet-violet-booster",
+      "product_type": "Pokémon Sealed",
+      "collection": "produits-scelles",
+      "vendor": "PokeVault",
+      "price": 4.99,
+      "description": "Booster unique Scarlet & Violet - 10 cartes aléatoires.",
+      "image_url": "https://images.unsplash.com/photo-1570303387789-d1fa9f6ebf6a?w=500"
+    }
+  ]
+}
