@@ -3,26 +3,28 @@
 {% enddoc %}
 
 <section class="category-tiles">
-  <div class="container">
+  <div class="category-tiles__container">
     <div class="tiles-grid">
       <!-- Tile 1: Sealed Products -->
-      <a href="/collections/produits-scelles" class="category-tile">
+      <a href="/collections/produits-scelles" class="category-tile" data-tile="sealed">
+        <div class="tile-background sealed-bg"></div>
+        <div class="tile-overlay"></div>
         <div class="tile-content">
-          <h2>{{ 'categories.sealed_products' | t }}</h2>
-          <p>{{ 'categories.sealed_description' | t }}</p>
+          <h2 class="tile-title">{{ 'categories.sealed_products' | t }}</h2>
+          <p class="tile-description">{{ 'categories.sealed_description' | t }}</p>
           <span class="tile-cta">{{ 'categories.explore' | t }} →</span>
         </div>
-        <div class="tile-background sealed-bg"></div>
       </a>
 
       <!-- Tile 2: Protections -->
-      <a href="/collections/protections" class="category-tile">
+      <a href="/collections/protections" class="category-tile" data-tile="protections">
+        <div class="tile-background protections-bg"></div>
+        <div class="tile-overlay"></div>
         <div class="tile-content">
-          <h2>{{ 'categories.protections' | t }}</h2>
-          <p>{{ 'categories.protections_description' | t }}</p>
+          <h2 class="tile-title">{{ 'categories.protections' | t }}</h2>
+          <p class="tile-description">{{ 'categories.protections_description' | t }}</p>
           <span class="tile-cta">{{ 'categories.explore' | t }} →</span>
         </div>
-        <div class="tile-background protections-bg"></div>
       </a>
     </div>
   </div>
@@ -30,38 +32,64 @@
 
 {% stylesheet %}
   .category-tiles {
-    margin: 4rem 0;
+    margin: 5rem 0;
+    padding: 0 2rem;
+  }
+
+  .category-tiles__container {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .tiles-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .category-tile {
     position: relative;
-    height: 400px;
-    border-radius: var(--radius-lg);
+    height: 420px;
+    border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
     color: var(--text-primary);
     display: flex;
     align-items: flex-end;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid transparent;
+  }
+
+  .category-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+    z-index: 2;
+    pointer-events: none;
   }
 
   .category-tile:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-12px);
+    border-color: var(--accent-secondary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
-  .category-tile:hover .tile-content {
-    background: linear-gradient(to top, rgba(14, 12, 10, 0.95), rgba(14, 12, 10, 0.7));
+  .category-tile:hover .tile-overlay {
+    opacity: 0.65;
   }
 
   .category-tile:hover .tile-cta {
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .category-tile:hover .tile-title {
     color: var(--yellow);
   }
 
@@ -74,73 +102,121 @@
     background-size: cover;
     background-position: center;
     z-index: 0;
+    transition: transform 0.6s ease-out;
+  }
+
+  .category-tile:hover .tile-background {
+    transform: scale(1.05);
   }
 
   .sealed-bg {
-    background-color: var(--bg-secondary);
-    background-image: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   }
 
   .protections-bg {
-    background-color: var(--bg-tertiary);
-    background-image: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    background: linear-gradient(135deg, #D9C9BC 0%, var(--accent-secondary) 100%);
+  }
+
+  .tile-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(46, 43, 39, 0.95), rgba(46, 43, 39, 0.3));
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    opacity: 0.55;
   }
 
   .tile-content {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     width: 100%;
-    padding: 2rem;
-    background: linear-gradient(to top, rgba(14, 12, 10, 0.9), rgba(14, 12, 10, 0.5));
-    transition: background 0.3s ease;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
-  .tile-content h2 {
-    font-size: 1.75rem;
+  .tile-title {
+    font-size: 1.85rem;
+    font-weight: 700;
     margin-bottom: 0.75rem;
     color: var(--text-primary);
+    font-family: var(--f-display);
+    transition: color 0.3s ease;
+    line-height: 1.2;
   }
 
-  .tile-content p {
+  .tile-description {
     font-size: 0.95rem;
     color: var(--text-secondary);
-    margin-bottom: 1.25rem;
-    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    opacity: 0.9;
   }
 
   .tile-cta {
     font-family: var(--f-display);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--yellow);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: color 0.3s ease;
+    letter-spacing: 0.08em;
+    transition: all 0.3s ease;
+    display: inline-block;
   }
 
   @media (max-width: 768px) {
+    .category-tiles {
+      margin: 3rem 0;
+      padding: 0 1rem;
+    }
+
     .tiles-grid {
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
 
     .category-tile {
-      height: 300px;
+      height: 320px;
     }
 
     .tile-content {
-      padding: 1.5rem;
+      padding: 2rem;
     }
 
-    .tile-content h2 {
-      font-size: 1.25rem;
+    .tile-title {
+      font-size: 1.35rem;
     }
 
-    .tile-content p {
-      font-size: 0.85rem;
+    .tile-description {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.gsap) {
+      const tiles = document.querySelectorAll('.category-tile');
+
+      gsap.from(tiles, {
+        duration: 0.8,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.category-tiles',
+          start: 'top 80%'
+        }
+      });
+    }
+  });
+{% endjavascript %}
 
 {% schema %}
 {

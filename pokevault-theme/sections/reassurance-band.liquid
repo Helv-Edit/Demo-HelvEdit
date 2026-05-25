@@ -68,75 +68,147 @@
 {% stylesheet %}
   .reassurance-band {
     background-color: var(--bg-secondary);
-    padding: 4rem 2rem;
-    margin: 4rem 0;
+    padding: 5rem 2rem;
+    margin: 5rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
   }
 
   .reassurance-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .reassurance-item {
     text-align: center;
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+  }
+
+  .reassurance-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(233, 182, 125, 0.05) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .reassurance-item:hover {
+    background-color: rgba(255, 203, 5, 0.08);
+    transform: translateY(-6px);
+  }
+
+  .reassurance-item:hover::before {
+    opacity: 1;
   }
 
   .reassurance-icon {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 1.25rem;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius-lg);
-    background-color: rgba(255, 203, 5, 0.1);
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(233, 182, 125, 0.15) 0%, rgba(153, 188, 195, 0.1) 100%);
     color: var(--yellow);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    z-index: 1;
   }
 
   .reassurance-item:hover .reassurance-icon {
-    background-color: rgba(255, 203, 5, 0.2);
-    transform: scale(1.1);
+    background: linear-gradient(135deg, var(--accent-warm) 0%, var(--yellow) 100%);
+    color: var(--text-primary);
+    transform: scale(1.15) rotate(-5deg);
+    box-shadow: 0 12px 24px rgba(229, 181, 125, 0.2);
   }
 
   .reassurance-item h3 {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-family: var(--f-display);
     margin-bottom: 0.75rem;
     color: var(--text-primary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     font-weight: 700;
+    position: relative;
+    z-index: 1;
   }
 
   .reassurance-item p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
     margin: 0;
+    position: relative;
+    z-index: 1;
   }
 
   @media (max-width: 768px) {
     .reassurance-band {
-      padding: 2rem 1rem;
-      margin: 2rem 0;
+      padding: 3rem 1rem;
+      margin: 3rem 0;
     }
 
     .reassurance-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: 2rem;
+    }
+
+    .reassurance-item {
+      padding: 1rem;
+    }
+
+    .reassurance-icon {
+      width: 50px;
+      height: 50px;
     }
 
     .reassurance-item h3 {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     .reassurance-item p {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .reassurance-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.gsap) {
+      const items = document.querySelectorAll('.reassurance-item');
+
+      gsap.from(items, {
+        duration: 0.8,
+        y: 40,
+        opacity: 0,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.reassurance-band',
+          start: 'top 85%'
+        }
+      });
+    }
+  });
+{% endjavascript %}
 
 {% schema %}
 {
