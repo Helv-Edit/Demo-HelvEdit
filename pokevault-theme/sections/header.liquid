@@ -9,13 +9,8 @@
     Poke<span>Vault</span>
   </a>
 
-  <!-- Navigation centrale -->
-  <nav class="site-nav" aria-label="Navigation principale">
-    <a href="{{ routes.root_url }}" class="nav-link">{{ 'header.home' | t }}</a>
-    <a href="/collections/acrylique" class="nav-link">{{ 'header.acrylic' | t }}</a>
-    <a href="/collections/sleeves" class="nav-link">{{ 'header.sleeves' | t }}</a>
-    <a href="/collections/toploaders" class="nav-link">{{ 'header.toploaders' | t }}</a>
-  </nav>
+  <!-- Spacer central -->
+  <div class="site-nav-spacer"></div>
 
   <!-- Actions droite -->
   <div class="header-actions">
@@ -95,42 +90,8 @@
 
   .site-logo span { color: var(--red); }
 
-  /* ── Nav ── */
-  .site-nav {
-    display: flex;
-    gap: 2rem;
-    flex: 1;
-    justify-content: center;
-  }
-
-  .nav-link {
-    font-family: var(--f-display);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 2px;
-    transition: color 0.2s;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--red);
-    transition: width 0.2s ease;
-  }
-
-  .nav-link:hover { color: var(--red); }
-  .nav-link:hover::after,
-  .nav-link.active::after { width: 100%; }
-  .nav-link.active { color: var(--red); }
+  /* ── Spacer ── */
+  .site-nav-spacer { flex: 1; }
 
   /* ── Actions ── */
   .header-actions {

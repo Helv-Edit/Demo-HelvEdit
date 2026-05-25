@@ -18,13 +18,17 @@
 
   <div class="hero__content">
     <h1 class="hero__title">
-      {{ section.settings.title | default: 'hero.title' | t }}
+      {%- if section.settings.title != blank -%}
+        {{ section.settings.title }}
+      {%- else -%}
+        {{ 'hero.title' | t }}
+      {%- endif -%}
       {% if section.settings.title_accent != blank %}
-        <span class="hero__accent">{{ section.settings.title_accent | default: 'hero.title_accent' | t }}</span>
+        <span class="hero__accent">{{ section.settings.title_accent }}</span>
       {% endif %}
     </h1>
     {% if section.settings.subtitle != blank %}
-      <p class="hero__subtitle">{{ section.settings.subtitle | default: 'hero.subtitle' | t }}</p>
+      <p class="hero__subtitle">{{ section.settings.subtitle }}</p>
     {% endif %}
   </div>
 </section>
@@ -37,7 +41,7 @@
     min-height: 420px;
     max-height: 720px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     overflow: hidden;
     margin-bottom: 2.5rem;
@@ -75,7 +79,7 @@
     position: relative;
     z-index: 1;
     text-align: center;
-    padding: 0 2rem;
+    padding: 3.5rem 2rem 0;
   }
 
   .hero__title {
