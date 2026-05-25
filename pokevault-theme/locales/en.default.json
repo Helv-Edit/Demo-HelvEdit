@@ -69,6 +69,21 @@
     "support_title": "Responsive Support",
     "support_desc": "Quick replies to all your questions and concerns"
   },
+  "page_404": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you're looking for doesn't exist.",
+    "back_home": "Back to Home"
+  },
+  "pages": {
+    "about_title": "About PokeVault",
+    "about_description": "We are passionate collectors dedicated to providing the finest Pokémon TCG products.",
+    "shipping_title": "Shipping & Delivery",
+    "shipping_description": "Learn about our secure and careful delivery process.",
+    "contact_title": "Contact Us",
+    "contact_description": "Have questions? Get in touch with our team.",
+    "faq_title": "Frequently Asked Questions",
+    "faq_description": "Find answers to common questions about our products and services."
+  },
   "sections": {
     "announcement_bar": {
       "name": "Announcement Bar"

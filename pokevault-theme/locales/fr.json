@@ -69,6 +69,21 @@
     "support_title": "Support Réactif",
     "support_desc": "Réponses rapides à tous vos questions"
   },
+  "page_404": {
+    "title": "Page Non Trouvée",
+    "description": "Désolé, la page que vous recherchez n'existe pas.",
+    "back_home": "Retour à l'accueil"
+  },
+  "pages": {
+    "about_title": "À Propos de PokeVault",
+    "about_description": "Nous sommes des collectionneurs passionnés dédiés à fournir les meilleurs produits Pokémon TCG.",
+    "shipping_title": "Livraison et Expédition",
+    "shipping_description": "Découvrez notre processus d'expédition sécurisé et attentionné.",
+    "contact_title": "Nous Contacter",
+    "contact_description": "Avez-vous des questions ? Contactez notre équipe.",
+    "faq_title": "Questions Fréquemment Posées",
+    "faq_description": "Trouvez les réponses aux questions courantes sur nos produits et services."
+  },
   "sections": {
     "announcement_bar": {
       "name": "Barre d'Annonces"

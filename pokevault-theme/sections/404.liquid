@@ -1,23 +1,73 @@
-{% comment %}
-  This section is used in the 404 template to render page shown when customers
-  enter an invalid store URL.
+{% doc %}
+  Renders a 404 Not Found page with messaging and link back to home.
+{% enddoc %}
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/404
-{% endcomment %}
+<div class="page-404">
+  <div class="page-404__content">
+    <h1 class="page-404__title">404</h1>
+    <h2 class="page-404__heading">{{ 'page_404.title' | t }}</h2>
+    <p class="page-404__description">{{ 'page_404.description' | t }}</p>
+    <a href="{{ routes.root_url }}" class="btn btn--primary btn--lg">{{ 'page_404.back_home' | t }}</a>
+  </div>
+</div>
 
-<h1>{{ '404.title' | t }}</h1>
+{% stylesheet %}
+  .page-404 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 600px;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 2rem;
+  }
 
-<p>
-  {{ '404.not_found' | t }}
-</p>
+  .page-404__content {
+    text-align: center;
+    max-width: 600px;
+  }
 
-<a href="{{ routes.all_products_collection_url }}">
-  {{ '404.back_to_shopping' | t }}
-</a>
+  .page-404__title {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 1rem;
+    font-family: var(--f-display);
+    line-height: 1;
+  }
+
+  .page-404__heading {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-family: var(--f-display);
+  }
+
+  .page-404__description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .page-404 {
+      min-height: 400px;
+      padding: 1.5rem;
+    }
+
+    .page-404__title {
+      font-size: 4rem;
+    }
+
+    .page-404__heading {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.404",
+  "name": "404 Page",
   "settings": []
 }
 {% endschema %}

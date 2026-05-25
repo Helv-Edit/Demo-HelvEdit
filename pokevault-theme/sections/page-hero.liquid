@@ -1,0 +1,115 @@
+{% doc %}
+  Hero section for pages with title and description.
+{% enddoc %}
+
+<section class="page-hero">
+  <div class="page-hero__content">
+    <h1 class="page-hero__title">{{ page.title }}</h1>
+    {% if page.metafields.custom.description %}
+      <p class="page-hero__description">{{ page.metafields.custom.description }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<div class="page-body">
+  <div class="page-body__content">
+    {{ page.content }}
+  </div>
+</div>
+
+{% stylesheet %}
+  .page-hero {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-hero__content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-hero__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--f-display);
+    margin-bottom: 1rem;
+  }
+
+  .page-hero__description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .page-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .page-body__content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  .page-body__content h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-body__content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-body__content ul,
+  .page-body__content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+
+  .page-body__content li {
+    margin-bottom: 0.75rem;
+  }
+
+  .page-body__content a {
+    color: var(--accent-primary);
+    text-decoration: underline;
+  }
+
+  .page-body__content a:hover {
+    color: var(--yellow);
+  }
+
+  @media (max-width: 768px) {
+    .page-hero {
+      padding: 2rem 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-hero__title {
+      font-size: 1.75rem;
+    }
+
+    .page-body {
+      padding: 0 1rem 2rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page Hero",
+  "settings": []
+}
+{% endschema %}
