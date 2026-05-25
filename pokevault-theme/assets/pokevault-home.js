@@ -136,7 +136,7 @@
         }
         const titleEl = document.querySelector('.catalog-title');
         if (titleEl) {
-          const labels = { all:'Tous les produits', booster:'Boosters', sleeve:'Sleeves', protection:'Protections', toploader:'Toploaders' };
+          const labels = { all:'Tous les produits', acrylic:'Protections Acryliques', sleeve:'Sleeves', toploader:'Toploaders' };
           titleEl.textContent = labels[cat] || 'Produits';
         }
       });

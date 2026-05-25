@@ -7,14 +7,8 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "title": "hero.title",
-        "title_accent": "hero.title_accent",
-        "subtitle": "hero.subtitle"
+        "title": "Protections Acryliques"
       }
-    },
-    "categories": {
-      "type": "category-tiles",
-      "settings": {}
     },
     "featured": {
       "type": "featured-products",
@@ -28,7 +22,6 @@
   "order": [
     "announcement",
     "hero",
-    "categories",
     "featured",
     "reassurance"
   ]
