@@ -1,24 +1,16 @@
 {% doc %}
-  Renders a CasePlex-style product card.
-  Light blue-gray background, contain image, pill badges, minimal info.
+  Carte produit dark — dark theme PokeVault avec pokéball animation.
 
   @param {product} product - The product to render
-
   @example
   {% render 'product-card', product: product %}
 {% enddoc %}
 
 {% liquid
   assign first_variant = product.first_available_variant
-  assign is_available  = first_variant.available
-  assign is_new  = false
-  if product.tags contains 'nouveau'
-    assign is_new = true
-  endif
-  assign is_sale = false
-  if product.compare_at_price > product.price
-    assign is_sale = true
-  endif
+  assign is_available  = first_variant != blank and first_variant.available
+  assign is_new        = product.tags contains 'nouveau'
+  assign is_bestseller = product.tags contains 'bestseller'
 
   assign title_lower = product.title | downcase
   assign type_lower  = product.type  | downcase
@@ -34,24 +26,25 @@
 
 <div class="product-card" data-cat="{{ cat }}">
 
-  <a href="{{ product.url }}" class="product-card__link" tabindex="-1">
-    <div class="product-card__image-wrap">
+  {% if is_bestseller %}
+    <div class="card-badge badge--bestseller">{{ 'product.badge_bestseller' | t }}</div>
+  {% elsif is_new %}
+    <div class="card-badge badge--new">{{ 'product.badge_new' | t }}</div>
+  {% endif %}
 
-      {% comment %} Badges {% endcomment %}
-      <div class="product-card__badges">
-        {% unless is_available %}
-          <span class="pv-badge pv-badge--out">{{ 'product.out_of_stock' | t }}</span>
-        {% endunless %}
-        {% if is_new and is_available %}
-          <span class="pv-badge pv-badge--new">{{ 'product.badge_new' | t }}</span>
-        {% endif %}
-        {% if is_sale and is_available %}
-          <span class="pv-badge pv-badge--sale">{{ 'product.badge_promo' | t }}</span>
-        {% endif %}
-      </div>
+  {% if first_variant %}
+    <button class="card-quick-add"
+      data-variant-id="{{ first_variant.id }}"
+      title="{{ 'product.add_to_cart' | t }}"
+      {% unless is_available %}disabled{% endunless %}>
+      +
+    </button>
+  {% endif %}
 
-      {% comment %} Image {% endcomment %}
-      <div class="product-card__image">
+  <a href="{{ product.url }}">
+    <div class="card-image-wrap">
+      <div class="card-view-overlay"></div>
+      <div class="card-image">
         {% if product.featured_image %}
           <img
             src="{{ product.featured_image | image_url: width: 600 }}"
@@ -61,27 +54,22 @@
             height="450"
           >
         {% else %}
-          <div class="product-card__placeholder">
-            {% case cat %}
-              {% when 'sleeve' %}SLV
-              {% when 'toploader' %}TOP
-              {% else %}ACR
-            {% endcase %}
-          </div>
+          <span style="font-family:var(--f-mono);font-size:.9rem;color:var(--muted)">
+            {% case cat %}{% when 'sleeve' %}SLV{% when 'toploader' %}TOP{% else %}ACR{% endcase %}
+          </span>
         {% endif %}
       </div>
     </div>
   </a>
 
-  {% comment %} Info {% endcomment %}
-  <div class="product-card__info">
-    <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
-    <div class="product-card__price-row">
-      {% if is_sale %}
-        <span class="price-compare">{{ product.compare_at_price | money }}</span>
-      {% endif %}
-      <span class="price-main {% if is_sale %}price-main--sale{% endif %}">
-        {{ product.price | money }}
+  <div class="card-info">
+    <a href="{{ product.url }}" class="card-title">{{ product.title }}</a>
+
+    <div class="card-price-row">
+      <span class="card-price">{{ product.price | money }}</span>
+      <span class="card-stock {% if is_available %}card-stock--in{% else %}card-stock--low{% endif %}">
+        <span class="stock-dot"></span>
+        {% if is_available %}{{ 'product.in_stock' | t }}{% else %}{{ 'product.low_stock' | t }}{% endif %}
       </span>
     </div>
   </div>

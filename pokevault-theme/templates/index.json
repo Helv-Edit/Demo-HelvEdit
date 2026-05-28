@@ -1,16 +1,27 @@
 {
   "sections": {
-    "announcement": {
-      "type": "announcement-bar",
-      "settings": {}
-    },
     "hero": {
       "type": "hero",
       "settings": {
-        "title": "Protections Acryliques"
+        "label": "Notre Bestseller",
+        "title": "Protection Acrylique",
+        "title_accent": "ETB",
+        "description": "La protection plébiscitée par +200 collectionneurs. Acrylique cristal 4mm, fermeture magnétique à 6 aimants, protection UV 99%.",
+        "stat1_value": "4.9", "stat1_label": "Note moyenne",
+        "stat2_value": "214", "stat2_label": "Avis vérifiés",
+        "stat3_value": "+31", "stat3_label": "Acheteurs / semaine",
+        "cta_label": "Voir le produit"
       }
     },
-    "featured": {
+    "trust": {
+      "type": "trust-bar",
+      "settings": {}
+    },
+    "brands": {
+      "type": "brands-strip",
+      "settings": {}
+    },
+    "catalog": {
       "type": "featured-products",
       "settings": {}
     },
@@ -19,10 +30,5 @@
       "settings": {}
     }
   },
-  "order": [
-    "announcement",
-    "hero",
-    "featured",
-    "reassurance"
-  ]
+  "order": ["hero", "trust", "brands", "catalog", "reassurance"]
 }

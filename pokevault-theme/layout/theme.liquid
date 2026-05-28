@@ -6,27 +6,56 @@
   {% render 'meta-tags' %}
   {{ content_for_header }}
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   {{ 'pokevault.css' | asset_url | stylesheet_tag }}
 
-  <!-- GSAP CDN -->
+  <!-- Assets globaux accessibles en JS -->
+  <script>
+    window.pvAssets = {
+      glb: {{ 'eevee-crown.glb' | asset_url | json }},
+      cartUrl: '/cart.js',
+      addUrl: '/cart/add.js',
+      changeUrl: '/cart/change.js',
+      routes: { cart: '/cart', collections: '/collections' }
+    };
+    window.Shopify = window.Shopify || {};
+    window.pvCurrency = {{ shop.money_format | json }};
+  </script>
+
+  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
-  <!-- Three.js r128 CDN -->
+  <!-- Three.js + add-ons -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.js" defer></script>
 </head>
 <body>
+
+  <!-- Constellation background -->
+  <canvas id="hero-bg" aria-hidden="true"></canvas>
+
+  <!-- Pokéball animation -->
+  <div id="pokeball">
+    <div id="pb-top"></div><div id="pb-bottom"></div>
+    <div id="pb-band"></div><div id="pb-core"></div><div id="pb-button"></div>
+  </div>
+  <div id="light-flash"></div>
+
+  <!-- ═══ ANNOUNCEMENT ═══ -->
+  {% section 'announcement-bar' %}
 
   <!-- ═══ HEADER ═══ -->
   {% section 'header' %}
 
-  <!-- ═══ MAIN CONTENT ═══ -->
+  <!-- ═══ MAIN ═══ -->
   <main id="shopify-section-content">
     {{ content_for_layout }}
   </main>
@@ -37,10 +66,7 @@
   <!-- ═══ CART DRAWER ═══ -->
   {% section 'cart-drawer' %}
 
-  <!-- ═══ CLOUD TRANSITION (login/checkout only) ═══ -->
-  {{ 'cloud-transition.js' | asset_url | script_tag }}
-
-  <!-- ═══ GLOBAL SCRIPTS ═══ -->
+  <!-- ═══ SCRIPTS ═══ -->
   <script defer src="{{ 'pokevault-home.js' | asset_url }}"></script>
   <script defer src="{{ 'customer-pages.js' | asset_url }}"></script>
 </body>

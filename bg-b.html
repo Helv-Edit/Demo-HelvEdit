@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;box-sizing:border-box}html,body{width:100%;height:100%;background:#0c0d11;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%!important;height:100%!important}
+.lbl{position:fixed;top:20px;left:50%;transform:translateX(-50%);font:700 12px monospace;letter-spacing:.1em;color:#fff;background:#5b8cff;padding:6px 18px;border-radius:20px;z-index:10}
+.hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font:11px monospace;color:rgba(255,255,255,.3);z-index:10}
+</style></head><body>
+<div class="lbl">FOND B - GRILLE HOLOGRAPHIQUE</div>
+<div class="hint">Glisser pour tourner</div>
+<canvas id="c"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.js"></script>
+<script>
+window.addEventListener('load', async function() {
+  var W=window.innerWidth, H=window.innerHeight;
+  var scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(38,W/H,.1,100);
+  camera.position.set(0,.3,5);
+  var renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+  renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.5;
+  scene.add(new THREE.AmbientLight(0xffffff,.8));
+  var key=new THREE.DirectionalLight(0xffffff,4); key.position.set(4,8,6); scene.add(key);
+  var rim=new THREE.PointLight(0x34e2c4,6,22); scene.add(rim);
+  var bg=new THREE.PointLight(0xc77dff,3,18); bg.position.set(-3,4,-5); scene.add(bg);
+  var ctrl=new THREE.OrbitControls(camera,renderer.domElement);
+  ctrl.enableDamping=true; ctrl.autoRotate=true; ctrl.autoRotateSpeed=2; ctrl.enableZoom=false; ctrl.enablePan=false;
+  window.addEventListener('resize',function(){var w=window.innerWidth,h=window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
+  var R=12,C=12,SP=.85,dots=[];
+  for(var r=0;r<R;r++)for(var c=0;c<C;c++){var m=new THREE.Mesh(new THREE.SphereGeometry(.05,6,6),new THREE.MeshStandardMaterial({color:0x34e2c4,emissive:0x34e2c4,emissiveIntensity:.1,roughness:.2}));m.position.set((c-(C-1)/2)*SP,(r-(R-1)/2)*SP,-4);m.userData={r:r,c:c};scene.add(m);dots.push(m);}
+  for(var r=0;r<R;r++){var p=[];for(var c=0;c<C;c++)p.push(new THREE.Vector3((c-(C-1)/2)*SP,(r-(R-1)/2)*SP,-4));scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(p),new THREE.LineBasicMaterial({color:0x34e2c4,transparent:true,opacity:.07})));}
+  for(var c=0;c<C;c++){var p=[];for(var r=0;r<R;r++)p.push(new THREE.Vector3((c-(C-1)/2)*SP,(r-(R-1)/2)*SP,-4));scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(p),new THREE.LineBasicMaterial({color:0x34e2c4,transparent:true,opacity:.07})));}
+  await MeshoptDecoder.ready;
+  var ldr=new THREE.GLTFLoader(); ldr.setMeshoptDecoder(MeshoptDecoder);
+  ldr.load('./eevee-crown.glb',function(gltf){var m=gltf.scene;var box=new THREE.Box3().setFromObject(m);var sz=box.getSize(new THREE.Vector3());m.position.sub(box.getCenter(new THREE.Vector3()));m.scale.setScalar(3.5/Math.max(sz.x,sz.y,sz.z));scene.add(m);});
+  var clk=new THREE.Clock();
+  (function loop(){requestAnimationFrame(loop);var t=clk.getElapsedTime();rim.position.set(Math.sin(t*.5)*5,1,Math.cos(t*.5)*5);dots.forEach(function(d){var w=Math.sin(t*2-(d.userData.r+d.userData.c)*.35)*.5+.5;d.material.emissiveIntensity=w;d.scale.setScalar(.4+w*1.1);});ctrl.update();renderer.render(scene,camera);})();
+});
+</script></body></html>

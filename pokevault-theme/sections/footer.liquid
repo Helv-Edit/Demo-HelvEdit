@@ -1,22 +1,33 @@
 {% doc %}
-  Renders the site footer with links, social media, newsletter, and copyright.
+  Footer dark theme PokeVault — logo holo, liens, réseaux, mentions légales.
 {% enddoc %}
 
 <footer class="site-footer">
-  <div class="footer-content">
-    <!-- Column 1: About -->
-    <div class="footer-section">
-      <h3>{{ 'footer.about' | t }}</h3>
-      <p>{{ 'footer.about_description' | t }}</p>
+  <div class="footer-grid">
+
+    <div>
+      <span class="footer-logo">POKE<b>VAULT</b></span>
+      <p class="footer-tagline">{{ 'footer.tagline' | t }}</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">IG</a>
+        <a href="#" class="social-btn">TK</a>
+        <a href="#" class="social-btn">FB</a>
+        <a href="#" class="social-btn">YT</a>
+      </div>
     </div>
 
-    <!-- Column 2: Links -->
-    <div class="footer-section">
-      <h3>{{ 'footer.links' | t }}</h3>
+    <div class="footer-col">
+      <h4>{{ 'footer.products' | t }}</h4>
       <ul>
         <li><a href="/collections/acrylique">{{ 'header.acrylic' | t }}</a></li>
         <li><a href="/collections/sleeves">{{ 'header.sleeves' | t }}</a></li>
         <li><a href="/collections/toploaders">{{ 'header.toploaders' | t }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ 'footer.info' | t }}</h4>
+      <ul>
         <li><a href="/pages/a-propos">{{ 'footer.about_page' | t }}</a></li>
         <li><a href="/pages/livraison">{{ 'footer.shipping' | t }}</a></li>
         <li><a href="/pages/contact">{{ 'footer.contact' | t }}</a></li>
@@ -24,141 +35,28 @@
       </ul>
     </div>
 
-    <!-- Column 3: Legal -->
-    <div class="footer-section">
-      <h3>{{ 'footer.legal' | t }}</h3>
+    <div class="footer-col">
+      <h4>{{ 'footer.legal' | t }}</h4>
       <ul>
-        <li><a href="/policies/privacy-policy">{{ 'footer.privacy' | t }}</a></li>
-        <li><a href="/policies/terms-of-service">{{ 'footer.terms' | t }}</a></li>
-        <li><a href="/policies/refund-policy">{{ 'footer.refund' | t }}</a></li>
+        <li><a href="/pages/confidentialite">{{ 'footer.privacy' | t }}</a></li>
+        <li><a href="/pages/cgv">{{ 'footer.terms' | t }}</a></li>
+        <li><a href="/pages/retours">{{ 'footer.returns' | t }}</a></li>
+        <li><a href="/pages/mentions-legales">{{ 'footer.mentions' | t }}</a></li>
       </ul>
     </div>
 
-    <!-- Column 4: Newsletter -->
-    <div class="footer-section">
-      <h3>{{ 'footer.newsletter' | t }}</h3>
-      <p>{{ 'footer.newsletter_description' | t }}</p>
-      <form method="post" action="/contact" class="newsletter-form">
-        <input
-          type="email"
-          name="contact[email]"
-          placeholder="{{ 'footer.email_placeholder' | t }}"
-          required
-        >
-        <button type="submit" class="btn btn--sm btn--primary">{{ 'footer.subscribe' | t }}</button>
-      </form>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© {{ 'now' | date: '%Y' }} PokeVault — {{ 'footer.by' | t }} <strong>Helv'Edit</strong></p>
+    <div class="payment-icons">
+      <span class="pay-icon">VISA</span>
+      <span class="pay-icon">MC</span>
+      <span class="pay-icon">AMEX</span>
+      <span class="pay-icon">PAYPAL</span>
     </div>
   </div>
-
-  <!-- Footer Bottom -->
-  <div class="footer-bottom">
-    <p>&copy; {{ 'now' | date: '%Y' }} PokeVault. {{ 'footer.all_rights' | t }}</p>
-  </div>
 </footer>
-
-{% stylesheet %}
-  .site-footer {
-    background-color: var(--bg-secondary);
-    border-top: 1px solid var(--border);
-    padding: 4rem 2rem 2rem;
-    margin-top: 6rem;
-  }
-
-  .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .footer-section h3 {
-    font-size: 1rem;
-    font-family: var(--f-display);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-primary);
-  }
-
-  .footer-section p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-
-  .footer-section ul {
-    list-style: none;
-  }
-
-  .footer-section li {
-    margin-bottom: 0.75rem;
-  }
-
-  .footer-section a {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
-
-  .footer-section a:hover {
-    color: var(--yellow);
-  }
-
-  .newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .newsletter-form input {
-    padding: 0.75rem;
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-primary);
-    font-family: var(--f-body);
-    font-size: 0.9rem;
-  }
-
-  .newsletter-form input::-webkit-input-placeholder {
-    color: var(--text-muted);
-  }
-
-  .newsletter-form input::placeholder {
-    color: var(--text-muted);
-  }
-
-  .newsletter-form input:focus {
-    outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 2px rgba(255, 203, 5, 0.1);
-  }
-
-  .footer-bottom {
-    border-top: 1px solid var(--border);
-    padding-top: 2rem;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (max-width: 768px) {
-    .footer-content {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    .site-footer {
-      padding: 2rem 1rem 1rem;
-      margin-top: 3rem;
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

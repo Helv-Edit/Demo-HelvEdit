@@ -28,20 +28,22 @@
   },
   "footer": {
     "about": "À propos de PokeVault",
-    "about_description": "Spécialistes des protections TCG — coques acryliques sur mesure, sleeves premium et toploaders pour toute votre collection.",
+    "about_description": "Spécialistes des protections TCG.",
+    "tagline": "Spécialistes des protections TCG — coques acryliques sur mesure, sleeves premium et toploaders pour toute votre collection.",
+    "by": "Par",
+    "products": "Protections",
+    "info": "Informations",
     "links": "Liens Rapides",
     "about_page": "À Propos",
     "shipping": "Livraison",
     "contact": "Contact",
     "faq": "FAQ",
-    "legal": "Mentions Légales",
+    "legal": "Légal",
     "privacy": "Politique de Confidentialité",
     "terms": "Conditions Générales",
+    "returns": "Politique de Retour",
+    "mentions": "Mentions Légales",
     "refund": "Politique de Retour",
-    "newsletter": "Newsletter",
-    "newsletter_description": "Recevez les nouveautés et offres exclusives en avant-première.",
-    "email_placeholder": "Entrez votre adresse email",
-    "subscribe": "S'inscrire",
     "all_rights": "Tous droits réservés."
   },
   "cart": {
@@ -50,7 +52,20 @@
     "subtotal": "Sous-total",
     "total": "Total",
     "note": "Livraison sécurisée en France — emballage renforcé.",
-    "checkout": "Procéder au paiement"
+    "checkout": "Procéder au paiement",
+    "free_shipping": "Livraison gratuite !",
+    "free_shipping_threshold": "Livraison gratuite dès 80 €",
+    "secure_note": "Livraison sécurisée en France — emballage renforcé."
+  },
+  "trust": {
+    "uv": "Protection UV 99%",
+    "delivery": "Livraison France 24-48h",
+    "custom": "Sur mesure chaque format",
+    "support": "Support expert réactif",
+    "reviews": "avis"
+  },
+  "brands": {
+    "compatible": "Compatible avec tous vos jeux de cartes"
   },
   "announcement": {
     "delivery_france": "🚚 Livraison sécurisée en France — emballage renforcé pour votre collection",
@@ -80,6 +95,8 @@
     "delivery_desc": "Emballage renforcé, livraison soignée partout en France métropolitaine",
     "uv_title": "Protection UV 99%",
     "uv_desc": "Bloque les UV, la poussière, les rayures et l'humidité pour préserver votre collection",
+    "custom_title": "Sur Mesure",
+    "custom_desc": "Coques acryliques conçues spécifiquement pour chaque format de produit TCG",
     "fit_title": "Sur Mesure",
     "fit_desc": "Coques acryliques conçues spécifiquement pour chaque format de produit TCG",
     "support_title": "Support Expert",
@@ -113,6 +130,8 @@
   "product": {
     "add_to_cart": "Ajouter au panier",
     "out_of_stock": "Rupture de stock",
+    "in_stock": "En stock",
+    "low_stock": "Dernier stock",
     "no_image": "Pas d'image",
     "variants": "variantes",
     "type_acrylic": "Coque Acrylique",
@@ -120,20 +139,18 @@
     "type_toploader": "Toploader",
     "type_default": "Protection",
     "badge_new": "Nouveau",
-    "badge_promo": "Promo"
+    "badge_promo": "Promo",
+    "badge_bestseller": "Bestseller"
   },
   "featured_products": {
     "promo_title": "Livraison offerte dès 80 €",
-    "promo_subtitle": "Emballage renforcé — tous formats",
-    "secure_payment": "Paiement sécurisé",
-    "daily_stock": "Stock mis à jour",
-    "authentic": "Produits authentiques",
     "filter_all": "Tous",
     "filter_acrylic": "Acrylique",
     "filter_sleeves": "Sleeves",
     "filter_toploaders": "Toploaders",
-    "no_products": "Aucun produit pour l'instant — ajoutez des produits dans l'admin Shopify.",
-    "products_count": "produit"
+    "no_products": "Aucun produit pour l'instant.",
+    "products_count": "produit",
+    "products_label": "produit"
   },
   "pagination": {
     "previous": "Précédent",

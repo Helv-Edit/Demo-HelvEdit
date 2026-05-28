@@ -1,120 +1,78 @@
+{% liquid
+  assign collection_handle = section.settings.collection | default: 'all'
+  assign products_col = collections[collection_handle]
+%}
+
 <div class="catalog-wrapper">
 
-  <div class="catalog-filters">
-    <button class="filter-tab active" data-cat="all">{{ 'featured_products.filter_all' | t }}</button>
-    <button class="filter-tab" data-cat="acrylic">{{ 'featured_products.filter_acrylic' | t }}</button>
-    <button class="filter-tab" data-cat="sleeve">{{ 'featured_products.filter_sleeves' | t }}</button>
-    <button class="filter-tab" data-cat="toploader">{{ 'featured_products.filter_toploaders' | t }}</button>
+  <div class="upsell-banner" id="upsell-banner">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <div>
+      <strong>{{ 'cart.free_shipping_threshold' | t }}</strong>
+      <span id="upsell-text"></span>
+    </div>
+    <div class="ship-progress"><div class="ship-progress-fill" id="ship-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="catalog-header">
-    <span class="catalog-title" id="catalogTitle">{{ 'featured_products.filter_all' | t }}</span>
-    <span class="catalog-count" id="catalogCount">
-      {%- assign all_products = collections.all.products -%}
-      {{ all_products.size }} {{ 'featured_products.products_count' | t }}
-    </span>
+  <div class="catalog-top">
+    <div class="catalog-filters">
+      <button class="filter-tab active" data-cat="all">{{ 'featured_products.filter_all' | t }}</button>
+      <button class="filter-tab" data-cat="acrylic">{{ 'featured_products.filter_acrylic' | t }}</button>
+      <button class="filter-tab" data-cat="sleeve">{{ 'featured_products.filter_sleeves' | t }}</button>
+      <button class="filter-tab" data-cat="toploader">{{ 'featured_products.filter_toploaders' | t }}</button>
+    </div>
+    <div class="catalog-meta">
+      <span class="catalog-count-badge" id="catalog-count">
+        {{ products_col.products_count | default: 0 }} {{ 'featured_products.products_label' | t }}
+      </span>
+    </div>
   </div>
 
-  <div class="products-grid" id="productGrid">
-    {%- for product in collections.all.products limit: 48 -%}
-      {% render 'product-card', product: product %}
-    {%- else -%}
-      <p class="catalog-empty">{{ 'featured_products.no_products' | t }}</p>
-    {%- endfor -%}
+  <div class="products-grid" id="product-grid">
+    {%- if products_col -%}
+      {%- for product in products_col.products limit: 24 -%}
+        {% render 'product-card', product: product %}
+      {%- else -%}
+        <p style="color:var(--muted)">{{ 'featured_products.no_products' | t }}</p>
+      {%- endfor -%}
+    {%- endif -%}
   </div>
 
 </div>
 
-{% stylesheet %}
-  .catalog-wrapper {
-    max-width: 1380px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
-  }
-
-  .catalog-filters {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-    padding-top: 0.5rem;
-  }
-
-  .filter-tab {
-    font-family: var(--f-display);
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 0.45rem 1.1rem;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    background: transparent;
-    color: var(--text-secondary);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .filter-tab:hover {
-    border-color: var(--red);
-    color: var(--red);
-  }
-
-  .filter-tab.active {
-    background: var(--red);
-    border-color: var(--red);
-    color: #FFFFFF;
-  }
-
-  .catalog-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-  }
-
-  .catalog-title {
-    font-family: var(--f-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .catalog-count {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .catalog-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 768px) {
-    .catalog-wrapper {
-      padding: 0 1rem 3rem;
-    }
-
-    .catalog-filters {
-      gap: 0.4rem;
-    }
-
-    .filter-tab {
-      font-size: 0.72rem;
-      padding: 0.4rem 0.9rem;
-    }
-  }
-{% endstylesheet %}
+{% javascript %}
+/* Filter tabs client-side */
+(function() {
+  const tabs = document.querySelectorAll('.filter-tab');
+  const cards = document.querySelectorAll('.product-card');
+  const countEl = document.getElementById('catalog-count');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.dataset.cat;
+      let visible = 0;
+      cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (countEl) countEl.textContent = visible + ' produit' + (visible > 1 ? 's' : '');
+    });
+  });
+})();
+{% endjavascript %}
 
 {% schema %}
 {
-  "name": "Produits vedette",
-  "settings": [],
-  "presets": [{ "name": "Produits vedette" }]
+  "name": "{{ 'sections.featured_products.name' | t }}",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection à afficher"
+    }
+  ],
+  "presets": [{ "name": "Catalogue produits" }]
 }
 {% endschema %}

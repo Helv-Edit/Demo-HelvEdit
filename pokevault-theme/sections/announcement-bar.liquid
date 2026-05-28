@@ -1,130 +1,14 @@
 {% doc %}
-  Renders a rotating announcement banner with 3 messages cycling every 5 seconds.
+  Barre d'annonce rotative — style dark mint PokeVault.
 {% enddoc %}
 
-<div class="announcement-bar">
-  <div class="announcement-content">
-    <div class="announcement-item active" data-index="0">
-      {{ 'announcement.delivery_france' | t }}
-    </div>
-    <div class="announcement-item" data-index="1">
-      {{ 'announcement.authentic' | t }}
-    </div>
-    <div class="announcement-item" data-index="2">
-      {{ 'announcement.slot_3' | t }}
-    </div>
-  </div>
-
-  <div class="announcement-dots">
-    <span class="dot active" data-index="0"></span>
-    <span class="dot" data-index="1"></span>
-    <span class="dot" data-index="2"></span>
+<div class="ann-bar">
+  <div class="ann-items">
+    <div class="ann-item active">{{ 'announcement.delivery_france' | t }}</div>
+    <div class="ann-item">{{ 'announcement.authentic' | t }}</div>
+    <div class="ann-item">{{ 'announcement.slot_3' | t }}</div>
   </div>
 </div>
-
-{% stylesheet %}
-  .announcement-bar {
-    background-color: #F5A623;
-    padding: 0.6rem 2rem;
-    text-align: center;
-    position: relative;
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .announcement-content {
-    position: relative;
-    min-height: 18px;
-    flex: 1;
-  }
-
-  .announcement-item {
-    font-family: var(--f-display);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    letter-spacing: 0.03em;
-    position: absolute;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    width: 100%;
-  }
-
-  .announcement-item.active {
-    position: relative;
-    opacity: 1;
-  }
-
-  .announcement-dots {
-    position: absolute;
-    right: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 0.4rem;
-  }
-
-  .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: rgba(0,0,0,0.25);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .dot.active {
-    background-color: #1a1a1a;
-  }
-
-  @media (max-width: 768px) {
-    .announcement-bar {
-      padding: 0.5rem 1rem;
-    }
-
-    .announcement-item {
-      font-size: 0.8rem;
-    }
-
-    .announcement-dots {
-      display: none;
-    }
-  }
-{% endstylesheet %}
-
-{% javascript %}
-  document.addEventListener('DOMContentLoaded', function() {
-    const items = document.querySelectorAll('.announcement-item');
-    const dots = document.querySelectorAll('.announcement-dots .dot');
-    let currentIndex = 0;
-
-    function showItem(index) {
-      items.forEach(item => item.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
-
-      items[index].classList.add('active');
-      dots[index].classList.add('active');
-    }
-
-    function nextItem() {
-      currentIndex = (currentIndex + 1) % items.length;
-      showItem(currentIndex);
-    }
-
-    // Rotate every 5 seconds
-    setInterval(nextItem, 5000);
-
-    // Click dots to manually switch
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', function() {
-        currentIndex = index;
-        showItem(currentIndex);
-      });
-    });
-  });
-{% endjavascript %}
 
 {% schema %}
 {

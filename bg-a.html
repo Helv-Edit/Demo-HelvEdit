@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;box-sizing:border-box}html,body{width:100%;height:100%;background:#0c0d11;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%!important;height:100%!important}
+.lbl{position:fixed;top:20px;left:50%;transform:translateX(-50%);font:700 12px monospace;letter-spacing:.1em;color:#06231d;background:#34e2c4;padding:6px 18px;border-radius:20px;z-index:10}
+.hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font:11px monospace;color:rgba(255,255,255,.3);z-index:10}
+</style></head><body>
+<div class="lbl">FOND A - CRISTAUX FLOTTANTS</div>
+<div class="hint">Glisser pour tourner</div>
+<canvas id="c"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.js"></script>
+<script>
+window.addEventListener('load', async function() {
+  var W=window.innerWidth, H=window.innerHeight;
+  var scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(38,W/H,.1,100);
+  camera.position.set(0,.3,5);
+  var renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+  renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.5;
+  scene.add(new THREE.AmbientLight(0xffffff,.8));
+  var key=new THREE.DirectionalLight(0xffffff,4); key.position.set(4,8,6); scene.add(key);
+  var rim=new THREE.PointLight(0x34e2c4,6,22); scene.add(rim);
+  var bg=new THREE.PointLight(0xc77dff,3,18); bg.position.set(-3,4,-5); scene.add(bg);
+  var ctrl=new THREE.OrbitControls(camera,renderer.domElement);
+  ctrl.enableDamping=true; ctrl.autoRotate=true; ctrl.autoRotateSpeed=2; ctrl.enableZoom=false; ctrl.enablePan=false;
+  window.addEventListener('resize',function(){var w=window.innerWidth,h=window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
+  var cm=new THREE.MeshPhysicalMaterial({color:0x34e2c4,transparent:true,opacity:.13,roughness:.04,transmission:.88,ior:1.6,clearcoat:1,side:THREE.DoubleSide});
+  var em=new THREE.LineBasicMaterial({color:0x34e2c4,transparent:true,opacity:.55});
+  var crys=[]; var gs=[new THREE.OctahedronGeometry(.22,0),new THREE.TetrahedronGeometry(.17,0),new THREE.OctahedronGeometry(.12,0)];
+  for(var i=0;i<22;i++){var g=gs[i%3],m=new THREE.Mesh(g,cm);m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),em));var r=2.5+Math.random()*2.8,a=Math.random()*Math.PI*2;m.position.set(Math.cos(a)*r,(Math.random()-.5)*3.5,Math.sin(a)*r);m.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,Math.random()*Math.PI);m.userData={a:a,r:r,sp:.08+Math.random()*.18,rx:(Math.random()-.5)*.012,ry:(Math.random()-.5)*.015};scene.add(m);crys.push(m);}
+  var pp=new Float32Array(120*3); for(var j=0;j<pp.length;j++)pp[j]=(Math.random()-.5)*14;
+  var pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x34e2c4,size:.024,transparent:true,opacity:.35})));
+  await MeshoptDecoder.ready;
+  var ldr=new THREE.GLTFLoader(); ldr.setMeshoptDecoder(MeshoptDecoder);
+  ldr.load('./eevee-crown.glb',function(gltf){var m=gltf.scene;var box=new THREE.Box3().setFromObject(m);var sz=box.getSize(new THREE.Vector3());m.position.sub(box.getCenter(new THREE.Vector3()));m.scale.setScalar(3.5/Math.max(sz.x,sz.y,sz.z));scene.add(m);});
+  var clk=new THREE.Clock();
+  (function loop(){requestAnimationFrame(loop);var t=clk.getElapsedTime();rim.position.set(Math.sin(t*.5)*5,1,Math.cos(t*.5)*5);crys.forEach(function(c){c.userData.a+=c.userData.sp*.007;c.position.x=Math.cos(c.userData.a)*c.userData.r;c.position.z=Math.sin(c.userData.a)*c.userData.r;c.position.y+=Math.sin(t*.6+c.userData.a)*.004;c.rotation.x+=c.userData.rx;c.rotation.y+=c.userData.ry;});ctrl.update();renderer.render(scene,camera);})();
+});
+</script></body></html>

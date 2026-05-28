@@ -1,37 +1,22 @@
 {% doc %}
-  Header sticky — logo, navigation, sélecteur de langue, compte, panier.
+  Header sticky — logo holo centré, icônes droite, dark theme PokeVault.
 {% enddoc %}
 
 <header class="site-header">
 
-  <!-- Logo -->
-  <a href="{{ routes.root_url }}" class="site-logo">
-    Poke<span>Vault</span>
-  </a>
-
-  <!-- Spacer central -->
-  <div class="site-nav-spacer"></div>
-
-  <!-- Mobile burger -->
-  <button class="burger-btn" id="burger-btn" aria-label="Menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <!-- Logo centré -->
+  <a href="{{ routes.root_url }}" class="logo">POKE<b>VAULT</b></a>
 
   <!-- Actions droite -->
   <div class="header-actions">
 
-    <!-- Sélecteur de langue -->
+    <!-- Langue -->
     {% if localization.available_locales.size > 1 %}
       <div class="lang-switcher">
         {% form 'localization' %}
           {% for locale in localization.available_locales %}
-            <button
-              type="submit"
-              name="locale_code"
-              value="{{ locale.iso_code }}"
-              class="lang-btn{% if locale.iso_code == localization.current_locale.iso_code %} lang-btn--active{% endif %}"
-              aria-label="{{ locale.endonym_name }}"
-            >
+            <button type="submit" name="locale_code" value="{{ locale.iso_code }}"
+              class="lang-btn{% if locale.iso_code == localization.current_locale.iso_code %} active{% endif %}">
               {{ locale.iso_code | upcase }}
             </button>
             {%- unless forloop.last %}<span class="lang-sep">|</span>{% endunless %}
@@ -42,275 +27,40 @@
 
     <!-- Compte -->
     {% if customer %}
-      <a href="{{ routes.account_url }}" class="header-icon-btn" aria-label="{{ customer.first_name }}">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </a>
+      <a href="{{ routes.account_url }}" class="icon-btn" aria-label="{{ customer.first_name }}">
     {% else %}
-      <a href="/account/login" class="header-icon-btn" aria-label="{{ 'header.login' | t }}">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </a>
+      <a href="{{ routes.account_login_url }}" class="icon-btn" aria-label="{{ 'header.login' | t }}">
     {% endif %}
+      <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </a>
 
     <!-- Panier -->
-    <button class="header-icon-btn header-cart-btn" id="cart-toggle" aria-label="{{ 'header.cart' | t }}">
-      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-        <circle cx="9" cy="21" r="1"/>
-        <circle cx="20" cy="21" r="1"/>
+    <button class="icon-btn" id="cart-toggle" aria-label="{{ 'header.cart' | t }}">
+      <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
         <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
       </svg>
-      <span id="cart-count" class="cart-count" style="display:none">0</span>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+
+    <!-- Burger mobile -->
+    <button class="burger" id="burger-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
     </button>
 
   </div>
 </header>
 
-<!-- Mobile menu -->
-<nav class="mobile-menu" id="mobile-menu" aria-hidden="true">
-  <div class="mobile-nav-links">
-    <a href="{{ routes.root_url }}" class="mobile-nav-link">{{ 'header.home' | t }} →</a>
-    <a href="/collections/acrylique" class="mobile-nav-link">{{ 'header.acrylic' | t }} →</a>
-    <a href="/collections/sleeves" class="mobile-nav-link">{{ 'header.sleeves' | t }} →</a>
-    <a href="/collections/toploaders" class="mobile-nav-link">{{ 'header.toploaders' | t }} →</a>
-  </div>
-  {% if localization.available_locales.size > 1 %}
-    {% form 'localization' %}
-      {% for locale in localization.available_locales %}
-        <button type="submit" name="locale_code" value="{{ locale.iso_code }}"
-          class="lang-btn{% if locale.iso_code == localization.current_locale.iso_code %} lang-btn--active{% endif %}">
-          {{ locale.endonym_name | capitalize }}
-        </button>
-      {% endfor %}
-    {% endform %}
-  {% endif %}
+<!-- Mobile nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
+  <a href="/collections/acrylique">{{ 'header.acrylic' | t }}</a>
+  <a href="/collections/sleeves">{{ 'header.sleeves' | t }}</a>
+  <a href="/collections/toploaders">{{ 'header.toploaders' | t }}</a>
 </nav>
-
-{% stylesheet %}
-  .site-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  /* ── Logo ── */
-  .site-logo {
-    font-family: var(--f-display);
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    text-decoration: none;
-    white-space: nowrap;
-    flex-shrink: 0;
-    letter-spacing: -0.02em;
-    transition: opacity 0.2s;
-  }
-
-  .site-logo:hover { opacity: 0.75; }
-
-  .site-logo span { color: var(--red); }
-
-  /* ── Spacer ── */
-  .site-nav-spacer { flex: 1; }
-
-  /* ── Burger ── */
-  .burger-btn {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    width: 36px;
-    height: 36px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: background 0.15s;
-  }
-  .burger-btn:hover { background: #F2F2F2; }
-  .burger-btn span {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: #444;
-    border-radius: 2px;
-    transition: all 0.25s ease;
-    transform-origin: center;
-  }
-  .burger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .burger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .burger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  /* ── Mobile menu drawer ── */
-  .mobile-menu {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border-bottom: 1px solid #EBEBEB;
-    padding: 1rem 1.5rem 1.5rem;
-    z-index: 99;
-    transform: translateY(-110%);
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .mobile-menu.open { transform: translateY(0); }
-
-  .mobile-nav-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #EBEBEB;
-    padding-bottom: 1rem;
-  }
-  .mobile-nav-link {
-    font-family: var(--f-display);
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #333;
-    text-decoration: none;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #F4F4F4;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: color 0.2s;
-  }
-  .mobile-nav-link:last-child { border-bottom: none; }
-  .mobile-nav-link:hover { color: var(--red); }
-
-  @media (max-width: 768px) {
-    .burger-btn { display: flex; }
-    .header-actions .lang-switcher { display: none; }
-  }
-
-  /* ── Actions ── */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-shrink: 0;
-  }
-
-  /* ── Langue ── */
-  .lang-switcher {
-    display: flex;
-    align-items: center;
-    gap: 0.1rem;
-    margin-right: 0.5rem;
-  }
-
-  .lang-switcher form {
-    display: flex;
-    align-items: center;
-    gap: 0.15rem;
-  }
-
-  .lang-btn {
-    font-family: var(--f-display);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #999;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.2rem 0.3rem;
-    transition: color 0.2s;
-    line-height: 1;
-  }
-
-  .lang-btn:hover { color: var(--text-primary); }
-
-  .lang-btn--active {
-    color: var(--text-primary);
-    cursor: default;
-  }
-
-  .lang-sep {
-    font-size: 0.65rem;
-    color: #ccc;
-    user-select: none;
-    line-height: 1;
-  }
-
-  /* ── Icônes ── */
-  .header-icon-btn {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    color: #444;
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.18s, color 0.18s;
-    position: relative;
-  }
-
-  .header-icon-btn:hover {
-    background: #F2F2F2;
-    color: var(--text-primary);
-  }
-
-  /* Badge panier */
-  .cart-count {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: var(--red);
-    color: #fff;
-    font-family: var(--f-display);
-    font-weight: 700;
-    font-size: 0.6rem;
-    min-width: 16px;
-    height: 16px;
-    border-radius: 8px;
-    padding: 0 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-  }
-
-  /* ── Mobile ── */
-  @media (max-width: 768px) {
-    .site-nav { display: none; }
-    .site-logo { font-size: 1.1rem; }
-    .header-actions { gap: 0.25rem; }
-    .lang-switcher { margin-right: 0.25rem; }
-  }
-{% endstylesheet %}
-
-<script>
-  (function() {
-    var burger = document.getElementById('burger-btn');
-    var menu   = document.getElementById('mobile-menu');
-    if (!burger || !menu) return;
-    burger.addEventListener('click', function() {
-      var open = burger.classList.toggle('open');
-      menu.classList.toggle('open', open);
-      burger.setAttribute('aria-expanded', open);
-      menu.setAttribute('aria-hidden', !open);
-      document.body.style.overflow = open ? 'hidden' : '';
-    });
-    document.addEventListener('click', function(e) {
-      if (!burger.contains(e.target) && !menu.contains(e.target)) {
-        burger.classList.remove('open');
-        menu.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-    });
-  })();
-</script>
 
 {% schema %}
 {

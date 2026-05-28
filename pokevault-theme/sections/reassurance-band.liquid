@@ -1,217 +1,59 @@
 {% doc %}
-  Renders a trust/reassurance band with 4 benefit items:
-  - Delivery (France only)
-  - Authentic products
-  - Reinforced packaging
-  - Responsive support
+  Bande de réassurance 4 items — dark theme PokeVault.
 {% enddoc %}
 
 <section class="reassurance-band">
-  <div class="container">
-    <div class="reassurance-grid">
-      <!-- Item 1: Livraison -->
-      <div class="reassurance-item">
-        <div class="reassurance-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect x="1" y="3" width="15" height="13" rx="2"/>
-            <path d="M16 8h4l3 5v3h-7V8z"/>
-            <circle cx="5.5" cy="18.5" r="1.5"/>
-            <circle cx="18.5" cy="18.5" r="1.5"/>
-          </svg>
-        </div>
-        <h3>{{ 'reassurance.delivery_title' | t }}</h3>
-        <p>{{ 'reassurance.delivery_desc' | t }}</p>
-      </div>
+  <div class="reassurance-grid">
 
-      <!-- Item 2: UV Protection -->
-      <div class="reassurance-item">
-        <div class="reassurance-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
-        <h3>{{ 'reassurance.uv_title' | t }}</h3>
-        <p>{{ 'reassurance.uv_desc' | t }}</p>
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/>
+          <circle cx="5.5" cy="18.5" r="1.5"/><circle cx="18.5" cy="18.5" r="1.5"/>
+        </svg>
       </div>
-
-      <!-- Item 3: Sur Mesure -->
-      <div class="reassurance-item">
-        <div class="reassurance-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <path d="M3 9h18M9 21V9"/>
-          </svg>
-        </div>
-        <h3>{{ 'reassurance.fit_title' | t }}</h3>
-        <p>{{ 'reassurance.fit_desc' | t }}</p>
-      </div>
-
-      <!-- Item 4: Support -->
-      <div class="reassurance-item">
-        <div class="reassurance-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-            <circle cx="9" cy="10" r="1"/>
-            <circle cx="12" cy="10" r="1"/>
-            <circle cx="15" cy="10" r="1"/>
-          </svg>
-        </div>
-        <h3>{{ 'reassurance.support_title' | t }}</h3>
-        <p>{{ 'reassurance.support_desc' | t }}</p>
-      </div>
+      <h3>{{ 'reassurance.delivery_title' | t }}</h3>
+      <p>{{ 'reassurance.delivery_desc' | t }}</p>
     </div>
+
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h3>{{ 'reassurance.uv_title' | t }}</h3>
+      <p>{{ 'reassurance.uv_desc' | t }}</p>
+    </div>
+
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+        </svg>
+      </div>
+      <h3>{{ 'reassurance.custom_title' | t }}</h3>
+      <p>{{ 'reassurance.custom_desc' | t }}</p>
+    </div>
+
+    <div class="reassurance-item">
+      <div class="reassurance-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          <circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>
+        </svg>
+      </div>
+      <h3>{{ 'reassurance.support_title' | t }}</h3>
+      <p>{{ 'reassurance.support_desc' | t }}</p>
+    </div>
+
   </div>
 </section>
-
-{% stylesheet %}
-  .reassurance-band {
-    background-color: var(--bg-secondary);
-    padding: 5rem 2rem;
-    margin: 5rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .reassurance-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .reassurance-item {
-    text-align: center;
-    padding: 1.5rem;
-    border-radius: 8px;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    position: relative;
-  }
-
-  .reassurance-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 8px;
-    background: linear-gradient(135deg, rgba(233, 182, 125, 0.05) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .reassurance-item:hover {
-    background-color: rgba(255, 203, 5, 0.08);
-    transform: translateY(-6px);
-  }
-
-  .reassurance-item:hover::before {
-    opacity: 1;
-  }
-
-  .reassurance-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(233, 182, 125, 0.15) 0%, rgba(153, 188, 195, 0.1) 100%);
-    color: var(--yellow);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    position: relative;
-    z-index: 1;
-  }
-
-  .reassurance-item:hover .reassurance-icon {
-    background: linear-gradient(135deg, var(--accent-warm) 0%, var(--yellow) 100%);
-    color: var(--text-primary);
-    transform: scale(1.15) rotate(-5deg);
-    box-shadow: 0 12px 24px rgba(229, 181, 125, 0.2);
-  }
-
-  .reassurance-item h3 {
-    font-size: 1.05rem;
-    font-family: var(--f-display);
-    margin-bottom: 0.75rem;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-    position: relative;
-    z-index: 1;
-  }
-
-  .reassurance-item p {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin: 0;
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (max-width: 768px) {
-    .reassurance-band {
-      padding: 3rem 1rem;
-      margin: 3rem 0;
-    }
-
-    .reassurance-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
-    }
-
-    .reassurance-item {
-      padding: 1rem;
-    }
-
-    .reassurance-icon {
-      width: 50px;
-      height: 50px;
-    }
-
-    .reassurance-item h3 {
-      font-size: 0.95rem;
-    }
-
-    .reassurance-item p {
-      font-size: 0.85rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .reassurance-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  }
-{% endstylesheet %}
-
-{% javascript %}
-  document.addEventListener('DOMContentLoaded', function() {
-    if (window.gsap) {
-      const items = document.querySelectorAll('.reassurance-item');
-
-      gsap.from(items, {
-        duration: 0.8,
-        y: 40,
-        opacity: 0,
-        stagger: 0.12,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.reassurance-band',
-          start: 'top 85%'
-        }
-      });
-    }
-  });
-{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:sections.reassurance_band.name",
-  "settings": []
+  "settings": [],
+  "presets": [{ "name": "Bande réassurance" }]
 }
 {% endschema %}

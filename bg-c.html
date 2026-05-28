@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+*{margin:0;box-sizing:border-box}html,body{width:100%;height:100%;background:#0c0d11;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%!important;height:100%!important}
+.lbl{position:fixed;top:20px;left:50%;transform:translateX(-50%);font:700 12px monospace;letter-spacing:.1em;color:#fff;background:#c77dff;padding:6px 18px;border-radius:20px;z-index:10}
+.hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font:11px monospace;color:rgba(255,255,255,.3);z-index:10}
+</style></head><body>
+<div class="lbl">FOND C - ANNEAUX ORBITAUX</div>
+<div class="hint">Glisser pour tourner</div>
+<canvas id="c"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.js"></script>
+<script>
+window.addEventListener('load', async function() {
+  var W=window.innerWidth, H=window.innerHeight;
+  var scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(38,W/H,.1,100);
+  camera.position.set(0,.3,5);
+  var renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+  renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.5;
+  scene.add(new THREE.AmbientLight(0xffffff,.8));
+  var key=new THREE.DirectionalLight(0xffffff,4); key.position.set(4,8,6); scene.add(key);
+  var rim=new THREE.PointLight(0x34e2c4,6,22); scene.add(rim);
+  var bg2=new THREE.PointLight(0xc77dff,3,18); bg2.position.set(-3,4,-5); scene.add(bg2);
+  var ctrl=new THREE.OrbitControls(camera,renderer.domElement);
+  ctrl.enableDamping=true; ctrl.autoRotate=true; ctrl.autoRotateSpeed=2; ctrl.enableZoom=false; ctrl.enablePan=false;
+  window.addEventListener('resize',function(){var w=window.innerWidth,h=window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
+  var defs=[{r:2.4,t:.014,col:0x34e2c4,rx:Math.PI/2,ry:0,sp:.45},{r:3.0,t:.01,col:0x5b8cff,rx:Math.PI/3,ry:.8,sp:-.28},{r:3.6,t:.008,col:0xc77dff,rx:.5,ry:1.6,sp:.18},{r:1.9,t:.009,col:0xffd166,rx:2.2,ry:1.,sp:-.55}];
+  var rings=defs.map(function(d){var mat=new THREE.MeshBasicMaterial({color:d.col,transparent:true,opacity:.55});var m=new THREE.Mesh(new THREE.TorusGeometry(d.r,d.t,8,128),mat);m.rotation.set(d.rx,d.ry,0);m.userData={sp:d.sp,mat:mat};scene.add(m);return m;});
+  var pp=new Float32Array(100*3);for(var j=0;j<pp.length;j++)pp[j]=(Math.random()-.5)*14;
+  var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x34e2c4,size:.024,transparent:true,opacity:.3})));
+  await MeshoptDecoder.ready;
+  var ldr=new THREE.GLTFLoader(); ldr.setMeshoptDecoder(MeshoptDecoder);
+  ldr.load('./eevee-crown.glb',function(gltf){var m=gltf.scene;var box=new THREE.Box3().setFromObject(m);var sz=box.getSize(new THREE.Vector3());m.position.sub(box.getCenter(new THREE.Vector3()));m.scale.setScalar(3.5/Math.max(sz.x,sz.y,sz.z));scene.add(m);});
+  var clk=new THREE.Clock();
+  (function loop(){requestAnimationFrame(loop);var t=clk.getElapsedTime();rim.position.set(Math.sin(t*.5)*5,1,Math.cos(t*.5)*5);rings.forEach(function(r){r.rotation.z+=r.userData.sp*.009;r.userData.mat.opacity=.35+Math.sin(t*1.8+r.userData.sp*8)*.2;});ctrl.update();renderer.render(scene,camera);})();
+});
+</script></body></html>
