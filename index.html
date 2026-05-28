@@ -1607,15 +1607,14 @@ window.addEventListener('load', async () => {
       opacity: 0, x: -30, duration: 0.6, ease: 'power2.out'
     });
 
-    // Product cards — batch stagger reveal
+    // Product cards — bidirectionnel
     gsap.set('.product-card', { opacity: 0, y: 40, scale: 0.95 });
     ScrollTrigger.batch('.product-card', {
-      onEnter: batch => gsap.to(batch, {
-        opacity: 1, y: 0, scale: 1,
-        duration: 0.65, stagger: 0.09, ease: 'power3.out', overwrite: true
-      }),
-      start: 'top 92%',
-      once: true
+      onEnter:     b => gsap.to(b, { opacity:1, y:0, scale:1, duration:0.65, stagger:0.09, ease:'power3.out', overwrite:true }),
+      onLeave:     b => gsap.to(b, { opacity:0, y:-30, scale:0.95, duration:0.35, stagger:0.05, ease:'power2.in', overwrite:true }),
+      onEnterBack: b => gsap.to(b, { opacity:1, y:0, scale:1, duration:0.5, stagger:0.09, ease:'power3.out', overwrite:true }),
+      onLeaveBack: b => gsap.to(b, { opacity:0, y:40, scale:0.95, duration:0.35, stagger:0.05, ease:'power2.in', overwrite:true }),
+      start: 'top 92%', end: 'bottom 8%'
     });
 
     // How it works steps
@@ -1681,10 +1680,17 @@ function initHeroBg() {
     requestAnimationFrame(frame);
     ctx.clearRect(0, 0, W, H);
 
+    /* boost scroll — effet chute/montée */
+    const boost = scrollV * 0.12;
+    scrollV *= 0.82;
+
     pts.forEach(p => {
+      p.vy += boost;
+      p.vy *= 0.97;
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
     });
 
     const MAX = 155;
@@ -1710,6 +1716,13 @@ function initHeroBg() {
       ctx.fill();
     });
   }
+
+  /* ── Scroll réactif ── */
+  let lastSY = window.scrollY, scrollV = 0;
+  window.addEventListener('scroll', () => {
+    scrollV = (window.scrollY - lastSY);
+    lastSY = window.scrollY;
+  }, { passive: true });
 
   resize(); spawn(); frame();
   window.addEventListener('resize', () => { resize(); });
