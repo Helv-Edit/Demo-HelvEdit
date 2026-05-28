@@ -1766,8 +1766,8 @@ function initThreeJS() {
   let H = wrap.clientHeight || 450;
 
   const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, W / H, 0.1, 100);
-  camera.position.set(0, 0, 6.5);
+  const camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
+  camera.position.set(0, 0.3, 5.5);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(W, H);
