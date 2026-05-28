@@ -67,11 +67,12 @@
 
   /* ═══ ANNOUNCEMENT ═════════════════════════════════════════════════════════ */
   .ann-bar {
-    background: var(--accent); padding: 0.5rem 2rem;
+    background: var(--bg2); padding: 0.5rem 2rem;
     font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.08em;
-    color: #06231d; text-align: center;
+    color: var(--accent); text-align: center;
     display: flex; align-items: center; justify-content: center;
     min-height: 32px; position: relative; z-index: 1;
+    border-bottom: 1px solid rgba(52,226,196,0.15);
   }
   .ann-items { position: relative; flex: 1; min-height: 18px; }
   .ann-item  { position: absolute; width: 100%; opacity: 0; transition: opacity 0.5s; text-align: center; }
@@ -80,9 +81,8 @@
   /* ═══ HEADER ════════════════════════════════════════════════════════════════ */
   .site-header {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(12,13,17,0.7);
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--line);
+    background: var(--bg2);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     height: 66px; padding: 0 2rem;
     display: flex; align-items: center; justify-content: space-between;
   }
