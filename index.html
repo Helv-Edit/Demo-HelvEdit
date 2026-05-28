@@ -1675,17 +1675,18 @@ function initHeroBg() {
     canvas.style.height = H + 'px';
   }
 
+  /* ── Suivi souris ── */
+  let mxD = 0, myD = 0, lmx = 0, lmy = 0;
+  window.addEventListener('mousemove', e => {
+    mxD = e.clientX - lmx;
+    myD = e.clientY - lmy;
+    lmx = e.clientX; lmy = e.clientY;
+  }, { passive: true });
+
   function spawn() {
     pts = Array.from({length: 130}, () => {
-      const d = 0.15 + Math.random() * 0.85; /* profondeur 0.15=loin 1=proche */
-      return {
-        x:  Math.random() * W,
-        y:  Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.22 * d,
-        vy: (Math.random() - 0.5) * 0.14 * d,
-        r:  d * 2.2,
-        d
-      };
+      const d = 0.15 + Math.random() * 0.85;
+      return { x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, r: d * 2.2, d };
     });
   }
 
@@ -1693,14 +1694,15 @@ function initHeroBg() {
     requestAnimationFrame(frame);
     ctx.clearRect(0, 0, W, H);
 
-    /* boost scroll + dérive univers */
+    /* mouvement souris + scroll */
     const boost = scrollV * 0.04;
     scrollV *= 0.82;
+    mxD *= 0.88; myD *= 0.88;
 
     pts.forEach(p => {
-      p.vy += boost * p.d;
-      p.vy *= 0.97;
-      p.vx += 0.004 * p.d; /* dérive lente vers la droite — effet navigation */
+      p.vx += (-mxD * 0.004) * p.d;
+      p.vy += (-myD * 0.004) * p.d + boost * p.d;
+      p.vx *= 0.94; p.vy *= 0.94;
       p.x += p.vx; p.y += p.vy;
       if (p.x < -10) p.x = W + 10;
       if (p.x > W + 10) p.x = -10;
