@@ -1595,7 +1595,7 @@ window.addEventListener('load', async () => {
   /* ── ScrollTrigger ──────────────────────────────────────────────────── */
   if (window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
-
+    ScrollTrigger.defaults({ toggleActions: 'play none none reverse' });
 
     // Trust items
     gsap.from('.trust-item', {
@@ -1676,52 +1676,63 @@ function initHeroBg() {
   }
 
   function spawn() {
-    pts = Array.from({length: 120}, () => ({
-      x:  Math.random() * W,
-      y:  Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      r:  0.6 + Math.random() * 1.1
-    }));
+    pts = Array.from({length: 130}, () => {
+      const d = 0.15 + Math.random() * 0.85; /* profondeur 0.15=loin 1=proche */
+      return {
+        x:  Math.random() * W,
+        y:  Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.22 * d,
+        vy: (Math.random() - 0.5) * 0.14 * d,
+        r:  d * 2.2,
+        d
+      };
+    });
   }
 
   function frame() {
     requestAnimationFrame(frame);
     ctx.clearRect(0, 0, W, H);
 
-    /* boost scroll — effet chute/montée */
+    /* boost scroll + dérive univers */
     const boost = scrollV * 0.04;
     scrollV *= 0.82;
 
     pts.forEach(p => {
-      p.vy += boost;
+      p.vy += boost * p.d;
       p.vy *= 0.97;
+      p.vx += 0.004 * p.d; /* dérive lente vers la droite — effet navigation */
       p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
       if (p.y < 0) p.y = H;
       if (p.y > H) p.y = 0;
     });
 
-    const MAX = 155;
+    /* lignes — seulement entre particules proches (d > 0.4) */
+    const MAX = 150;
     for (let i = 0; i < pts.length; i++) {
+      if (pts[i].d < 0.4) continue;
       for (let j = i + 1; j < pts.length; j++) {
+        if (pts[j].d < 0.4) continue;
         const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-        const d  = Math.sqrt(dx*dx + dy*dy);
-        if (d < MAX) {
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MAX) {
           ctx.beginPath();
           ctx.moveTo(pts[i].x, pts[i].y);
           ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = `rgba(52,226,196,${(1 - d/MAX) * 0.12})`;
-          ctx.lineWidth = 0.6;
+          const depth = (pts[i].d + pts[j].d) / 2;
+          ctx.strokeStyle = `rgba(52,226,196,${(1 - dist/MAX) * 0.22 * depth})`;
+          ctx.lineWidth = depth * 0.8;
           ctx.stroke();
         }
       }
     }
 
+    /* points — opacité et taille selon profondeur */
     pts.forEach(p => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(52,226,196,0.4)';
+      ctx.fillStyle = `rgba(52,226,196,${0.25 + p.d * 0.5})`;
       ctx.fill();
     });
   }
