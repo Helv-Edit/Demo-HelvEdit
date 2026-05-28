@@ -618,10 +618,17 @@
   }
   #canvas-3d { width: 100%; height: 100%; display: block; }
   .canvas-hint {
-    position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
-    font-size: 0.68rem; color: rgba(255,255,255,0.3);
-    font-family: var(--f-display); letter-spacing: 0.06em;
-    text-transform: uppercase;
+    text-align: center; margin-top: 0.75rem;
+    font-size: 0.68rem; font-family: var(--f-mono);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    padding: 0.35rem 0.9rem; border-radius: 20px;
+  }
+  .section-3d__canvas-col {
+    display: flex; flex-direction: column; align-items: center;
   }
 
   /* ═══ HOW IT WORKS ═══════════════════════════════════════════════════════ */
@@ -782,8 +789,10 @@
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
-    <div class="section-3d__canvas-wrap">
-      <canvas id="canvas-3d"></canvas>
+    <div class="section-3d__canvas-col">
+      <div class="section-3d__canvas-wrap">
+        <canvas id="canvas-3d"></canvas>
+      </div>
       <div class="canvas-hint">⟳ Glissez pour faire tourner</div>
     </div>
   </div>
