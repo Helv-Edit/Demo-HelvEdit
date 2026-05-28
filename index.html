@@ -1679,9 +1679,9 @@ function initHeroBg() {
     pts = Array.from({length: 120}, () => ({
       x:  Math.random() * W,
       y:  Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6,
-      r:  1.2 + Math.random() * 2
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      r:  0.6 + Math.random() * 1.1
     }));
   }
 
@@ -1690,7 +1690,7 @@ function initHeroBg() {
     ctx.clearRect(0, 0, W, H);
 
     /* boost scroll — effet chute/montée */
-    const boost = scrollV * 0.12;
+    const boost = scrollV * 0.04;
     scrollV *= 0.82;
 
     pts.forEach(p => {
@@ -1711,8 +1711,8 @@ function initHeroBg() {
           ctx.beginPath();
           ctx.moveTo(pts[i].x, pts[i].y);
           ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = `rgba(52,226,196,${(1 - d/MAX) * 0.35})`;
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = `rgba(52,226,196,${(1 - d/MAX) * 0.12})`;
+          ctx.lineWidth = 0.6;
           ctx.stroke();
         }
       }
@@ -1721,7 +1721,7 @@ function initHeroBg() {
     pts.forEach(p => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(52,226,196,0.75)';
+      ctx.fillStyle = 'rgba(52,226,196,0.4)';
       ctx.fill();
     });
   }
