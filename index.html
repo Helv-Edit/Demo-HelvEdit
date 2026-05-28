@@ -1671,9 +1671,9 @@ function initHeroBg() {
     pts = Array.from({length: 120}, () => ({
       x:  Math.random() * W,
       y:  Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r:  0.8 + Math.random() * 1.4
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
+      r:  1.2 + Math.random() * 2
     }));
   }
 
@@ -1696,8 +1696,8 @@ function initHeroBg() {
           ctx.beginPath();
           ctx.moveTo(pts[i].x, pts[i].y);
           ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = `rgba(52,226,196,${(1 - d/MAX) * 0.15})`;
-          ctx.lineWidth = 0.7;
+          ctx.strokeStyle = `rgba(52,226,196,${(1 - d/MAX) * 0.35})`;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
       }
@@ -1706,7 +1706,7 @@ function initHeroBg() {
     pts.forEach(p => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(52,226,196,0.45)';
+      ctx.fillStyle = 'rgba(52,226,196,0.75)';
       ctx.fill();
     });
   }
